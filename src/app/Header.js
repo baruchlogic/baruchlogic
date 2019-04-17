@@ -10,34 +10,41 @@ const StyledNavbar = styled(Navbar)`
   height: 4rem !important;
   justify-content: space-between;
   padding: 0 4rem !important;
+  @media (max-width: 750px) {
+    flex-direction: column;
+    height: auto !important;
+    .header__divider {
+      transform: rotateZ(90deg);
+    }
+  }
 `;
 
-const LinkStyle = {
-  color: 'white',
-  fontSize: '1.5rem'
-};
+const StyledLink = styled(Link)`
+  color: white !important;
+  font-size: 1.5rem !important;
+`;
 
 const Header = () => (
   <StyledNavbar className="bp3-dark">
-    <Link to="/" style={LinkStyle}>
+    <StyledLink to="/">
       home
-    </Link>
-    <Link to="/about" style={LinkStyle}>
+    </StyledLink>
+    <StyledLink to="/about">
       about
-    </Link>
-    <Link to="/text" style={LinkStyle}>
+    </StyledLink>
+    <StyledLink to="/text">
       text
-    </Link>
-    <Link to="/videos" style={LinkStyle}>
+    </StyledLink>
+    <StyledLink to="/videos">
       videos
-    </Link>
-    <Link to="/exercises" style={LinkStyle}>
+    </StyledLink>
+    <StyledLink to="/exercises">
       exercises
-    </Link>
-    <Link to="/homework" style={LinkStyle}>
+    </StyledLink>
+    <StyledLink to="/homework">
       homework
-    </Link>
-    <Navbar.Divider />
+    </StyledLink>
+    <Navbar.Divider className="header__divider"/>
     <Navbar.Group>
       <Icon icon="user" iconSize={32} />
     </Navbar.Group>
