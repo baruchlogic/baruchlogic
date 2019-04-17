@@ -29,6 +29,14 @@ const StyledLink = styled(Link)`
   }
 `;
 
+const StyledIcon = styled(Icon)`
+  cursor: pointer;
+  transition: color 0.1s linear;
+  &:hover {
+    color: #669eff;
+  }
+`;
+
 const Header = () => (
   <StyledNavbar className="bp3-dark">
     <StyledLink to="/">home</StyledLink>
@@ -39,7 +47,7 @@ const Header = () => (
     <StyledLink to="/homework">homework</StyledLink>
     <Navbar.Divider className="header__divider" />
     <Navbar.Group>
-      <Icon icon="user" iconSize={32} />
+      <StyledIcon icon="user" iconSize={32} />
     </Navbar.Group>
   </StyledNavbar>
 );
