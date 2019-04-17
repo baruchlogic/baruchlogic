@@ -22,29 +22,22 @@ const StyledNavbar = styled(Navbar)`
 const StyledLink = styled(Link)`
   color: white !important;
   font-size: 1.5rem !important;
+  transition: color 0.1s linear;
+  &:hover {
+    color: #669eff !important;
+    text-decoration: none;
+  }
 `;
 
 const Header = () => (
   <StyledNavbar className="bp3-dark">
-    <StyledLink to="/">
-      home
-    </StyledLink>
-    <StyledLink to="/about">
-      about
-    </StyledLink>
-    <StyledLink to="/text">
-      text
-    </StyledLink>
-    <StyledLink to="/videos">
-      videos
-    </StyledLink>
-    <StyledLink to="/exercises">
-      exercises
-    </StyledLink>
-    <StyledLink to="/homework">
-      homework
-    </StyledLink>
-    <Navbar.Divider className="header__divider"/>
+    <StyledLink to="/">home</StyledLink>
+    <StyledLink to="/about">about</StyledLink>
+    <StyledLink to="/text">text</StyledLink>
+    <StyledLink to="/videos">videos</StyledLink>
+    <StyledLink to="/exercises">exercises</StyledLink>
+    <StyledLink to="/homework">homework</StyledLink>
+    <Navbar.Divider className="header__divider" />
     <Navbar.Group>
       <Icon icon="user" iconSize={32} />
     </Navbar.Group>
