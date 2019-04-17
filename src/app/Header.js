@@ -17,7 +17,7 @@ const LinkStyle = {
 
 const Header = () => (
   <Navbar
-    className="app-header bp3-dark"
+    className="bp3-dark"
     style={headerStyles}
   >
     <Link to="/" style={LinkStyle}>home</Link>
