@@ -5,6 +5,7 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     compress: true,
+    historyApiFallback: true,
     port: 9000
   },
   entry: './src/app/index.js',
@@ -18,6 +19,10 @@ module.exports = {
         }
       },
       {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      },
+      {
         test: /\.html$/,
         use: [
           {
@@ -28,12 +33,13 @@ module.exports = {
     ]
   },
   output: {
+    filename: 'main.js',
     path: path.resolve(__dirname, './dist'),
-    filename: 'main.js'
+    publicPath: '/'
   },
   plugins: [
     new HtmlWebPackPlugin({
-      template: 'src/index.html' 
+      template: 'src/index.html'
     })
   ]
 };
