@@ -38,9 +38,25 @@ const StyledCard = styled(Card)`
   animation-delay: ${props => `${props.order * 0.5}s`};
   animation-fill-mode: forwards;
   animation-timing-function: cubic-bezier(0.28, 0.84, 0.42, 1);
+  font-size: 24px;
   opacity: 0;
   transform: translateY(400px);
   width: 30%;
+`;
+
+const StyledVideoIcon = styled.i`
+  color: #669eff;
+  font-size: 64px;
+`;
+
+const StyledBookIcon = styled.i`
+  color: #96622d;
+  font-size: 64px;
+`;
+
+const StyledHWIcon = styled.i`
+  color: #d9822b;
+  font-size: 64px;
 `;
 
 const Home = () => (
@@ -48,13 +64,26 @@ const Home = () => (
     <StyledH1>baruchlogic</StyledH1>
     <CardContainer>
       <StyledCard order={1}>
-        An Open Educational Resource for teaching introductory propositional
-        logic.
+      <StyledHWIcon className="fas fa-table" />
+      <div>
+        Interactive, challenging problemsets.
+      </div>
       </StyledCard>
-      <StyledCard order={2}>Clear, easy to understand text</StyledCard>
-      <StyledCard order={3}>Helpful videos</StyledCard>
+      <StyledCard order={2}>
+        <StyledBookIcon className="fas fa-book-reader" />
+        <div>
+          Clear, easy to understand text
+        </div>
+      </StyledCard>
+      <StyledCard order={3}>
+        <StyledVideoIcon className="fas fa-video" />
+        <div>Helpful videos</div>
+      </StyledCard>
     </CardContainer>
   </StyledContainer>
 );
+
+// An open educational resource for teaching introductory propositional
+// logic.
 
 export default Home;
