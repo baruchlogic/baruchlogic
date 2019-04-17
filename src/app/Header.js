@@ -1,32 +1,36 @@
 import React from 'react';
+import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Navbar } from '@blueprintjs/core';
+import { Icon, Intent } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 
-import { Colors } from "@blueprintjs/core";
-
-const headerStyles = {
-  display: 'flex',
-  alignItems: 'center',
-  height: '5rem',
-  justifyContent: 'space-between'
-};
+const StyledNavbar = styled(Navbar)`
+  display: flex;
+  align-items: center;
+  height: 4rem !important;
+  justify-content: space-between;
+  padding: 0 4rem !important;
+`;
 
 const LinkStyle = {
-  color: 'white'
+  color: 'white',
+  fontSize: '1.5rem'
 };
 
 const Header = () => (
-  <Navbar
-    className="bp3-dark"
-    style={headerStyles}
-  >
+  <StyledNavbar className="bp3-dark">
     <Link to="/" style={LinkStyle}>home</Link>
     <Link to="/about" style={LinkStyle}>about</Link>
     <Link to="/text" style={LinkStyle}>text</Link>
     <Link to="/videos" style={LinkStyle}>videos</Link>
     <Link to="/exercises" style={LinkStyle}>exercises</Link>
     <Link to="/homework" style={LinkStyle}>homework</Link>
-  </Navbar>
+     <Navbar.Divider />
+     <Navbar.Group>
+      <Icon icon="user" iconSize={32} />
+     </Navbar.Group>
+  </StyledNavbar>
 );
 
 export default Header;
