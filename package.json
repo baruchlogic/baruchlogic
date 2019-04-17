@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "build": "webpack --mode production",
-    "lint": "eslint src/ --ext .js,.jsx",
+    "lint": "eslint --fix src/ --ext .js,.jsx",
     "start": "webpack-dev-server --open --mode development"
   },
   "husky": {
