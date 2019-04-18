@@ -77,8 +77,7 @@ const Home = () => (
   <StyledContainer>
     <StyledH1>baruchlogic</StyledH1>
     <StyledH2>
-      An open educational resource for teaching introductory propositional
-      logic
+      An open educational resource for teaching introductory propositional logic
     </StyledH2>
     <CardContainer>
       <StyledCard order={1}>
