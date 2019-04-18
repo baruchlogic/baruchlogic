@@ -13,10 +13,14 @@ const StyledH1 = styled(H1)`
 `;
 
 const CardContainer = styled.div`
-  width: 80%;
+  align-items: center;
   display: flex;
   justify-content: space-between;
   margin: auto;
+  width: 80%;
+  @media (max-width: 750px) {
+    flex-direction: column;
+  }
 `;
 
 const rotate = keyframes`
@@ -42,6 +46,10 @@ const StyledCard = styled(Card)`
   opacity: 0;
   transform: translateY(400px);
   width: 30%;
+  @media (max-width: 750px) {
+    width: 80%;
+    margin: 1rem 0;
+  }
 `;
 
 const StyledVideoIcon = styled.i`
@@ -64,16 +72,12 @@ const Home = () => (
     <StyledH1>baruchlogic</StyledH1>
     <CardContainer>
       <StyledCard order={1}>
-      <StyledHWIcon className="fas fa-table" />
-      <div>
-        Interactive, challenging problemsets.
-      </div>
+        <StyledHWIcon className="fas fa-table" />
+        <div>Interactive, challenging problemsets.</div>
       </StyledCard>
       <StyledCard order={2}>
         <StyledBookIcon className="fas fa-book-reader" />
-        <div>
-          Clear, easy to understand text
-        </div>
+        <div>Clear, easy to understand text</div>
       </StyledCard>
       <StyledCard order={3}>
         <StyledVideoIcon className="fas fa-video" />

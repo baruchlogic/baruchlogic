@@ -13,9 +13,6 @@ const StyledNavbar = styled(Navbar)`
   @media (max-width: 750px) {
     flex-direction: column;
     height: auto !important;
-    .header__divider {
-      transform: rotateZ(90deg);
-    }
   }
 `;
 
@@ -29,11 +26,17 @@ const StyledLink = styled(Link)`
   }
 `;
 
-const StyledIcon = styled(Icon)`
+const StyledUserIcon = styled(Icon)`
   cursor: pointer;
   transition: color 0.1s linear;
   &:hover {
     color: #669eff;
+  }
+`;
+
+const StyledDivider = styled(Navbar.Divider)`
+  @media (max-width: 750px) {
+    transform: rotateZ(90deg);
   }
 `;
 
@@ -45,9 +48,9 @@ const Header = () => (
     <StyledLink to="/videos">videos</StyledLink>
     <StyledLink to="/exercises">exercises</StyledLink>
     <StyledLink to="/homework">homework</StyledLink>
-    <Navbar.Divider className="header__divider" />
+    <StyledDivider />
     <Navbar.Group>
-      <StyledIcon icon="user" iconSize={32} />
+      <StyledUserIcon icon="user" iconSize={32} />
     </Navbar.Group>
   </StyledNavbar>
 );
