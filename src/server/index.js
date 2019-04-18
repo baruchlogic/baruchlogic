@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const { query } = require('./db');
 
 const app = express();
 
@@ -14,6 +15,12 @@ app.get('/api/getList', (req, res) => {
   console.log('Sent list of items');
 });
 
+app.get('/api/videos', (req, res) => {
+  query('SELECT * FROM video', [], (_err, _res) => {
+    res.send(_res);
+  });
+});
+
 // Handles any requests that don't match the ones above
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
@@ -23,5 +30,3 @@ const port = process.env.PORT || 5000;
 app.listen(port);
 
 console.log('App is listening on port ' + port);
-
-export default app;
