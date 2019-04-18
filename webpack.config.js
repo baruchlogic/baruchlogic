@@ -8,7 +8,7 @@ module.exports = {
     historyApiFallback: true,
     port: 9000
   },
-  entry: './src/app/index.js',
+  entry: ['babel-polyfill', './src/app/index.js'],
   module: {
     rules: [
       {

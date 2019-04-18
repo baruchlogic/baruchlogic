@@ -4,9 +4,9 @@ import { Switch, Route } from 'react-router-dom';
 import Header from './Header';
 import About from './About';
 import Home from './Home';
-
+import VideosContainer from './VideosContainer';
 const Text = () => <div>Text</div>;
-const VideosContainer = () => <div>Videos</div>;
+// const VideosContainer = () => <div>Videos</div>;
 const ExercisesContainer = () => <div>Exercises</div>;
 const HomeworkContainer = () => <div>Homework</div>;
 

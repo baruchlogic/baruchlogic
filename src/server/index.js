@@ -1,8 +1,11 @@
 const express = require('express');
 const path = require('path');
 const { query } = require('./db');
+const cors = require('cors');
 
 const app = express();
+
+app.use(cors());
 
 // Serve the static files from the React app
 app.use(express.static(path.join(__dirname, 'dist')));
@@ -15,10 +18,13 @@ app.get('/api/getList', (req, res) => {
   console.log('Sent list of items');
 });
 
-app.get('/api/videos', (req, res) => {
-  query('SELECT * FROM video', [], (_err, _res) => {
-    res.send(_res);
-  });
+app.get('/api/videos', async (req, res) => {
+  const rows = await query('SELECT * FROM video', []);
+  res.send(rows);
+  // query('SELECT * FROM video', [], (_err, _res) => {
+  //   console.log('_res', _res.rows);
+  //   res.send(_res.rows);
+  // });
 });
 
 // Handles any requests that don't match the ones above
