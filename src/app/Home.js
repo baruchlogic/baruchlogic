@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, H1 } from '@blueprintjs/core';
+import { Card, H1, H2 } from '@blueprintjs/core';
 import styled, { keyframes } from 'styled-components';
 
 const StyledContainer = styled.div`
@@ -10,6 +10,11 @@ const StyledContainer = styled.div`
 const StyledH1 = styled(H1)`
   font-size: 64px !important;
   margin: 64px !important;
+`;
+
+const StyledH2 = styled(H2)`
+  font-size: 32px !important;
+  margin-bottom: 64px !important;
 `;
 
 const CardContainer = styled.div`
@@ -43,6 +48,7 @@ const StyledCard = styled(Card)`
   animation-fill-mode: forwards;
   animation-timing-function: cubic-bezier(0.28, 0.84, 0.42, 1);
   font-size: 24px;
+  height: 250px;
   opacity: 0;
   transform: translateY(400px);
   width: 30%;
@@ -70,10 +76,14 @@ const StyledHWIcon = styled.i`
 const Home = () => (
   <StyledContainer>
     <StyledH1>baruchlogic</StyledH1>
+    <StyledH2>
+      An open educational resource for teaching introductory propositional
+      logic
+    </StyledH2>
     <CardContainer>
       <StyledCard order={1}>
         <StyledHWIcon className="fas fa-table" />
-        <div>Interactive, challenging problemsets.</div>
+        <div>Interactive, challenging problemsets</div>
       </StyledCard>
       <StyledCard order={2}>
         <StyledBookIcon className="fas fa-book-reader" />
@@ -81,13 +91,10 @@ const Home = () => (
       </StyledCard>
       <StyledCard order={3}>
         <StyledVideoIcon className="fas fa-video" />
-        <div>Helpful videos</div>
+        <div>Helpful videos with intuitive examples</div>
       </StyledCard>
     </CardContainer>
   </StyledContainer>
 );
-
-// An open educational resource for teaching introductory propositional
-// logic.
 
 export default Home;

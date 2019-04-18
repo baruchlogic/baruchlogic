@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import { Switch, Route } from 'react-router-dom';
 import Header from './Header';
 import About from './About';
@@ -23,4 +24,8 @@ const App = () => (
   </div>
 );
 
-export default App;
+const StyledApp = styled(App)`
+  box-sizing: border-box;
+`;
+
+export default StyledApp;
