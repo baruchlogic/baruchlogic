@@ -42,7 +42,14 @@ class Login extends Component {
   };
 
 onLogout = () => {
-  fetch('http://localhost:5000/api/logout');
+  fetch('http://localhost:5000/api/logout', {
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': 'http://localhost:5000',
+      'Vary': 'Origin'
+    },
+    credentials: 'include'
+  });
 };
 
   render() {
