@@ -19,7 +19,7 @@ const SECRET = 'cats';
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(SECRET));
-app.use(session({ secret: SECRET, resave: false, saveUninitialized: true }));
+app.use(session({ secret: SECRET, resave: false, saveUninitialized: false }));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -49,14 +49,14 @@ passport.use(
 const getUserById = async id => {
   try {
     const user = await query('SELECT * FROM student WHERE id = $1', [id]);
-    return user;
+    return user.rows[0];
   } catch (e) {}
 };
 
 const getUserByKey = async key => {
   try {
     const user = await query('SELECT * FROM student WHERE key = $1', [key]);
-    return user;
+    return user.rows[0];
   } catch (e) {}
 };
 
@@ -64,8 +64,13 @@ passport.serializeUser(function(user, done) {
   done(null, user);
 });
 
-passport.deserializeUser(async function(user, done) {
-  // const user = await getUserByKey(key);
+passport.deserializeUser(async function(id, done) {
+  // try {
+  //   const user = await getUserById(id);
+  //   done(null, user);
+  // } catch (e) {
+  //   done(e);
+  // }
   done(null, user);
 });
 
@@ -93,7 +98,7 @@ passport.authenticate('local'),
   const { body: { key } } = req;
   console.log("key", key);
   console.log('isAuthenticated', req.isAuthenticated());
-  res.send(req.user);
+  res.sendStatus(200);
 });
 
 app.get('/api/logout', (req, res) => {
