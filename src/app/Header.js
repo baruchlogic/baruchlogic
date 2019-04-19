@@ -50,7 +50,9 @@ const Header = () => (
     <StyledLink to="/homework">homework</StyledLink>
     <StyledDivider />
     <Navbar.Group>
-      <StyledUserIcon icon="user" iconSize={32} />
+      <Link to="/login">
+        <StyledUserIcon icon="user" iconSize={32} />
+      </Link>
     </Navbar.Group>
   </StyledNavbar>
 );
