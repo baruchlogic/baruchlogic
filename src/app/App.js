@@ -7,7 +7,6 @@ import Home from './Home';
 import Login from './Login';
 import VideosContainer from './VideosContainer';
 const Text = () => <div>Text</div>;
-// const VideosContainer = () => <div>Videos</div>;
 const ExercisesContainer = () => <div>Exercises</div>;
 const HomeworkContainer = () => <div>Homework</div>;
 

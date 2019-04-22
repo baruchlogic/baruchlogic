@@ -1,4 +1,28 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
+import { Button, Card, Elevation, InputGroup } from '@blueprintjs/core';
+
+import { Icon } from '@blueprintjs/core';
+
+const FormContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+`;
+
+const FormCard = styled(Card)`
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center !important;
+`;
+
+const StyledInputGroup = styled(InputGroup)`
+  margin: 1rem;
+`;
+
+const StyledButton = styled(Button)`
+  margin: 1rem;
+`;
 
 class Login extends Component {
   state = {
@@ -55,11 +79,21 @@ class Login extends Component {
   render() {
     const { key } = this.state;
     return (
-      <div>
-        <input onChange={this.onInputChange} value={key} />
-        <button onClick={this.onLogin}>SUBMIT</button>
-        <button onClick={this.onLogout}>LOGOUT</button>
-      </div>
+      <FormContainer>
+        <FormCard elevation={Elevation.THREE}>
+          <StyledInputGroup
+            id="text-input"
+            onChange={this.onInputChange}
+            value={key}
+            placeholder={'Enter your password...'}
+            leftIcon={<Icon icon="key" />}
+          />
+          <StyledButton onClick={this.onLogin} intent="success">
+            SUBMIT
+          </StyledButton>
+          <StyledButton onClick={this.onLogout}>LOGOUT</StyledButton>
+        </FormCard>
+      </FormContainer>
     );
   }
 }
