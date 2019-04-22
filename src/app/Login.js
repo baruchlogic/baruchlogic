@@ -11,7 +11,7 @@ class Login extends Component {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': 'http://localhost:5000',
-        'Vary': 'Origin'
+        Vary: 'Origin'
       },
       credentials: 'include'
     });
@@ -31,7 +31,7 @@ class Login extends Component {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': 'http://localhost:5000',
-        'Vary': 'Origin'
+        Vary: 'Origin'
       },
       body: JSON.stringify({
         key,
@@ -41,27 +41,27 @@ class Login extends Component {
     });
   };
 
-onLogout = () => {
-  fetch('http://localhost:5000/api/logout', {
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': 'http://localhost:5000',
-      'Vary': 'Origin'
-    },
-    credentials: 'include'
-  });
-};
+  onLogout = () => {
+    fetch('http://localhost:5000/api/logout', {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': 'http://localhost:5000',
+        Vary: 'Origin'
+      },
+      credentials: 'include'
+    });
+  };
 
   render() {
     const { key } = this.state;
     return (
       <div>
-      <input onChange={this.onInputChange} value={key} />
-      <button onClick={this.onLogin}>SUBMIT</button>
-      <button onClick={this.onLogout}>LOGOUT</button>
+        <input onChange={this.onInputChange} value={key} />
+        <button onClick={this.onLogin}>SUBMIT</button>
+        <button onClick={this.onLogout}>LOGOUT</button>
       </div>
-    )
+    );
   }
-};
+}
 
 export default Login;

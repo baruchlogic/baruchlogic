@@ -1,5 +1,6 @@
 const { Pool } = require('pg');
 
+// Establish db connection
 const pool = new Pool({
   user: 'baruchlogic',
   host: 'localhost',
@@ -7,12 +8,13 @@ const pool = new Pool({
   password: 'baruchlogic',
   port: 5432
 });
-
-module.exports.pool = pool;
-
 pool.connect(err => {
   console.log(err ? 'Connection error' : 'Connection successful');
 });
 
-module.exports.query = (query, params, callback) =>
-  pool.query(query, params, callback);
+const query = (query, params, callback) => pool.query(query, params, callback);
+
+module.exports = {
+  pool,
+  query
+};

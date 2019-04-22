@@ -1,14 +1,11 @@
 const express = require('express');
-const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
 const { query } = require('./db');
 const cors = require('cors');
 const configApp = require('./config');
-const { getUserById, getUserByKey } = require('./api/user');
 
 const app = express();
 
@@ -41,20 +38,24 @@ app.get('/api/videos', async (req, res) => {
   res.send(rows);
 });
 
-app.post('/api/login',
-corsWithOptions,
-passport.authenticate('local'),
-(req, res) => {
-  console.log("LOGIN", req.body);
-  console.log("user", req.user);
-  console.log("cookies", req.cookies);
-  console.log("session", req.session);
-  // console.log("res", res);
-  const { body: { key } } = req;
-  console.log("key", key);
-  console.log('isAuthenticated', req.isAuthenticated());
-  res.status(200).send(req.session);
-});
+app.post(
+  '/api/login',
+  corsWithOptions,
+  passport.authenticate('local'),
+  (req, res) => {
+    console.log('LOGIN', req.body);
+    console.log('user', req.user);
+    console.log('cookies', req.cookies);
+    console.log('session', req.session);
+    // console.log("res", res);
+    const {
+      body: { key }
+    } = req;
+    console.log('key', key);
+    console.log('isAuthenticated', req.isAuthenticated());
+    res.status(200).send(req.session);
+  }
+);
 
 app.get('/api/logout', (req, res) => {
   console.log("LET'S LOG OUT");
@@ -69,10 +70,10 @@ app.get('/api/logout', (req, res) => {
 });
 
 app.get('/api/auth', (req, res) => {
-  console.log("AUTH", req.user);
-  console.log("session", req.session);
-  console.log("user", req.user);
-  console.log("IS AUTH", req.isAuthenticated());
+  console.log('AUTH', req.user);
+  console.log('session', req.session);
+  console.log('user', req.user);
+  console.log('IS AUTH', req.isAuthenticated());
   if (req.isAuthenticated()) {
     res.send('true');
   } else {
