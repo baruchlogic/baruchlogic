@@ -1,6 +1,9 @@
+const { query } = require('../db');
+
+
 const videoRoutes = app => {
   app.get('/videos', (req, res, next) => {
-    db.query('SELECT * FROM videos', [], (err, res) => {
+    query('SELECT * FROM videos', [], (err, res) => {
       if (err) {
         return next(err);
       }

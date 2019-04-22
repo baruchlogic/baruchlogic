@@ -3,14 +3,14 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
-const { query } = require('./db');
 const cors = require('cors');
 const configApp = require('./config');
+const apiRoutes = require('./api');
 
 const app = express();
 
 const corsWithOptions = cors({
-  origin: 'http://localhost:9000',
+  origin: process.env.api || 'http://localhost:9000',
   credentials: true
 });
 app.use(corsWithOptions);
@@ -33,10 +33,7 @@ app.options('*', corsWithOptions);
 
 configApp(app);
 
-app.get('/api/videos', async (req, res) => {
-  const rows = await query('SELECT * FROM video', []);
-  res.send(rows);
-});
+apiRoutes(app);
 
 app.post(
   '/api/login',
