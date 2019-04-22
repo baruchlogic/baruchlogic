@@ -27,10 +27,11 @@ const StyledLink = styled(Link)`
 `;
 
 const StyledUserIcon = styled(Icon)`
+  color: white !important;
   cursor: pointer;
   transition: color 0.1s linear;
   &:hover {
-    color: #669eff;
+    color: #669eff !important;
   }
 `;
 
