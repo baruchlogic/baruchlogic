@@ -1,12 +1,10 @@
-const videoRoutes = app => {
-  app.get('/videos', (req, res, next) => {
-    db.query('SELECT * FROM videos', [], (err, res) => {
-      if (err) {
-        return next(err);
-      }
-      res.send(res.rows);
-    });
+const { query } = require('../db');
+
+const configVideoRoutes = app => {
+  app.get('/api/videos', async (req, res) => {
+    const rows = await query('SELECT * FROM video', []);
+    res.send(rows);
   });
 };
 
-module.exports = videoRoutes;
+module.exports = configVideoRoutes;

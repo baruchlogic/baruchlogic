@@ -3,9 +3,9 @@
 const authRoutes = require('./auth');
 const videoRoutes = require('./video');
 
-const apiRoutes = app => {
+const configEndpoints = app => {
   authRoutes(app);
   videoRoutes(app);
 };
 
-module.exports = apiRoutes;
+module.exports = configEndpoints;

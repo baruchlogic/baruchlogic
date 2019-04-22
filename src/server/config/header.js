@@ -1,4 +1,5 @@
-function configHeaders(app) {
+// Configure headers so that client app can communicate with API
+const configHeaders = app => {
   app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', req.headers.origin);
     res.header(
@@ -12,6 +13,6 @@ function configHeaders(app) {
     );
     next();
   });
-}
+};
 
 module.exports = configHeaders;
