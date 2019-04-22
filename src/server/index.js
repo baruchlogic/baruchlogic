@@ -2,12 +2,8 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const passport = require('passport');
-const { query } = require('./db');
-const cors = require('cors');
 const configApp = require('./config');
 const configEndpoints = require('./api');
-const corsWithOptions = require('./config/cors');
 
 const app = express();
 
@@ -24,9 +20,6 @@ app.use(
     saveUninitialized: true
   })
 );
-
-app.use(corsWithOptions);
-app.options('*', corsWithOptions);
 
 configApp(app);
 

@@ -1,5 +1,5 @@
 const passport = require('passport');
-const corsWithOptions = require('../config/cors');
+const { corsWithOptions } = require('../config/cors');
 
 const configAuthRoutes = app => {
   app.post(

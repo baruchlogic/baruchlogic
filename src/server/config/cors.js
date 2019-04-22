@@ -5,4 +5,10 @@ const corsWithOptions = cors({
   credentials: true
 });
 
-module.exports = corsWithOptions;
+const configCORS = app => {
+  app.use(corsWithOptions);
+  app.options('*', corsWithOptions);
+};
+
+module.exports = configCORS;
+module.exports.corsWithOptions = corsWithOptions;
