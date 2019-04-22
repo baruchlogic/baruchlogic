@@ -1,36 +1,29 @@
 const express = require('express');
-const path = require('path');
-const { query } = require('./db');
-const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const configApp = require('./config');
+const configEndpoints = require('./api');
 
 const app = express();
 
-app.use(cors());
+const SECRET = 'cats';
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser(SECRET));
+app.use(
+  session({
+    cookie: { maxAge: 60 * 60 * 24 * 1000 },
+    secret: SECRET,
+    sameSite: false,
+    resave: false,
+    saveUninitialized: true
+  })
+);
 
-// Serve the static files from the React app
-app.use(express.static(path.join(__dirname, 'dist')));
-app.use(express.static(path.join(__dirname, 'dist')));
+configApp(app);
 
-// An api endpoint that returns a short list of items
-app.get('/api/getList', (req, res) => {
-  const list = ['item1', 'item2', 'item3'];
-  res.json(list);
-  console.log('Sent list of items');
-});
-
-app.get('/api/videos', async (req, res) => {
-  const rows = await query('SELECT * FROM video', []);
-  res.send(rows);
-  // query('SELECT * FROM video', [], (_err, _res) => {
-  //   console.log('_res', _res.rows);
-  //   res.send(_res.rows);
-  // });
-});
-
-// Handles any requests that don't match the ones above
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
+configEndpoints(app);
 
 const port = process.env.PORT || 5000;
 app.listen(port);

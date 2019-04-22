@@ -1,10 +1,10 @@
-import app from '../index.js';
+const { getAllVideos } = require('../db/data-access-layer/video');
 
-app.get('/videos', (req, res, next) => {
-  db.query('SELECT * FROM videos', [], (err, res) => {
-    if (err) {
-      return next(err);
-    }
-    res.send(res.rows);
+const configVideoRoutes = app => {
+  app.get('/api/videos', async (req, res) => {
+    const videos = await getAllVideos();
+    res.send(videos);
   });
-});
+};
+
+module.exports = configVideoRoutes;

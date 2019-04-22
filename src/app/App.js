@@ -4,6 +4,7 @@ import { Switch, Route } from 'react-router-dom';
 import Header from './Header';
 import About from './About';
 import Home from './Home';
+import Login from './Login';
 import VideosContainer from './VideosContainer';
 const Text = () => <div>Text</div>;
 // const VideosContainer = () => <div>Videos</div>;
@@ -20,6 +21,7 @@ const App = () => (
       <Route exact path="/videos" component={VideosContainer} />
       <Route exact path="/exercises" component={ExercisesContainer} />
       <Route exact path="/homework" component={HomeworkContainer} />
+      <Route exact path="/login" component={Login} />
     </Switch>
   </div>
 );
