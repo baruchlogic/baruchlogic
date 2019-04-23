@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { object } from 'prop-types';
 import { Button, Card, Elevation, InputGroup } from '@blueprintjs/core';
-
+import { authFetch } from './helpers/auth';
 import { Icon } from '@blueprintjs/core';
 
 const FormContainer = styled.div`
@@ -25,12 +25,6 @@ const StyledButton = styled(Button)`
   margin: 1rem;
 `;
 
-const fetchHeaders = {
-  'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': 'http://localhost:5000',
-  Vary: 'Origin'
-};
-
 class Login extends Component {
   static propTypes = {
     history: object
@@ -41,15 +35,7 @@ class Login extends Component {
   };
 
   async componentDidMount() {
-    const res = await fetch('http://localhost:5000/api/auth', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'http://localhost:5000',
-        Vary: 'Origin'
-      },
-      credentials: 'include'
-    });
+    const res = await authFetch('http://localhost:5000/api/auth', 'GET');
     console.log('res', await res.json());
   }
 
@@ -62,15 +48,13 @@ class Login extends Component {
   onLogin = async () => {
     const { history } = this.props;
     const { key } = this.state;
-    const { status } = await fetch('http://localhost:5000/api/login', {
-      method: 'POST',
-      headers: fetchHeaders,
-      body: JSON.stringify({
-        key,
-        username: 'foo'
-      }),
-      credentials: 'include'
-    });
+    const { status } = await authFetch(
+      'http://localhost:5000/api/login',
+      'POST',
+      {
+        body: JSON.stringify({ key, username: 'foo' })
+      }
+    );
     console.log('SUCCESS', status);
     if (status === 200) {
       history.push('/');
@@ -79,10 +63,10 @@ class Login extends Component {
 
   onLogout = async () => {
     const { history } = this.props;
-    const { status } = await fetch('http://localhost:5000/api/logout', {
-      headers: fetchHeaders,
-      credentials: 'include'
-    });
+    const { status } = await authFetch(
+      'http://localhost:5000/api/logout',
+      'GET'
+    );
     if (status === 200) {
       history.push('/');
     }
