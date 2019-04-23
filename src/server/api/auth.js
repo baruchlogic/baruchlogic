@@ -42,7 +42,11 @@ const configAuthRoutes = app => {
     req.logout();
     console.log(req.session);
     console.log('isAuth', req.isAuthenticated());
-    res.sendStatus(200);
+    if (req.isAuthenticated()) {
+      res.sendStatus(400);
+    } else {
+      res.sendStatus(200);
+    }
   });
 };
 

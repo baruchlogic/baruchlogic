@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { object } from 'prop-types';
 import { Button, Card, Elevation, InputGroup } from '@blueprintjs/core';
 
 import { Icon } from '@blueprintjs/core';
@@ -24,7 +25,17 @@ const StyledButton = styled(Button)`
   margin: 1rem;
 `;
 
+const fetchHeaders = {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': 'http://localhost:5000',
+  Vary: 'Origin'
+};
+
 class Login extends Component {
+  static propTypes = {
+    history: object
+  };
+
   state = {
     key: ''
   };
@@ -48,32 +59,33 @@ class Login extends Component {
     });
   };
 
-  onLogin = () => {
+  onLogin = async () => {
+    const { history } = this.props;
     const { key } = this.state;
-    fetch('http://localhost:5000/api/login', {
+    const { status } = await fetch('http://localhost:5000/api/login', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'http://localhost:5000',
-        Vary: 'Origin'
-      },
+      headers: fetchHeaders,
       body: JSON.stringify({
         key,
         username: 'foo'
       }),
       credentials: 'include'
     });
+    console.log('SUCCESS', status);
+    if (status === 200) {
+      history.push('/');
+    }
   };
 
-  onLogout = () => {
-    fetch('http://localhost:5000/api/logout', {
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'http://localhost:5000',
-        Vary: 'Origin'
-      },
+  onLogout = async () => {
+    const { history } = this.props;
+    const { status } = await fetch('http://localhost:5000/api/logout', {
+      headers: fetchHeaders,
       credentials: 'include'
     });
+    if (status === 200) {
+      history.push('/');
+    }
   };
 
   render() {
