@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { object } from 'prop-types';
 import { Button, Card, Elevation, InputGroup } from '@blueprintjs/core';
-import { authFetch } from './helpers/auth';
+import { authFetch } from '../helpers/auth';
 import { Icon } from '@blueprintjs/core';
 
 const FormContainer = styled.div`

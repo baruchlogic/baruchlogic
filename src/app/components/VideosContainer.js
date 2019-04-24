@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import { getVideos } from '../db';
 
 class VideosContainer extends Component {
   async componentDidMount() {
