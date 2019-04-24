@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 
-class VideosContainer extends Component {
-  async componentDidMount() {
+const VideosContainer = () => {
+  const fetchVideos = async () => {
     console.log('GET VIDEOS');
     // NOTE: The first instance of getting data ftom the API
     // TODO: Use the libraries/wrappers
@@ -9,11 +9,14 @@ class VideosContainer extends Component {
       res.json()
     );
     console.log('videos', videos.rows);
-  }
+    return () => {};
+  };
 
-  render() {
-    return <div>Videos</div>;
-  }
-}
+  useEffect(() => {
+    fetchVideos();
+  }, []);
+
+  return <div>Videos</div>;
+};
 
 export default VideosContainer;
