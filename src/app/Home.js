@@ -28,7 +28,7 @@ const CardContainer = styled.div`
   }
 `;
 
-const rotate = keyframes`
+const slideIn = keyframes`
   0% {
     opacity: 0;
     transform: translateY(400px);
@@ -43,7 +43,7 @@ const rotate = keyframes`
 `;
 
 const StyledCard = styled(Card)`
-  animation: ${rotate} 1s;
+  animation: ${slideIn} 1s;
   animation-delay: ${props => `${props.order * 0.5}s`};
   animation-fill-mode: forwards;
   animation-timing-function: cubic-bezier(0.28, 0.84, 0.42, 1);

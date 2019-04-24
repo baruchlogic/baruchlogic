@@ -6,7 +6,7 @@ import About from './About';
 import Home from './Home';
 import Login from './Login';
 import VideosContainer from './VideosContainer';
-const Text = () => <div>Text</div>;
+import Textbook from './Textbook';
 const ExercisesContainer = () => <div>Exercises</div>;
 const HomeworkContainer = () => <div>Homework</div>;
 
@@ -16,7 +16,7 @@ const App = () => (
     <Switch>
       <Route exact path="/" component={Home} />
       <Route exact path="/about" component={About} />
-      <Route exact path="/text" component={Text} />
+      <Route exact path="/text" component={Textbook} />
       <Route exact path="/videos" component={VideosContainer} />
       <Route exact path="/exercises" component={ExercisesContainer} />
       <Route exact path="/homework" component={HomeworkContainer} />

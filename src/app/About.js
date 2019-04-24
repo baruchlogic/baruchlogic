@@ -1,15 +1,8 @@
 import React from 'react';
-import { Card, Divider, Elevation } from '@blueprintjs/core';
-import styled from 'styled-components';
+import { Divider, Elevation } from '@blueprintjs/core';
 
+import StyledCard from '../styled-components/StyledCard';
 import { ADMIN_EMAIL } from '../constants';
-
-const StyledCard = styled(Card)`
-  font-size: 1.5rem;
-  margin: 1rem auto;
-  text-align: center;
-  width: 80%;
-`;
 
 const About = () => (
   <StyledCard elevation={Elevation.THREE}>
