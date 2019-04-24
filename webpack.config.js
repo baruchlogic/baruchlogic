@@ -8,7 +8,7 @@ module.exports = {
     historyApiFallback: true,
     port: 9000
   },
-  entry: ['babel-polyfill', './src/app/index.js'],
+  entry: ['babel-polyfill', './src/app/components/index.js'],
   module: {
     rules: [
       {
@@ -41,5 +41,11 @@ module.exports = {
     new HtmlWebPackPlugin({
       template: 'src/index.html'
     })
-  ]
+  ],
+  resolve: {
+    alias: {
+      'app-styled': path.resolve(__dirname, 'src/app/styled-components'),
+      constants: path.resolve(__dirname, 'src/constants')
+    }
+  }
 };

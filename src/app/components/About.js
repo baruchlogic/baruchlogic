@@ -1,8 +1,8 @@
 import React from 'react';
 import { Divider, Elevation } from '@blueprintjs/core';
 
-import StyledCard from '../styled-components/StyledCard';
-import { ADMIN_EMAIL } from '../constants';
+import StyledCard from 'app-styled/StyledCard';
+import { ADMIN_EMAIL } from 'constants';
 
 const About = () => (
   <StyledCard elevation={Elevation.THREE}>

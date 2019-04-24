@@ -3,7 +3,7 @@ import { Elevation } from '@blueprintjs/core';
 
 import StyledCard from '../styled-components/StyledCard';
 
-import { ADMIN_EMAIL, TEXTBOOK_URL } from '../constants';
+import { ADMIN_EMAIL, TEXTBOOK_URL } from 'constants';
 
 const Textbook = () => (
   <StyledCard elevation={Elevation.THREE}>
