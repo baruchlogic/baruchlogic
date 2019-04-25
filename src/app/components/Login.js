@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { object } from 'prop-types';
 import { Button, Card, Elevation, InputGroup } from '@blueprintjs/core';
@@ -25,29 +25,33 @@ const StyledButton = styled(Button)`
   margin: 1rem;
 `;
 
-class Login extends Component {
-  static propTypes = {
-    history: object
-  };
+const Login = ({ history }) => {
+  const [key, setKey] = useState('');
+  const [isAuth, setIsAuth] = useState(false);
 
-  state = {
-    key: ''
-  };
-
-  async componentDidMount() {
-    const res = await authFetch('http://localhost:5000/api/auth', 'GET');
-    console.log('res', await res.json());
-  }
-
-  onInputChange = ({ target: { value: key } }) => {
-    this.setState({
-      key
+  const fetchIsAuth = async () => {
+    authFetch('http://localhost:5000/api/auth', 'GET').then(res => {
+      if (res.status === 200) {
+        setIsAuth(true);
+      }
     });
   };
 
-  onLogin = async () => {
-    const { history } = this.props;
-    const { key } = this.state;
+  useEffect(() => {
+    fetchIsAuth();
+  }, []);
+
+  const onInputChange = ({ target: { value: key } }) => {
+    setKey(key);
+  };
+
+  const onKeyDown = ({ key }) => {
+    if (key === 'Enter') {
+      onLogin();
+    }
+  };
+
+  const onLogin = async () => {
     const { status } = await authFetch(
       'http://localhost:5000/api/login',
       'POST',
@@ -55,14 +59,12 @@ class Login extends Component {
         body: JSON.stringify({ key, username: 'foo' })
       }
     );
-    console.log('SUCCESS', status);
     if (status === 200) {
       history.push('/');
     }
   };
 
-  onLogout = async () => {
-    const { history } = this.props;
+  const onLogout = async () => {
     const { status } = await authFetch(
       'http://localhost:5000/api/logout',
       'GET'
@@ -72,26 +74,35 @@ class Login extends Component {
     }
   };
 
-  render() {
-    const { key } = this.state;
-    return (
-      <FormContainer>
-        <FormCard elevation={Elevation.THREE}>
-          <StyledInputGroup
-            id="text-input"
-            onChange={this.onInputChange}
-            value={key}
-            placeholder={'Enter your password...'}
-            leftIcon={<Icon icon="key" />}
-          />
-          <StyledButton onClick={this.onLogin} intent="success">
-            SUBMIT
+  return (
+    <FormContainer>
+      <FormCard elevation={Elevation.THREE}>
+        {isAuth ? (
+          <StyledButton onClick={onLogout} intent="success">
+            LOGOUT
           </StyledButton>
-          <StyledButton onClick={this.onLogout}>LOGOUT</StyledButton>
-        </FormCard>
-      </FormContainer>
-    );
-  }
-}
+        ) : (
+          <>
+            <StyledInputGroup
+              id="text-input"
+              onChange={onInputChange}
+              onKeyDown={onKeyDown}
+              value={key}
+              placeholder={'Enter your password...'}
+              leftIcon={<Icon icon="key" />}
+            />
+            <StyledButton onClick={onLogin} intent="success">
+              LOGIN
+            </StyledButton>
+          </>
+        )}
+      </FormCard>
+    </FormContainer>
+  );
+};
+
+Login.propTypes = {
+  history: object.isRequired
+};
 
 export default Login;
