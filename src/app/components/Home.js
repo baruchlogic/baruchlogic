@@ -1,6 +1,7 @@
 import React from 'react';
-import { Card, H1, H2 } from '@blueprintjs/core';
+import { Card, Elevation, H1, H2 } from '@blueprintjs/core';
 import styled, { keyframes } from 'styled-components';
+import { object } from 'prop-types';
 
 const StyledContainer = styled.div`
   width: 100% !important;
@@ -15,6 +16,7 @@ const StyledH1 = styled(H1)`
 const StyledH2 = styled(H2)`
   font-size: 32px !important;
   margin-bottom: 64px !important;
+  margin: 0 1rem 64px 1rem !important;
 `;
 
 const CardContainer = styled.div`
@@ -73,27 +75,49 @@ const StyledHWIcon = styled.i`
   font-size: 64px;
 `;
 
-const Home = () => (
+const Home = ({ history }) => (
   <StyledContainer>
     <StyledH1>baruchlogic</StyledH1>
-    <StyledH2>
-      An open educational resource for teaching introductory propositional logic
-    </StyledH2>
+    <StyledH2>An open educational resource for symbolic logic</StyledH2>
     <CardContainer>
-      <StyledCard order={1}>
+      <StyledCard
+        order={1}
+        elevation={Elevation.THREE}
+        interactive={true}
+        onClick={() => {
+          history.push('/homework'); // TODO: Use `/problemsets`(?)
+        }}
+      >
         <StyledHWIcon className="fas fa-table" />
         <div>Interactive, challenging problemsets</div>
       </StyledCard>
-      <StyledCard order={2}>
+      <StyledCard
+        order={2}
+        elevation={Elevation.THREE}
+        interactive={true}
+        onClick={() => history.push('/text')}
+      >
         <StyledBookIcon className="fas fa-book-reader" />
         <div>Clear, easy to understand text</div>
       </StyledCard>
-      <StyledCard order={3}>
+      <StyledCard
+        order={3}
+        elevation={Elevation.THREE}
+        interactive={true}
+        onClick={() => {
+          history.push('/video');
+        }}
+      >
         <StyledVideoIcon className="fas fa-video" />
         <div>Helpful videos with intuitive examples</div>
       </StyledCard>
     </CardContainer>
   </StyledContainer>
 );
+
+Home.propTypes = {
+  /** react-router */
+  history: object.isRequired
+};
 
 export default Home;

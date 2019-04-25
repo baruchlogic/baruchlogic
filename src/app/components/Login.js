@@ -102,7 +102,7 @@ const Login = ({ history }) => {
 };
 
 Login.propTypes = {
-  // react-router
+  /** react-router */
   history: object.isRequired
 };
 
