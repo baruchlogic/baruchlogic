@@ -105,7 +105,7 @@ const Home = ({ history }) => (
         elevation={Elevation.THREE}
         interactive={true}
         onClick={() => {
-          history.push('/video');
+          history.push('/videos');
         }}
       >
         <StyledVideoIcon className="fas fa-video" />
