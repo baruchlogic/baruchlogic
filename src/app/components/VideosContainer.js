@@ -1,19 +1,29 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 
-class VideosContainer extends Component {
-  async componentDidMount() {
-    console.log('GET VIDEOS');
-    // NOTE: The first instance of getting data ftom the API
-    // TODO: Use the libraries/wrappers
-    const videos = await fetch('http://localhost:5000/api/videos').then(res =>
+const VideosContainer = () => {
+  const [videos, setVideos] = useState([]);
+
+  const fetchVideos = async () => {
+    const response = await fetch('http://localhost:5000/api/videos').then(res =>
       res.json()
     );
-    console.log('videos', videos.rows);
-  }
+    setVideos(response.rows);
+  };
 
-  render() {
-    return <div>Videos</div>;
-  }
-}
+  useEffect(() => {
+    fetchVideos();
+  }, []);
+
+  return (
+    <div>
+      Videos
+      <ul>
+        {videos.map(video => (
+          <li key={video.id}>{video.title}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 export default VideosContainer;
