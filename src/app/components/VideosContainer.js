@@ -19,9 +19,21 @@ const StyledH1 = styled(H1)`
   color: white !important;
 `;
 
+const StyledSpan = styled.span`
+  margin-right: 1rem;
+`;
+
+const StyledListItem = styled.li`
+  text-align: left;
+`;
+
+const StyledLink = styled(Link)`
+  color: white;
+`;
+
 const VideosContainer = ({
   match: {
-    params: { 'short_title': currentShortTitle }
+    params: { short_title: currentShortTitle }
   }
 }) => {
   const [videos, setVideos] = useState([]);
@@ -79,6 +91,7 @@ const VideosContainer = ({
     groupVideos(videos);
   });
 
+  // TODO: Call this from `fetchVideos`;
   useEffect(() => {
     getCurrentVideo();
   });
@@ -91,13 +104,14 @@ const VideosContainer = ({
           <div>
             <ul>
               {videos.map(video => (
-                <li key={video.id}>
-                  <Link to={`/videos/${video.short_title}`}>
-                    {video.unit_index}
-                    {video.section_index}
+                <StyledListItem key={video.id}>
+                  <StyledLink to={`/videos/${video.short_title}`}>
+                    <StyledSpan>
+                      {video.unit_index}.{video.section_index}
+                    </StyledSpan>
                     {video.title}
-                  </Link>
-                </li>
+                  </StyledLink>
+                </StyledListItem>
               ))}
             </ul>
           </div>
