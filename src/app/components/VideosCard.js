@@ -3,17 +3,18 @@ import { Card } from '@blueprintjs/core';
 import { shape, string } from 'prop-types';
 
 const VideosCard = ({ video }) => {
-  return video.id ? (
+  return video.id !== undefined ? (
     <div>
       <h1>{video.title}</h1>
       <Card>
         <iframe
+          title={video.title}
           width="560"
           height="315"
-          title={video.title}
           src={video.url}
           frameBorder="0"
-          allow="encrypted-media"
+          allow="accelerometer; autoplay; encrypted-media;
+                 gyroscope; picture-in-picture"
           allowFullScreen
         />
       </Card>
