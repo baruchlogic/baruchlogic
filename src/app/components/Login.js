@@ -12,9 +12,11 @@ const FormContainer = styled.div`
 `;
 
 const FormCard = styled(Card)`
-  display: flex !important;
-  flex-direction: column;
-  justify-content: center !important;
+  &&& {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 `;
 
 const StyledInputGroup = styled(InputGroup)`

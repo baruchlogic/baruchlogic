@@ -16,16 +16,16 @@ const StyledSidebar = styled.div`
       text-decoration: none;
     }
   }
-  h1 {
-    color: #2d0f4c !important;
-    padding-top: 1rem !important;
+  &&& h1 {
+    color: #2d0f4c;
+    padding-top: 1rem;
   }
-  li {
+  &&& li {
     list-style: none;
     text-align: left;
     &:hover {
       list-style: initial;
-      color: #669eff !important;
+      color: #669eff;
     }
   }
   span {

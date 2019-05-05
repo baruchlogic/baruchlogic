@@ -5,34 +5,40 @@ import { Navbar } from '@blueprintjs/core';
 import { Icon } from '@blueprintjs/core';
 
 const StyledNavbar = styled(Navbar)`
-  background-color: #2d0f4c !important;
-  display: flex;
-  align-items: center;
-  height: 4rem !important;
-  justify-content: space-between;
-  padding: 0 4rem !important;
-  @media (max-width: 750px) {
-    flex-direction: column;
-    height: auto !important;
+  &&& {
+    background-color: #2d0f4c;
+    display: flex;
+    align-items: center;
+    height: 4rem;
+    justify-content: space-between;
+    padding: 0 4rem;
+    @media (max-width: 750px) {
+      flex-direction: column;
+      height: auto;
+    }
   }
 `;
 
 const StyledLink = styled(Link)`
-  color: white !important;
-  font-size: 1.5rem !important;
-  transition: color 0.1s linear;
-  &:hover {
-    color: #669eff !important;
-    text-decoration: none;
+  &&& {
+    color: white;
+    font-size: 1.5rem;
+    transition: color 0.1s linear;
+    &:hover {
+      color: #669eff;
+      text-decoration: none;
+    }
   }
 `;
 
 const StyledUserIcon = styled(Icon)`
-  color: white !important;
-  cursor: pointer;
-  transition: color 0.1s linear;
-  &:hover {
-    color: #669eff !important;
+  &&& {
+    color: white;
+    cursor: pointer;
+    transition: color 0.1s linear;
+    &:hover {
+      color: #669eff;
+    }
   }
 `;
 

@@ -4,19 +4,25 @@ import styled, { keyframes } from 'styled-components';
 import { object } from 'prop-types';
 
 const StyledContainer = styled.div`
-  width: 100% !important;
-  text-align: center !important;
+  &&& {
+    width: 100%;
+    text-align: center;
+  }
 `;
 
 const StyledH1 = styled(H1)`
-  font-size: 64px !important;
-  margin: 64px !important;
+  &&& {
+    font-size: 64px;
+    margin: 64px;
+  }
 `;
 
 const StyledH2 = styled(H2)`
-  font-size: 32px !important;
-  margin-bottom: 64px !important;
-  margin: 0 1rem 64px 1rem !important;
+  &&& {
+    font-size: 32px;
+    margin-bottom: 64px;
+    margin: 0 1rem 64px 1rem;
+  }
 `;
 
 const CardContainer = styled.div`
