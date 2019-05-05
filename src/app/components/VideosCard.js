@@ -1,12 +1,20 @@
 import React from 'react';
-import { Card } from '@blueprintjs/core';
+import styled from 'styled-components';
+import StyledCard from 'app-styled/StyledCard';
+import { Elevation } from '@blueprintjs/core';
 import { shape, string } from 'prop-types';
+
+const StyledContainer = styled.div`
+  margin: 1rem;
+  text-align: center;
+  width: 100%;
+`;
 
 const VideosCard = ({ video }) => {
   return video.id !== undefined ? (
-    <div>
-      <h1>{video.title}</h1>
-      <Card>
+    <StyledContainer>
+      <StyledCard elevation={Elevation.THREE}>
+        <h1>{video.title}</h1>
         <iframe
           title={video.title}
           width="560"
@@ -17,8 +25,8 @@ const VideosCard = ({ video }) => {
                  gyroscope; picture-in-picture"
           allowFullScreen
         />
-      </Card>
-    </div>
+      </StyledCard>
+    </StyledContainer>
   ) : null;
 };
 

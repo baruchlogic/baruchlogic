@@ -4,47 +4,11 @@ import { object } from 'prop-types';
 import { Link } from 'react-router-dom';
 import { H1 } from '@blueprintjs/core';
 
+import StyledSidebar from 'app-styled/StyledSidebar';
 import VideosCard from './VideosCard';
 
-// #3a3a8f, #2bb055, #394b59, #2ed41c, #10559f
 const StyledContainer = styled.div`
-  box-shadow: 1px 1px 2px 1px #2d0f4c;
-  color: #2d0f4c;
-  height: 1000px;
-  text-align: center;
-  width: 300px;
-`;
-
-const StyledH1 = styled(H1)`
-  color: #2d0f4c !important;
-  padding-top: 1rem !important;
-`;
-
-const StyledSpan = styled.span`
-  margin-right: 1rem;
-`;
-
-const StyledListItem = styled.li`
-  list-style: none;
-  text-align: left;
-  &:hover {
-    list-style: initial;
-    color: #669eff !important;
-  }
-`;
-
-const StyledLink = styled(Link)`
-  color: #2d0f4c;
   display: flex;
-  margin: 0.25rem 0;
-  &:hover {
-    color: inherit;
-    text-decoration: none;
-  }
-`;
-
-const StyledUL = styled.ul`
-  font-size: 1.2rem;
 `;
 
 const VideosContainer = ({
@@ -114,28 +78,26 @@ const VideosContainer = ({
 
   return fetchIsLoading ? null : (
     <>
-      <div>
-        <StyledContainer>
-          <StyledH1>videos</StyledH1>
-          <div>
-            <StyledUL>
-              {videos.map(video => (
-                <StyledListItem key={video.id}>
-                  <StyledLink to={`/videos/${video.short_title}`}>
-                    <div>
-                      <StyledSpan>
-                        {video.unit_index}.{video.section_index}
-                      </StyledSpan>
-                    </div>
-                    <div>{video.title}</div>
-                  </StyledLink>
-                </StyledListItem>
-              ))}
-            </StyledUL>
-          </div>
-        </StyledContainer>
-      </div>
-      {currentVideo && <VideosCard video={currentVideo} />}
+      <StyledContainer>
+        <StyledSidebar>
+          <H1>videos</H1>
+          <ul>
+            {videos.map(video => (
+              <li key={video.id}>
+                <Link to={`/videos/${video.short_title}`}>
+                  <div>
+                    <span className="numbering">
+                      {video.unit_index}.{video.section_index}
+                    </span>
+                  </div>
+                  <div>{video.title}</div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </StyledSidebar>
+        {currentVideo && <VideosCard video={currentVideo} />}
+      </StyledContainer>
     </>
   );
 };
