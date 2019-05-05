@@ -17,6 +17,7 @@ const VideosContainer = ({
   }
 }) => {
   const [videos, setVideos] = useState([]);
+  const [groupedVideos, setGroupdVideos] = useState([]);
   const [currentVideo, setCurrentVideo] = useState(null);
   const [fetchIsLoading, setFetchIsLoading] = useState(true);
 
@@ -24,7 +25,10 @@ const VideosContainer = ({
     const response = await fetch('http://localhost:5000/api/videos').then(res =>
       res.json()
     );
-    setVideos(response.rows);
+    const videos = response.rows;
+    const groupedVideos = groupVideos(videos);
+    setVideos(videos);
+    setGroupdVideos(groupedVideos);
     setFetchIsLoading(false);
   };
 
@@ -32,46 +36,42 @@ const VideosContainer = ({
     const currentVideo = videos.find(
       video => video.short_title === currentShortTitle
     );
+    console.log('getCurrentVideo', currentVideo);
     setCurrentVideo(currentVideo);
   };
 
-  const sortByUnitAndUnitIndex = (a, b) => {
-    if (a.unit < b.unit) {
-      return -1;
-    } else if (a.unit > b.unit) {
-      return 1;
-    } else {
-      if (a.unit_index < b.unit_index) {
-        return -1;
-      } else if (a.unit_index > b.unit_index) {
-        return 1;
-      } else {
-        return 0;
+  const groupVideos = videos => {
+    const result = [];
+    for (const video of videos) {
+      const { index_in_section: indexInSection, section, unit } = video;
+      if (!result[unit - 1]) {
+        result[unit - 1] = [];
       }
+      if (!result[unit - 1][section - 1]) {
+        result[unit - 1][section - 1] = [];
+      }
+      result[unit - 1][section - 1][indexInSection - 1] = video;
     }
+    return result;
   };
 
-  const groupVideos = videos => {
-    const sorted = [...videos];
-    sorted.sort(sortByUnitAndUnitIndex);
-    const result = {};
-    for (const video of sorted) {
-      const unitNumber = video.unit;
-      const arr = result[unitNumber];
-      result[unitNumber] = arr ? [...arr, video] : [video];
-    }
-    console.log('GROUP', result);
-  };
+  const mapVideoToJSX = video => (
+    <li key={video.id}>
+      <Link to={`/videos/${video.short_title}`}>
+        <div>
+          <span className="numbering">
+            {video.section}.{video.index_in_section}
+          </span>
+        </div>
+        <div>{video.title}</div>
+      </Link>
+    </li>
+  );
 
   useEffect(() => {
     fetchVideos();
   }, []);
 
-  useEffect(() => {
-    groupVideos(videos);
-  });
-
-  // TODO: Call this from `fetchVideos`;
   useEffect(() => {
     getCurrentVideo();
   });
@@ -82,17 +82,18 @@ const VideosContainer = ({
         <StyledSidebar>
           <H1>videos</H1>
           <ul>
-            {videos.map(video => (
-              <li key={video.id}>
-                <Link to={`/videos/${video.short_title}`}>
-                  <div>
-                    <span className="numbering">
-                      {video.unit_index}.{video.section_index}
-                    </span>
-                  </div>
-                  <div>{video.title}</div>
-                </Link>
-              </li>
+            {groupedVideos.map((unit, unitIndex) => (
+              <div key={unitIndex}>
+                <h2>Unit {unitIndex + 1}</h2>
+                <>
+                  {unit.map((section, sectionIndex) => (
+                    <div key={sectionIndex}>
+                      <h3>Section {sectionIndex + 1}</h3>
+                      <>{section.map(mapVideoToJSX)}</>
+                    </div>
+                  ))}
+                </>
+              </div>
             ))}
           </ul>
         </StyledSidebar>

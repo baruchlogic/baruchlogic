@@ -33,7 +33,7 @@ const StyledSidebar = styled.div`
   }
   ul {
     font-size: 1.2rem;
-    padding-right: 1rem;
+    padding: 0 2rem;
   }
 `;
 

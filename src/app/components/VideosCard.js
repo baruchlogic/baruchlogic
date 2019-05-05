@@ -11,6 +11,10 @@ const StyledContainer = styled.div`
   width: 100%;
 `;
 
+const StyledH1 = styled.h1`
+  margin: 0 0 1rem 0;
+`;
+
 const StyledStyledCard = styled(StyledCard)`
   min-width: 600px;
 `;
@@ -19,7 +23,7 @@ const VideosCard = ({ video }) => {
   return video.id !== undefined ? (
     <StyledContainer>
       <StyledStyledCard elevation={Elevation.THREE}>
-        <h1>{video.title}</h1>
+        <StyledH1>{video.title}</StyledH1>
         <iframe
           title={video.title}
           width="560"
