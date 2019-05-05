@@ -36,7 +36,6 @@ const VideosContainer = ({
     const currentVideo = videos.find(
       video => video.short_title === currentShortTitle
     );
-    console.log('getCurrentVideo', currentVideo);
     setCurrentVideo(currentVideo);
   };
 
