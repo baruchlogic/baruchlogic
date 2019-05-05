@@ -28,7 +28,7 @@ const StyledSidebar = styled.div`
       color: #669eff !important;
     }
   }
-  span.numbering {
+  span {
     margin-right: 1rem;
   }
   ul {
