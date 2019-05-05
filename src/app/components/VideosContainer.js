@@ -8,15 +8,16 @@ import VideosCard from './VideosCard';
 
 // #3a3a8f, #2bb055, #394b59, #2ed41c, #10559f
 const StyledContainer = styled.div`
-  background-color: #10559f;
-  color: white;
+  box-shadow: 1px 1px 2px 1px #2d0f4c;
+  color: #2d0f4c;
   height: 1000px;
   text-align: center;
-  width: 250px;
+  width: 300px;
 `;
 
 const StyledH1 = styled(H1)`
-  color: white !important;
+  color: #2d0f4c !important;
+  padding-top: 1rem !important;
 `;
 
 const StyledSpan = styled.span`
@@ -24,11 +25,26 @@ const StyledSpan = styled.span`
 `;
 
 const StyledListItem = styled.li`
+  list-style: none;
   text-align: left;
+  &:hover {
+    list-style: initial;
+    color: #669eff !important;
+  }
 `;
 
 const StyledLink = styled(Link)`
-  color: white;
+  color: #2d0f4c;
+  display: flex;
+  margin: 0.25rem 0;
+  &:hover {
+    color: inherit;
+    text-decoration: none;
+  }
+`;
+
+const StyledUL = styled.ul`
+  font-size: 1.2rem;
 `;
 
 const VideosContainer = ({
@@ -100,20 +116,22 @@ const VideosContainer = ({
     <>
       <div>
         <StyledContainer>
-          <StyledH1>Videos</StyledH1>
+          <StyledH1>videos</StyledH1>
           <div>
-            <ul>
+            <StyledUL>
               {videos.map(video => (
                 <StyledListItem key={video.id}>
                   <StyledLink to={`/videos/${video.short_title}`}>
-                    <StyledSpan>
-                      {video.unit_index}.{video.section_index}
-                    </StyledSpan>
-                    {video.title}
+                    <div>
+                      <StyledSpan>
+                        {video.unit_index}.{video.section_index}
+                      </StyledSpan>
+                    </div>
+                    <div>{video.title}</div>
                   </StyledLink>
                 </StyledListItem>
               ))}
-            </ul>
+            </StyledUL>
           </div>
         </StyledContainer>
       </div>

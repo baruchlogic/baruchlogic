@@ -5,6 +5,7 @@ import { Navbar } from '@blueprintjs/core';
 import { Icon } from '@blueprintjs/core';
 
 const StyledNavbar = styled(Navbar)`
+  background-color: #2d0f4c !important;
   display: flex;
   align-items: center;
   height: 4rem !important;
@@ -42,7 +43,7 @@ const StyledDivider = styled(Navbar.Divider)`
 `;
 
 const Header = () => (
-  <StyledNavbar className="bp3-dark">
+  <StyledNavbar>
     <StyledLink to="/">home</StyledLink>
     <StyledLink to="/about">about</StyledLink>
     <StyledLink to="/text">text</StyledLink>

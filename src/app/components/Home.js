@@ -49,8 +49,11 @@ const StyledCard = styled(Card)`
   animation-delay: ${props => `${props.order * 0.5}s`};
   animation-fill-mode: forwards;
   animation-timing-function: cubic-bezier(0.28, 0.84, 0.42, 1);
+  display: flex;
+  flex-direction: column;
   font-size: 24px;
   height: 250px;
+  justify-content: space-around;
   opacity: 0;
   transform: translateY(400px);
   width: 30%;
@@ -66,12 +69,12 @@ const StyledVideoIcon = styled.i`
 `;
 
 const StyledBookIcon = styled.i`
-  color: #96622d;
+  color: #669eff;
   font-size: 64px;
 `;
 
 const StyledHWIcon = styled.i`
-  color: #d9822b;
+  color: #669eff;
   font-size: 64px;
 `;
 
