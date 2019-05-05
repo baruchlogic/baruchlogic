@@ -6,14 +6,19 @@ import { shape, string } from 'prop-types';
 
 const StyledContainer = styled.div`
   margin: 1rem;
+  overflow: scroll;
   text-align: center;
   width: 100%;
+`;
+
+const StyledStyledCard = styled(StyledCard)`
+  min-width: 600px;
 `;
 
 const VideosCard = ({ video }) => {
   return video.id !== undefined ? (
     <StyledContainer>
-      <StyledCard elevation={Elevation.THREE}>
+      <StyledStyledCard elevation={Elevation.THREE}>
         <h1>{video.title}</h1>
         <iframe
           title={video.title}
@@ -25,7 +30,7 @@ const VideosCard = ({ video }) => {
                  gyroscope; picture-in-picture"
           allowFullScreen
         />
-      </StyledCard>
+      </StyledStyledCard>
     </StyledContainer>
   ) : null;
 };
