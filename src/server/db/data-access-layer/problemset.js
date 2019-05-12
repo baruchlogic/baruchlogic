@@ -10,6 +10,19 @@ const getAllProblemsets = async () => {
   }
 };
 
+const getProblemSetById = async id => {
+  console.log('getProblemSetById');
+  try {
+    const response = await query('SELECT * FROM problemset WHERE id = $1', [
+      id
+    ]);
+    return response.rows[0];
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 module.exports = {
-  getAllProblemsets
+  getAllProblemsets,
+  getProblemSetById
 };

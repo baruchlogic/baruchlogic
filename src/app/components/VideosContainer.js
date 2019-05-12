@@ -73,7 +73,6 @@ const VideosContainer = ({
 
   useEffect(() => {
     getCurrentVideo();
-    fetchProblemSets();
   });
 
   return fetchIsLoading ? null : (

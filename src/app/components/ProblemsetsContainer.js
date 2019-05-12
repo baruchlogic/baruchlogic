@@ -4,8 +4,8 @@ import { object } from 'prop-types';
 import { Link } from 'react-router-dom';
 import { H1 } from '@blueprintjs/core';
 
+import ProblemsetContainer from './ProblemsetContainer';
 import StyledSidebar from 'app-styled/StyledSidebar';
-import VideosCard from './VideosCard';
 
 const StyledContainer = styled.div`
   display: flex;
@@ -13,12 +13,10 @@ const StyledContainer = styled.div`
 
 const ProblemsetsContainer = ({
   match: {
-    params: { problemset_id: problemsetId }
+    params: { id: problemsetId }
   }
 }) => {
-  const [problemsets, setProblemsets] = useState([]);
   const [groupedProblemsets, setGroupedProblemsets] = useState([]);
-  const [currentProblemset, setCurrentProblemset] = useState(null);
   const [fetchIsLoading, setFetchIsLoading] = useState(true);
 
   const fetchProblemSets = async () => {
@@ -27,52 +25,28 @@ const ProblemsetsContainer = ({
     );
     setFetchIsLoading(false);
     const problemsets = response;
-    setProblemsets(problemsets);
+    const groupedProblemsets = groupProblemSetsByUnit(problemsets);
+    setGroupedProblemsets(groupedProblemsets);
   };
 
-  // const getCurrentVideo = () => {
-  //   const currentVideo = videos.find(
-  //     video => video.short_title === currentShortTitle
-  //   );
-  //   setCurrentVideo(currentVideo);
-  // };
-
-  // const groupVideos = videos => {
-  //   const result = [];
-  //   for (const video of videos) {
-  //     const { index_in_section: indexInSection, section, unit } = video;
-  //     if (!result[unit - 1]) {
-  //       result[unit - 1] = [];
-  //     }
-  //     if (!result[unit - 1][section - 1]) {
-  //       result[unit - 1][section - 1] = [];
-  //     }
-  //     result[unit - 1][section - 1][indexInSection - 1] = video;
-  //   }
-  //   return result;
-  // };
-
-  // const mapVideoToJSX = video => (
-  //   <li key={video.id}>
-  //     <Link to={`/videos/${video.short_title}`}>
-  //       <div>
-  //         <span className="numbering">
-  //           {video.section}.{video.index_in_section}
-  //         </span>
-  //       </div>
-  //       <div>{video.title}</div>
-  //     </Link>
-  //   </li>
-  // );
+  const groupProblemSetsByUnit = problemsets => {
+    let maxUnit = 0;
+    for (const problemset of problemsets) {
+      maxUnit = Math.max(maxUnit, problemset.unit);
+    }
+    const result = new Array(maxUnit).fill(0).map(x => []);
+    for (const problemset of problemsets) {
+      result[problemset.unit - 1].push(problemset);
+    }
+    for (const set of result) {
+      set.sort((a, b) => a.index_in_unit - b.index_in_unit);
+    }
+    return result;
+  };
 
   useEffect(() => {
     fetchProblemSets();
   }, []);
-
-  // useEffect(() => {
-  //   getCurrentVideo();
-  //   fetchProblemSets();
-  // });
 
   const mapProblemSetToJSX = problemset => (
     <li key={problemset.id}>
@@ -91,8 +65,16 @@ const ProblemsetsContainer = ({
       <StyledContainer>
         <StyledSidebar>
           <H1>problemsets</H1>
-          <ul>{problemsets.map(mapProblemSetToJSX)}</ul>
+          <ul>
+            {groupedProblemsets.map((unit, unitIndex) => (
+              <div key={unitIndex}>
+                <h2>Unit {unitIndex + 1}</h2>
+                <>{unit.map(mapProblemSetToJSX)}</>
+              </div>
+            ))}
+          </ul>
         </StyledSidebar>
+        {problemsetId && <ProblemsetContainer problemsetId={problemsetId} />}
       </StyledContainer>
     </>
   );
