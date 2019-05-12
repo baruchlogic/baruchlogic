@@ -7,7 +7,7 @@ import Login from './Login';
 import VideosContainer from './VideosContainer';
 import Textbook from './Textbook';
 const ExercisesContainer = () => <div>Exercises</div>;
-const HomeworkContainer = () => <div>Homework</div>;
+import ProblemsetsContainer from './ProblemsetsContainer';
 
 const App = () => (
   <div>
@@ -18,7 +18,7 @@ const App = () => (
       <Route exact path="/text" component={Textbook} />
       <Route exact path="/videos/:short_title?" component={VideosContainer} />
       <Route exact path="/exercises/:id?" component={ExercisesContainer} />
-      <Route exact path="/homework" component={HomeworkContainer} />
+      <Route exact path="/homework" component={ProblemsetsContainer} />
       <Route exact path="/login" component={Login} />
     </Switch>
   </div>
