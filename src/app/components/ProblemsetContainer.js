@@ -16,6 +16,7 @@ const ProblemsetContainer = ({ problemsetId }) => {
     const result = await fetch(
       `http://localhost:5000/api/problemsets/${problemsetId}/problems`
     ).then(res => res.json());
+    console.log('RESULT', result);
     setProblems(result);
   };
 

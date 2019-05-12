@@ -23,13 +23,14 @@ const getProblemSetById = async id => {
 const getProblemsByProblemsetId = async id => {
   try {
     const response = await query(
-      'SELECT (id, type, choices, prompt) FROM problem INNER JOIN problem_v_problemset ON problem.id = problem_v_problemset.problem_id WHERE problem_v_problemset.problemset_id = $1', [id]
+      'SELECT row_to_json(problem) FROM (select id, type, choices, problem_v_problemset.problem_index FROM problem INNER JOIN problem_v_problemset ON problem.id = problem_v_problemset.problem_id WHERE problem_v_problemset.problemset_id = $1) problem ORDER BY problem_index ASC;',
+      [id]
     );
-    return response.rows;
+    return response.rows.map(row => row.row_to_json);
   } catch (e) {
     console.log(e);
   }
-}
+};
 
 module.exports = {
   getAllProblemsets,
