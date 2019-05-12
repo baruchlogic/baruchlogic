@@ -45,6 +45,7 @@ const ProblemsetContainer = ({ problemsetId }) => {
       {problems.map(problem => (
         <Problem
           key={problem.id}
+          value={problemsetResponses[problem.id]}
           problem={problem}
           setProblemResponse={setProblemResponse}
         />

@@ -6,7 +6,7 @@ const TrueFalse = ({ problem, setProblemResponse, value}) => (
     <label>
       <input
       type="radio"
-      checked={value}
+      checked={value === true}
       onChange={() => {setProblemResponse(problem.id, true);}}
       value={true}
     />
@@ -15,7 +15,7 @@ const TrueFalse = ({ problem, setProblemResponse, value}) => (
     <label>
       <input
       type="radio"
-      checked={!value}
+      checked={value === false}
       onChange={() => {setProblemResponse(problem.id, false);}}
       value={false}
     />
@@ -24,13 +24,13 @@ const TrueFalse = ({ problem, setProblemResponse, value}) => (
   </div>
 );
 
-const Problem = ({ problem, setProblemResponse }) => {
+const Problem = ({ problem, setProblemResponse, value }) => {
   return (
     <StyledCard key={problem.id}>
       <div>({problem.problem_index})</div>
       <div>
         <p>{problem.prompt}</p>
-        <TrueFalse problem={problem} setProblemResponse={setProblemResponse} value={true}/>
+        <TrueFalse problem={problem} setProblemResponse={setProblemResponse} value={value}/>
       </div>
     </StyledCard>
   );
