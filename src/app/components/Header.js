@@ -55,7 +55,7 @@ const Header = () => (
     <StyledLink to="/text">text</StyledLink>
     <StyledLink to="/videos">videos</StyledLink>
     <StyledLink to="/exercises">exercises</StyledLink>
-    <StyledLink to="/homework">homework</StyledLink>
+    <StyledLink to="/problemsets">problemsets</StyledLink>
     <StyledDivider />
     <Navbar.Group>
       <Link to="/login">

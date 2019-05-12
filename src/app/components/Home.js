@@ -94,7 +94,7 @@ const Home = ({ history }) => (
         elevation={Elevation.THREE}
         interactive={true}
         onClick={() => {
-          history.push('/homework'); // TODO: Use `/problemsets`(?)
+          history.push('/problemsets');
         }}
       >
         <StyledHWIcon className="fas fa-table" />

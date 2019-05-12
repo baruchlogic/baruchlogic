@@ -79,7 +79,7 @@ const ProblemsetsContainer = ({
       <Link to={`/problemsets/${problemset.id}`}>
         <div>
           <span className="numbering">
-            Homework #{problemset.index_in_unit}
+            Problemset #{problemset.index_in_unit}
           </span>
         </div>
       </Link>
@@ -91,9 +91,7 @@ const ProblemsetsContainer = ({
       <StyledContainer>
         <StyledSidebar>
           <H1>problemsets</H1>
-          <ul>
-            {problemsets.map(mapProblemSetToJSX)}
-          </ul>
+          <ul>{problemsets.map(mapProblemSetToJSX)}</ul>
         </StyledSidebar>
       </StyledContainer>
     </>
