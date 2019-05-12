@@ -21,6 +21,13 @@ const VideosContainer = ({
   const [currentVideo, setCurrentVideo] = useState(null);
   const [fetchIsLoading, setFetchIsLoading] = useState(true);
 
+  const fetchProblemSets = async () => {
+    const response = await fetch('http://localhost:5000/api/problemsets').then(
+      res => res.json()
+    );
+    console.log('HERE', response);
+  }
+
   const fetchVideos = async () => {
     const response = await fetch('http://localhost:5000/api/videos').then(res =>
       res.json()
@@ -73,6 +80,7 @@ const VideosContainer = ({
 
   useEffect(() => {
     getCurrentVideo();
+    fetchProblemSets();
   });
 
   return fetchIsLoading ? null : (
