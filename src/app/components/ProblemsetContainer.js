@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Problem from './Problem';
+import StyledCard from 'app-styled/StyledCard';
+import { Button } from '@blueprintjs/core';
 
 const ProblemsetContainer = ({ problemsetId }) => {
   const [problemset, setProblemset] = useState(null);
@@ -36,6 +38,17 @@ const ProblemsetContainer = ({ problemsetId }) => {
     console.log(problemsetResponses);
   };
 
+  const onSubmit = async () => {
+    console.log(JSON.stringify(problemsetResponses));
+    await fetch(`http://localhost:5000/api/problemsets/${problemsetId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(problemsetResponses)
+    });
+  };
+
   const problemsetNumber =
     problemset && problemset.unit + problemset.index_in_unit - 1;
 
@@ -50,6 +63,11 @@ const ProblemsetContainer = ({ problemsetId }) => {
           setProblemResponse={setProblemResponse}
         />
       ))}
+      <StyledCard>
+        <Button intent="success" large onClick={onSubmit}>
+          SUBMIT
+        </Button>
+      </StyledCard>
     </div>
   );
 };
