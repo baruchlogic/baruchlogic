@@ -4,10 +4,11 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const configApp = require('./config');
 const configEndpoints = require('./api');
+require('dotenv').config();
 
 const app = express();
 
-const SECRET = 'cats';
+const SECRET = process.env.COOKE_SECRET;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(SECRET));
