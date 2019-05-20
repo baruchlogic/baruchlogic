@@ -1,4 +1,6 @@
-This is a teaching tool for classes in introductory logic.
+![](src/app/assets/baruch-logic-homepage-screencap.png)
+
+**baruchlogic** is a teaching tool for introductory logic.
 
 (It is currently under construction.)
 
