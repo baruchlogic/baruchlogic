@@ -38,9 +38,7 @@ const scoreResponses = async responses => {
   let score = 0;
   for (const id of ids) {
     console.log(id);
-    const q = await query('SELECT answer FROM problem WHERE id = $1', [
-      id
-    ]);
+    const q = await query('SELECT answer FROM problem WHERE id = $1', [id]);
     const answer = q.rows[0].answer;
     const response = responses[id];
     console.log('answer', id, response, answer);

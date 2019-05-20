@@ -1,11 +1,12 @@
 const { Pool } = require('pg');
+require('dotenv').config();
 
 // Establish db connection
 const pool = new Pool({
-  user: 'baruchlogic',
-  host: 'localhost',
-  database: 'baruchlogic',
-  password: 'baruchlogic',
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_USER,
+  password: process.env.DB_PASS,
   port: 5432
 });
 pool.connect(err => {
