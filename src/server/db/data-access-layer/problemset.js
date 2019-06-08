@@ -32,8 +32,8 @@ const getProblemsByProblemsetId = async id => {
   }
 };
 
-const saveScore = async (studentId, problemsetId, score) => {
-  console.log('saveScore');
+const saveBestScore = async (studentId, problemsetId, score) => {
+  console.log('saveBestScore');
   await query(
     `INSERT INTO problemset_score
     (student_id, problemset_id, score)
@@ -44,7 +44,8 @@ const saveScore = async (studentId, problemsetId, score) => {
     DO
     UPDATE SET score = $3
     WHERE problemset_score.problemset_id = $2
-    AND problemset_score.student_id = $1`,
+    AND problemset_score.student_id = $1
+    AND problemset_score.score < $3`,
     [studentId, problemsetId, score]
   );
 };
@@ -88,7 +89,7 @@ module.exports = {
   getAllProblemsets,
   getProblemsByProblemsetId,
   getProblemSetById,
-  saveScore,
+  saveBestScore,
   saveResponses,
   scoreResponses
 };

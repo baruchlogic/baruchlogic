@@ -2,7 +2,7 @@ const {
   getAllProblemsets,
   getProblemsByProblemsetId,
   getProblemSetById,
-  saveScore,
+  saveBestScore,
   saveResponses,
   scoreResponses
 } = require('../db/data-access-layer/problemset');
@@ -31,7 +31,7 @@ const configProblemsetRoutes = app => {
     const score = await scoreResponses(req.body);
     console.log('SCORE', score);
     await saveResponses(studentId, problemsetId, req.body);
-    await saveScore(studentId, problemsetId, score);
+    await saveBestScore(studentId, problemsetId, score);
     res.status(200).send(String(score));
   });
 };
