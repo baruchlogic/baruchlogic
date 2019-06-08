@@ -2,6 +2,7 @@ const {
   getAllProblemsets,
   getProblemsByProblemsetId,
   getProblemSetById,
+  saveResponses,
   scoreResponses
 } = require('../db/data-access-layer/problemset');
 
@@ -23,7 +24,13 @@ const configProblemsetRoutes = app => {
 
   app.post('/api/problemsets/:id', async (req, res) => {
     console.log('POST', req.body);
+    console.log('SESSION', req.session);
+    console.log('USER', req.user);
+    const { id: problemsetId } = req.params;
+    const { id: studentId } = req.user;
     const score = await scoreResponses(req.body);
+    console.log('SCORE', score);
+    await saveResponses(studentId, problemsetId, req.body);
     res.status(200).send(String(score));
   });
 };

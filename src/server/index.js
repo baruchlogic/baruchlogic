@@ -8,7 +8,7 @@ require('dotenv').config();
 
 const app = express();
 
-const SECRET = process.env.COOKE_SECRET;
+const SECRET = process.env.COOKIE_SECRET;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(SECRET));

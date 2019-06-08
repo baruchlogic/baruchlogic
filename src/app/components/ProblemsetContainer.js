@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Problem from './Problem';
 import StyledCard from 'app-styled/StyledCard';
 import { Button } from '@blueprintjs/core';
+import { authFetch } from '../helpers/auth';
 
 const ProblemsetContainer = ({ problemsetId }) => {
   const [problemset, setProblemset] = useState(null);
@@ -40,11 +41,7 @@ const ProblemsetContainer = ({ problemsetId }) => {
 
   const onSubmit = async () => {
     console.log(JSON.stringify(problemsetResponses));
-    await fetch(`http://localhost:5000/api/problemsets/${problemsetId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+    authFetch(`http://localhost:5000/api/problemsets/${problemsetId}`, 'POST', {
       body: JSON.stringify(problemsetResponses)
     });
   };
