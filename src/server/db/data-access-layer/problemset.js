@@ -38,7 +38,13 @@ const saveScore = async (studentId, problemsetId, score) => {
     `INSERT INTO problemset_score
     (student_id, problemset_id, score)
     VALUES
-    ($1, $2, $3)`,
+    ($1, $2, $3)
+    ON CONFLICT ON CONSTRAINT
+    problemset_score_unique
+    DO
+    UPDATE SET score = $3
+    WHERE problemset_score.problemset_id = $2
+    AND problemset_score.student_id = $1`,
     [studentId, problemsetId, score]
   );
 };
@@ -82,6 +88,7 @@ module.exports = {
   getAllProblemsets,
   getProblemsByProblemsetId,
   getProblemSetById,
+  saveScore,
   saveResponses,
   scoreResponses
 };
