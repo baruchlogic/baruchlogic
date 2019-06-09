@@ -73,19 +73,13 @@ const StyledRow = styled.div`
 `;
 
 const TruthTable = ({ problem, setProblemResponse, value }) => {
-  const formula = new Formula.default();
+  // Used for `onChange` to prevent React warning;
+  const emptyFn = () => {};
+
+  // Create initial response matrix
+  const formula = new Formula();
   const columns = formula.generateTruthTableHeaders(problem.prompt);
-  console.log('COLUMNS!!!', columns);
-  const getAtomicVariables = proposition => {
-    const result = new Set();
-    for (const letter of proposition) {
-      if (/[a-z]/i.test(letter)) {
-        result.add(letter);
-      }
-    }
-    return Array.from(result).sort();
-  };
-  const atomicVariables = getAtomicVariables(problem.prompt);
+  const atomicVariables = formula.getAtomicVariables(problem.prompt);
   const nRows = 2 ** atomicVariables.length;
   const newValue = new Array(nRows)
     .fill(0)
@@ -93,11 +87,14 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
   useEffect(() => {
     setProblemResponse(problem.id, newValue);
   }, []);
+  // Set a value in the response matrix
   const setCellValueCopy = (matrix, i, j, value) => {
     const copy = matrix.map(row => [...row]);
     copy[i][j] = value;
     return copy;
   };
+
+  // Functions used for keyboard navigation
   const getNextIndex = (j, k) => {
     console.log('j', j, 'k', k, 'nRows', nRows);
     if (j < nRows - 1) {
@@ -120,7 +117,9 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
   const getLeftIndex = (j, k) => {
     return `${(k - 1) * 1000 + j + 1}`;
   };
-  const focusNextElement = (j ,k) => {
+
+  // Functions used to move focus around
+  const focusNextElement = (j, k) => {
     const focusedElement = document.querySelector('input:focus');
     console.log('FE', focusedElement);
     const nextTabindex = getNextIndex(j, k);
@@ -156,6 +155,7 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
     );
     if (rightFocusedElement) rightFocusedElement.focus();
   };
+
   const handleKeyDown = (e, j, k) => {
     const { key } = e;
     console.log('key', key);
@@ -194,7 +194,7 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
         break;
     }
   };
-  console.log('value', value);
+
   return (
     <table>
       <thead>
@@ -213,6 +213,7 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
                   onKeyDown={e => {
                     handleKeyDown(e, j, k);
                   }}
+                  onChange={emptyFn}
                   value={(value && value[j][k]) || ''}
                   tabIndex={`${k * 1000 + j + 1}`}
                 />
