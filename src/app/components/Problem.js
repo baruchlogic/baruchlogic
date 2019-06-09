@@ -106,25 +106,92 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
       return `${(k + 1) * 1000 + 0 + 1}`;
     }
   };
+  const getPrevIndex = (j, k) => {
+    console.log('j', j, 'k', k, 'nRows', nRows);
+    if (j === 0) {
+      return `${(k - 1) * 1000 + nRows}`;
+    } else {
+      return `${k * 1000 + j}`;
+    }
+  };
+  const getRightIndex = (j, k) => {
+    return `${(k + 1) * 1000 + j + 1}`;
+  };
+  const getLeftIndex = (j, k) => {
+    return `${(k - 1) * 1000 + j + 1}`;
+  };
+  const focusNextElement = (j ,k) => {
+    const focusedElement = document.querySelector('input:focus');
+    console.log('FE', focusedElement);
+    const nextTabindex = getNextIndex(j, k);
+    console.log('nextTabindex', nextTabindex);
+    const nextFocusedElement = document.querySelector(
+      `input[tabindex="${nextTabindex}"]`
+    );
+    console.log('nextFocusedElement', nextFocusedElement);
+    if (nextFocusedElement) nextFocusedElement.focus();
+  };
+  const focusPrevElement = (j, k) => {
+    const focusedElement = document.querySelector('input:focus');
+    console.log('FE', focusedElement);
+    const prevTabIndex = getPrevIndex(j, k);
+    console.log('prevTabIndex', prevTabIndex);
+    const prevFocusedElement = document.querySelector(
+      `input[tabindex="${prevTabIndex}"]`
+    );
+    console.log('prevFocusedElement', prevFocusedElement);
+    if (prevFocusedElement) prevFocusedElement.focus();
+  };
+  const focusLeftElement = (j, k) => {
+    const leftIndex = getLeftIndex(j, k);
+    const leftFocusedElement = document.querySelector(
+      `input[tabindex="${leftIndex}"]`
+    );
+    if (leftFocusedElement) leftFocusedElement.focus();
+  };
+  const focusRightElement = (j, k) => {
+    const rightIndex = getRightIndex(j, k);
+    const rightFocusedElement = document.querySelector(
+      `input[tabindex="${rightIndex}"]`
+    );
+    if (rightFocusedElement) rightFocusedElement.focus();
+  };
   const handleKeyDown = (e, j, k) => {
     const { key } = e;
     console.log('key', key);
-    if (/^[tf]$/i.test(key)) {
-      const newValue = setCellValueCopy(value, j, k, key);
-      setProblemResponse(problem.id, newValue);
-      const focusedElement = document.querySelector('input:focus');
-      console.log('FE', focusedElement);
-      const nextTabindex = getNextIndex(j, k);
-      console.log('nextTabindex', nextTabindex);
-      const nextFocusedElement = document.querySelector(
-        `input[tabindex="${nextTabindex}"]`
-      );
-      console.log('nextFocusedElement', nextFocusedElement);
-      if (nextFocusedElement) nextFocusedElement.focus();
-    } else if (key === 'Backspace') {
-      console.log('here');
-      const newValue = setCellValueCopy(value, j, k, '');
-      setProblemResponse(problem.id, newValue);
+    switch (key) {
+      case 't':
+      case 'T':
+      case 'f':
+      case 'F': {
+        const newValue = setCellValueCopy(value, j, k, key);
+        setProblemResponse(problem.id, newValue);
+        focusNextElement(j, k);
+        break;
+      }
+      case 'Backspace':
+        console.log('backspace');
+        if (value[j][k]) {
+          const newValue = setCellValueCopy(value, j, k, '');
+          setProblemResponse(problem.id, newValue);
+        } else {
+          focusPrevElement(j, k);
+        }
+        break;
+      case 'ArrowUp':
+        focusPrevElement(j, k);
+        break;
+      case 'ArrowDown':
+        focusNextElement(j, k);
+        break;
+      case 'ArrowLeft':
+        focusLeftElement(j, k);
+        break;
+      case 'ArrowRight':
+        focusRightElement(j, k);
+        break;
+      default:
+        break;
     }
   };
   console.log('value', value);
