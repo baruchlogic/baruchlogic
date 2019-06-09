@@ -1,5 +1,5 @@
 const { query } = require('../index');
-const { Formula } = require('logically-logically');
+const { Formula } = require('logically-locally');
 
 const getAllProblemsets = async () => {
   try {
@@ -74,7 +74,10 @@ const scoreSelectedResponse = (problem, response) =>
   problem.answer === response;
 
 const scoreTruthTable = (problem, response) => {
-  // const formula = new Formula();
+  console.log("RESPONSE", response);
+  const formula = new Formula();
+  const truthTable = formula.generateTruthTable(problem.prompt);
+  console.log("TRUTHTABLE", truthTable);
 };
 
 const scoreProblemResponse = (problem, response) => {

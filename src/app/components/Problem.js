@@ -79,24 +79,15 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
   // Create initial response matrix
   const formula = new Formula();
   const columns = formula.generateTruthTableHeaders(problem.prompt);
-  console.log('COLUMNS!!!', columns);
-  // const getAtomicVariables = proposition => {
-  //   const result = new Set();
-  //   for (const letter of proposition) {
-  //     if (/[a-z]/i.test(letter)) {
-  //       result.add(letter);
-  //     }
-  //   }
-  //   return Array.from(result).sort();
-  // };
+  const initialValue = formula
+    .generateTruthTable(problem.prompt, true)
+    .map(row => row.map(el => (el === true ? 't' : el === false ? 'f' : '')));
   const atomicVariables = formula.getAtomicVariables(problem.prompt);
-  const nRows = 2 ** atomicVariables.length;
-  const newValue = new Array(nRows)
-    .fill(0)
-    .map(el => new Array(columns.length).fill(null));
+  const nRows = Math.pow(2, atomicVariables.length);
   useEffect(() => {
-    setProblemResponse(problem.id, newValue);
+    setProblemResponse(problem.id, initialValue);
   }, []);
+  
   // Set a value in the response matrix
   const setCellValueCopy = (matrix, i, j, value) => {
     const copy = matrix.map(row => [...row]);
@@ -174,7 +165,7 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
       case 'T':
       case 'f':
       case 'F': {
-        const newValue = setCellValueCopy(value, j, k, key);
+        const newValue = setCellValueCopy(value, j, k, key.toLowerCase());
         setProblemResponse(problem.id, newValue);
         focusNextElement(j, k);
         break;
@@ -226,6 +217,7 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
                   onChange={emptyFn}
                   value={(value && value[j][k]) || ''}
                   tabIndex={`${k * 1000 + j + 1}`}
+                  disabled={k < atomicVariables.length}
                 />
               </td>
             ))}
