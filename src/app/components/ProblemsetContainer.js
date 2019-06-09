@@ -14,6 +14,8 @@ const ProblemsetContainer = ({ problemsetId }) => {
   const [problemset, setProblemset] = useState(null);
   const [problems, setProblems] = useState([]);
   const [problemsetResponses, setProblemsetResponses] = useState({});
+  const [currentScore, setCurrentScore] = useState(null);
+  const [bestScore, setBestScore] = useState(null);
 
   const fetchProblemSet = async () => {
     const result = await fetch(
@@ -51,8 +53,13 @@ const ProblemsetContainer = ({ problemsetId }) => {
 
   const onSubmit = async () => {
     console.log(JSON.stringify(problemsetResponses));
-    authFetch(`http://localhost:5000/api/problemsets/${problemsetId}`, 'POST', {
-      body: JSON.stringify(problemsetResponses)
+    const score = await authFetch(
+      `http://localhost:5000/api/problemsets/${problemsetId}`,
+      'POST',
+      { body: JSON.stringify(problemsetResponses) }
+    );
+    score.text().then(score => {
+      setCurrentScore(score);
     });
   };
 
@@ -74,6 +81,12 @@ const ProblemsetContainer = ({ problemsetId }) => {
         <Button intent="success" large onClick={onSubmit}>
           SUBMIT
         </Button>
+      </StyledCard>
+
+      <StyledCard elevation={Elevation.THREE}>
+        <div>SCORES</div>
+        <div>Current Score: {currentScore}</div>
+        <div>Your Best Score: {bestScore}</div>
       </StyledCard>
     </StyledContainer>
   );
