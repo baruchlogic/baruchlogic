@@ -17,7 +17,7 @@ const configAuthRoutes = app => {
       } = req;
       console.log('key', key);
       console.log('isAuthenticated', req.isAuthenticated());
-      res.status(200).send(req.session);
+      res.status(200).send({ ...req.session, admin: req.user.admin });
     }
   );
 
