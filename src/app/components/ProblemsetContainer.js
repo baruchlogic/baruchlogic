@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { string } from 'prop-types';
 import Problem from './Problem';
 import StyledCard from 'app-styled/StyledCard';
 import { Button } from '@blueprintjs/core';
@@ -71,6 +72,10 @@ const ProblemsetContainer = ({ problemsetId }) => {
       </StyledCard>
     </div>
   );
+};
+
+ProblemsetContainer.propTypes = {
+  problemsetId: string
 };
 
 export default ProblemsetContainer;
