@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import StyledCard from 'app-styled/StyledCard';
 import styled from 'styled-components';
 import { Formula } from 'logically';
@@ -87,6 +87,30 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
   };
   const atomicVariables = getAtomicVariables(problem.prompt);
   const nRows = 2 ** atomicVariables.length;
+  const newValue = new Array(nRows)
+    .fill(0)
+    .map(el => new Array(columns.length).fill(null));
+  useEffect(() => {
+    setProblemResponse(problem.id, newValue);
+  }, []);
+  const setCellValueCopy = (matrix, i, j, value) => {
+    const copy = matrix.map(row => [...row]);
+    copy[i][j] = value;
+    return copy;
+  };
+  const handleKeyDown = (e, j, k) => {
+    const { key } = e;
+    console.log('key', key);
+    if (/^[tf]$/i.test(key)) {
+      const newValue = setCellValueCopy(value, j, k, key);
+      setProblemResponse(problem.id, newValue);
+    } else if (key === 'Backspace') {
+      console.log('here');
+      const newValue = setCellValueCopy(value, j, k, '');
+      setProblemResponse(problem.id, newValue);
+    }
+  };
+  console.log('value', value);
   return (
     <table>
       <thead>
@@ -101,7 +125,12 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
           <tr key={`row-${j}`}>
             {columns.map((row, k) => (
               <td key={`cell-${k}`}>
-                <input />
+                <input
+                  onKeyDown={e => {
+                    handleKeyDown(e, j, k);
+                  }}
+                  value={(value && value[j][k]) || ''}
+                />
               </td>
             ))}
           </tr>
