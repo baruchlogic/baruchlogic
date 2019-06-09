@@ -31,12 +31,16 @@ const ProblemsetContainer = ({ problemsetId }) => {
     fetchProblems();
   }, problemsetId);
 
+  useEffect(() => {
+    console.log('problemsetResponses', problemsetResponses);
+  }, [problemsetResponses]);
+
   const setProblemResponse = (problemId, response) => {
-    setProblemsetResponses({
+    console.log('setProblemResponse', problemsetResponses, problemId, response);
+    setProblemsetResponses(problemsetResponses => ({
       ...problemsetResponses,
       [problemId]: response
-    });
-    console.log(problemsetResponses);
+    }));
   };
 
   const onSubmit = async () => {

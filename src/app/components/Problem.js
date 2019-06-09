@@ -86,6 +86,7 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
   const atomicVariables = formula.getAtomicVariables(problem.prompt);
   const nRows = Math.pow(2, atomicVariables.length);
   useEffect(() => {
+    console.log("SET", problem.id);
     setProblemResponse(problem.id, initialValue);
   }, []);
 
@@ -202,15 +203,15 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
       <thead>
         <tr>
           {columns.map((row, i) => (
-            <td key={`col-${i}`}>{row}</td>
+            <td key={`col-${i}-${problem.id}`}>{row}</td>
           ))}
         </tr>
       </thead>
       <tbody>
         {new Array(nRows).fill(0).map((row, j) => (
-          <tr key={`row-${j}`}>
+          <tr key={`row-${j}-${problem.id}`}>
             {columns.map((row, k) => (
-              <td key={`cell-${k}`}>
+              <td key={`cell-${k}-${problem.id}`}>
                 <input
                   onKeyDown={e => {
                     handleKeyDown(e, j, k);
