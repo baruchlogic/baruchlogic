@@ -143,10 +143,24 @@ const scoreResponses = async (responses, problemsetId) => {
   return Math.floor((score / count) * 100);
 };
 
+const getScore = async (problemsetId, studentId) => {
+  console.log('getScore', problemsetId, studentId);
+  const q = await query(
+    `SELECT score
+    FROM problemset_score
+    WHERE problemset_id = $1
+    AND student_id = $2`,
+    [problemsetId, studentId]
+  );
+  console.log('QUERY', q);
+  return q.rows[0].score;
+};
+
 module.exports = {
   getAllProblemsets,
   getProblemsByProblemsetId,
   getProblemSetById,
+  getScore,
   saveBestScore,
   saveResponses,
   scoreResponses
