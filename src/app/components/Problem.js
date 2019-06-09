@@ -79,6 +79,16 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
   // Create initial response matrix
   const formula = new Formula();
   const columns = formula.generateTruthTableHeaders(problem.prompt);
+  console.log('COLUMNS!!!', columns);
+  // const getAtomicVariables = proposition => {
+  //   const result = new Set();
+  //   for (const letter of proposition) {
+  //     if (/[a-z]/i.test(letter)) {
+  //       result.add(letter);
+  //     }
+  //   }
+  //   return Array.from(result).sort();
+  // };
   const atomicVariables = formula.getAtomicVariables(problem.prompt);
   const nRows = 2 ** atomicVariables.length;
   const newValue = new Array(nRows)

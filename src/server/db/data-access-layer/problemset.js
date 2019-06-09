@@ -1,4 +1,5 @@
 const { query } = require('../index');
+const { Formula } = require('logically-logically');
 
 const getAllProblemsets = async () => {
   try {
@@ -69,17 +70,39 @@ const saveResponses = async (studentId, problemsetId, responses) => {
   console.log('r', r);
 };
 
+const scoreSelectedResponse = (problem, response) =>
+  problem.answer === response;
+
+const scoreTruthTable = (problem, response) => {
+  // const formula = new Formula();
+};
+
+const scoreProblemResponse = (problem, response) => {
+  let score = null;
+  switch (problem.type) {
+    case 'true_false':
+    case 'multiple_choice':
+      score = scoreSelectedResponse(problem, response);
+      break;
+    case 'truth_table':
+      score = scoreTruthTable(problem, response);
+      break;
+    default:
+      break;
+  }
+  return score;
+};
+
 const scoreResponses = async responses => {
   console.log('scoreResponses', responses);
   const ids = Object.keys(responses);
   let score = 0;
   for (const id of ids) {
     console.log(id);
-    const q = await query('SELECT answer FROM problem WHERE id = $1', [id]);
-    const answer = q.rows[0].answer;
+    const q = await query('SELECT * FROM problem WHERE id = $1', [id]);
+    const problem = q.rows[0];
     const response = responses[id];
-    console.log('answer', id, response, answer);
-    score += response === answer;
+    score += scoreProblemResponse(problem, response);
   }
   console.log(Math.floor(score));
   return Math.floor(score);
