@@ -98,12 +98,29 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
     copy[i][j] = value;
     return copy;
   };
+  const getNextIndex = (j, k) => {
+    console.log('j', j, 'k', k, 'nRows', nRows);
+    if (j < nRows - 1) {
+      return `${k * 1000 + j + 2}`;
+    } else {
+      return `${(k + 1) * 1000 + 0 + 1}`;
+    }
+  };
   const handleKeyDown = (e, j, k) => {
     const { key } = e;
     console.log('key', key);
     if (/^[tf]$/i.test(key)) {
       const newValue = setCellValueCopy(value, j, k, key);
       setProblemResponse(problem.id, newValue);
+      const focusedElement = document.querySelector('input:focus');
+      console.log('FE', focusedElement);
+      const nextTabindex = getNextIndex(j, k);
+      console.log('nextTabindex', nextTabindex);
+      const nextFocusedElement = document.querySelector(
+        `input[tabindex="${nextTabindex}"]`
+      );
+      console.log('nextFocusedElement', nextFocusedElement);
+      if (nextFocusedElement) nextFocusedElement.focus();
     } else if (key === 'Backspace') {
       console.log('here');
       const newValue = setCellValueCopy(value, j, k, '');
@@ -130,6 +147,7 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
                     handleKeyDown(e, j, k);
                   }}
                   value={(value && value[j][k]) || ''}
+                  tabIndex={`${k * 1000 + j + 1}`}
                 />
               </td>
             ))}
