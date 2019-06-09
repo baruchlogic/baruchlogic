@@ -27,7 +27,7 @@ const MultipleChoice = ({ problem, setProblemResponse, value }) => {
 MultipleChoice.propTypes = {
   problem: object.isRequired,
   setProblemResponse: func.isRequired,
-  value: string.isRequired
+  value: string
 };
 
 export default MultipleChoice;

@@ -156,7 +156,7 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
                   tabIndex={`${k * 1000 + j + 1}`}
                   disabled={k < atomicVariables.length}
                 />
-            </td>
+              </td>
             ))}
           </tr>
         ))}

@@ -31,7 +31,7 @@ const TrueFalse = ({ problem, setProblemResponse, value }) => (
 TrueFalse.propTypes = {
   problem: object.isRequired,
   setProblemResponse: func.isRequired,
-  value: string.isRequired
+  value: string
 };
 
 export default TrueFalse;
