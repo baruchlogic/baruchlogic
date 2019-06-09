@@ -4,7 +4,13 @@ import styled from 'styled-components';
 import { Formula } from 'logically-locally';
 
 const StyledInput = styled.input`
-  // width: 50px;
+  font-size: 1rem;
+  text-align: center;
+  width: 50px;
+`;
+
+const StyledHeaderTD = styled.td`
+  white-space: nowrap;
 `;
 
 const TruthTable = ({ problem, setProblemResponse, value }) => {
@@ -17,7 +23,7 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
   console.log('COLUMNS', columns);
   const initialValue = formula
     .generateTruthTable(problem.prompt, true)
-    .map(row => row.map(el => (el === true ? 't' : el === false ? 'f' : '')));
+    .map(row => row.map(el => (el === true ? 'T' : el === false ? 'F' : '')));
   const atomicVariables = formula.getAtomicVariables(problem.prompt);
   const nRows = Math.pow(2, atomicVariables.length);
   useEffect(() => {
@@ -102,7 +108,7 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
       case 'T':
       case 'f':
       case 'F': {
-        const newValue = setCellValueCopy(value, j, k, key.toLowerCase());
+        const newValue = setCellValueCopy(value, j, k, key.toUpperCase());
         setProblemResponse(problem.id, newValue);
         focusNextElement(j, k);
         break;
@@ -138,7 +144,9 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
       <thead>
         <tr>
           {columns.map((row, i) => (
-            <td key={`col-${i}-${problem.id}`}>{row}</td>
+            <StyledHeaderTD key={`col-${i}-${problem.id}`}>
+              {row}
+            </StyledHeaderTD>
           ))}
         </tr>
       </thead>

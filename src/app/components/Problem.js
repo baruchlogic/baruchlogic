@@ -33,6 +33,8 @@ const Problem = ({ problem, setProblemResponse, value }) => {
     <StyledCard key={problem.id} elevation={Elevation.TWO}>
       <div>({problem.problem_index})</div>
       <StyledDiv>
+        {problem.type === 'truth_table' &&
+          'Complete the truth table for the following proposition:'}
         <div>{problem.prompt}</div>
         <ProblemType
           problem={problem}

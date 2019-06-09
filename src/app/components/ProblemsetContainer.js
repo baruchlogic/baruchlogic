@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { string } from 'prop-types';
+import styled from 'styled-components';
 import Problem from './Problem';
 import StyledCard from 'app-styled/StyledCard';
-import { Button } from '@blueprintjs/core';
+import { Button, Elevation } from '@blueprintjs/core';
 import { authFetch } from '../helpers/auth';
+
+const StyledContainer = styled.div`
+  width: 80%;
+`;
 
 const ProblemsetContainer = ({ problemsetId }) => {
   const [problemset, setProblemset] = useState(null);
@@ -55,7 +60,7 @@ const ProblemsetContainer = ({ problemsetId }) => {
     problemset && problemset.unit + problemset.index_in_unit - 1;
 
   return (
-    <div>
+    <StyledContainer>
       <h1>{`Problemset #${problemsetNumber}`}</h1>
       {problems.map(problem => (
         <Problem
@@ -65,12 +70,12 @@ const ProblemsetContainer = ({ problemsetId }) => {
           setProblemResponse={setProblemResponse}
         />
       ))}
-      <StyledCard>
+      <StyledCard elevation={Elevation.THREE}>
         <Button intent="success" large onClick={onSubmit}>
           SUBMIT
         </Button>
       </StyledCard>
-    </div>
+    </StyledContainer>
   );
 };
 
