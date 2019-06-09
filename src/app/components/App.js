@@ -1,17 +1,21 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import Header from './Header';
 import About from './About';
+import AdminContainer from './AdminContainer';
+import Header from './Header';
 import Home from './Home';
 import Login from './Login';
-import VideosContainer from './VideosContainer';
-import Textbook from './Textbook';
-const ExercisesContainer = () => <div>Exercises</div>;
 import ProblemsetsContainer from './ProblemsetsContainer';
+import Textbook from './Textbook';
+import VideosContainer from './VideosContainer';
+const ExercisesContainer = () => <div>Exercises</div>;
 
 const App = () => (
   <div>
-    <Header />
+    <Switch>
+      <Route path="/admin" component={AdminContainer} />
+      <Route path="/" component={Header} />
+    </Switch>
     <Switch>
       <Route exact path="/" component={Home} />
       <Route exact path="/about" component={About} />
