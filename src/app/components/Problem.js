@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import StyledCard from 'app-styled/StyledCard';
 import styled from 'styled-components';
 import { Formula } from 'logically';
@@ -31,22 +31,24 @@ const TrueFalse = ({ problem, setProblemResponse, value }) => (
 );
 
 const MultipleChoice = ({ problem, setProblemResponse, value }) => {
-  const choices = problem.choices;
+  const { choices } = problem;
   return (
     <div>
-      {Object.keys(choices).sort().map(key => (
-        <label key={key}>
-          <input
-            type="radio"
-            checked={value === key}
-            onChange={() => {
-              setProblemResponse(problem.id, key);
-            }}
-            value={true}
-          />
-          {choices[key]}
-        </label>
-      ))}
+      {Object.keys(choices)
+        .sort()
+        .map(key => (
+          <label key={key}>
+            <input
+              type="radio"
+              checked={value === key}
+              onChange={() => {
+                setProblemResponse(problem.id, key);
+              }}
+              value={true}
+            />
+            {choices[key]}
+          </label>
+        ))}
     </div>
   );
 };
@@ -71,6 +73,9 @@ const StyledRow = styled.div`
 `;
 
 const TruthTable = ({ problem, setProblemResponse, value }) => {
+  const formula = new Formula.default();
+  const columns = formula.generateTruthTableHeader(problem.prompt);
+  console.log('COLUMNS!!!', columns);
   const getAtomicVariables = proposition => {
     const result = new Set();
     for (const letter of proposition) {
@@ -82,27 +87,26 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
   };
   const atomicVariables = getAtomicVariables(problem.prompt);
   const nRows = 2 ** atomicVariables.length;
-  const formula = new Formula.default();
-  const rows = formula.generateTruthTableArray(problem.prompt);
-  console.log('ROWS!!!', rows);
   return (
     <table>
       <thead>
-       <tr>
-         {rows.map((row, i) => (
-           <td key={`row-${i}`}>{row}</td>
-         ))}
-       </tr>
-     </thead>
-     <tbody>
-       {new Array(nRows).fill(0).map((row, j) => (
-         <tr key={`row-${j}`}>
-           {rows.map((row, k) => (
-             <td key={`cell-${k}`}><input /></td>
-           ))}
-         </tr>
-       ))}
-     </tbody>
+        <tr>
+          {columns.map((row, i) => (
+            <td key={`col-${i}`}>{row}</td>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {new Array(nRows).fill(0).map((row, j) => (
+          <tr key={`row-${j}`}>
+            {columns.map((row, k) => (
+              <td key={`cell-${k}`}>
+                <input />
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
     </table>
   );
 };
