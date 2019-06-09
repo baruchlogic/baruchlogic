@@ -74,7 +74,7 @@ const StyledRow = styled.div`
 
 const TruthTable = ({ problem, setProblemResponse, value }) => {
   const formula = new Formula.default();
-  const columns = formula.generateTruthTableHeader(problem.prompt);
+  const columns = formula.generateTruthTableHeaders(problem.prompt);
   console.log('COLUMNS!!!', columns);
   const getAtomicVariables = proposition => {
     const result = new Set();
