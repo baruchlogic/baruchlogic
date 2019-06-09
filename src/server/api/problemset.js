@@ -28,7 +28,7 @@ const configProblemsetRoutes = app => {
     console.log('USER', req.user);
     const { id: problemsetId } = req.params;
     const { id: studentId } = req.user;
-    const score = await scoreResponses(req.body);
+    const score = await scoreResponses(req.body, problemsetId);
     console.log('SCORE', score);
     await saveResponses(studentId, problemsetId, req.body);
     await saveBestScore(studentId, problemsetId, score);

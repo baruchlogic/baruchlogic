@@ -122,7 +122,7 @@ const scoreProblemResponse = (problem, response) => {
   return Number(score);
 };
 
-const scoreResponses = async responses => {
+const scoreResponses = async (responses, problemsetId) => {
   console.log('scoreResponses', responses);
   const ids = Object.keys(responses);
   let score = 0;
@@ -134,7 +134,13 @@ const scoreResponses = async responses => {
     score += scoreProblemResponse(problem, response);
   }
   console.log(Math.floor(score));
-  return Math.floor(score);
+  const q = await query(
+    'SELECT COUNT(*) FROM problem_v_problemset WHERE problemset_id = $1',
+    [problemsetId]
+  );
+  const count = Number(q.rows[0].count);
+  console.log('COUNT!', count);
+  return Math.floor((score / count) * 100);
 };
 
 module.exports = {
