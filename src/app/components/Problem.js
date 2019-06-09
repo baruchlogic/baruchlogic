@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import StyledCard from 'app-styled/StyledCard';
 import styled from 'styled-components';
-import { Formula } from 'logically';
+import { Formula } from 'logically-locally';
 
 const TrueFalse = ({ problem, setProblemResponse, value }) => (
   <div>
