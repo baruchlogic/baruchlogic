@@ -1,5 +1,6 @@
 import React from 'react';
 import StyledCard from 'app-styled/StyledCard';
+import styled from 'styled-components';
 import { Formula } from 'logically';
 
 const TrueFalse = ({ problem, setProblemResponse, value }) => (
@@ -50,11 +51,60 @@ const MultipleChoice = ({ problem, setProblemResponse, value }) => {
   );
 };
 
+const StyledHeader = styled.div`
+  align-items: center;
+  display: flex:
+  justify-content: center;
+`;
+
+const StyledTruthTable = styled.div`
+  align-items: center;
+  display: flex:
+  flex-direction: column;
+  justify-content: center;
+`;
+
+const StyledRow = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
+`;
+
 const TruthTable = ({ problem, setProblemResponse, value }) => {
+  const getAtomicVariables = proposition => {
+    const result = new Set();
+    for (const letter of proposition) {
+      if (/[a-z]/i.test(letter)) {
+        result.add(letter);
+      }
+    }
+    return Array.from(result).sort();
+  };
+  const atomicVariables = getAtomicVariables(problem.prompt);
+  const nRows = 2 ** atomicVariables.length;
   const formula = new Formula.default();
   const rows = formula.generateTruthTableArray(problem.prompt);
   console.log('ROWS!!!', rows);
-  return <div>Truth Table</div>;
+  return (
+    <table>
+      <thead>
+       <tr>
+         {rows.map((row, i) => (
+           <td key={`row-${i}`}>{row}</td>
+         ))}
+       </tr>
+     </thead>
+     <tbody>
+       {new Array(nRows).fill(0).map((row, j) => (
+         <tr key={`row-${j}`}>
+           {rows.map((row, k) => (
+             <td key={`cell-${k}`}><input /></td>
+           ))}
+         </tr>
+       ))}
+     </tbody>
+    </table>
+  );
 };
 
 const Problem = ({ problem, setProblemResponse, value }) => {
