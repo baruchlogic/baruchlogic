@@ -1,5 +1,6 @@
 import React from 'react';
 import StyledCard from 'app-styled/StyledCard';
+import { Formula } from 'logically';
 
 const TrueFalse = ({ problem, setProblemResponse, value }) => (
   <div>
@@ -50,17 +51,10 @@ const MultipleChoice = ({ problem, setProblemResponse, value }) => {
 };
 
 const TruthTable = ({ problem, setProblemResponse, value }) => {
-  const getAtomicVariables = proposition => {
-    const result = new Set();
-    for (const letter of proposition) {
-      if (/[a-z]/i.test(letter)) {
-        result.add(letter);
-      }
-    }
-    return Array.from(result).sort();
-  };
-  const atomicVariables = getAtomicVariables(problem.prompt);
-  const nRows = 2 ** atomicVariables.length;
+  const formula = new Formula.default();
+  const rows = formula.generateTruthTableArray(problem.prompt);
+  console.log('ROWS!!!', rows);
+  return <div>Truth Table</div>;
 };
 
 const Problem = ({ problem, setProblemResponse, value }) => {
