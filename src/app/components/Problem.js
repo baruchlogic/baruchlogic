@@ -79,6 +79,7 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
   // Create initial response matrix
   const formula = new Formula();
   const columns = formula.generateTruthTableHeaders(problem.prompt);
+  console.log('COLUMNS', columns);
   const initialValue = formula
     .generateTruthTable(problem.prompt, true)
     .map(row => row.map(el => (el === true ? 't' : el === false ? 'f' : '')));
@@ -87,7 +88,7 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
   useEffect(() => {
     setProblemResponse(problem.id, initialValue);
   }, []);
-  
+
   // Set a value in the response matrix
   const setCellValueCopy = (matrix, i, j, value) => {
     const copy = matrix.map(row => [...row]);
