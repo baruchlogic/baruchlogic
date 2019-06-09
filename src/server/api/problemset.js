@@ -2,6 +2,7 @@ const {
   getAllProblemsets,
   getProblemsByProblemsetId,
   getProblemSetById,
+  getScore,
   saveBestScore,
   saveResponses,
   scoreResponses
@@ -32,6 +33,13 @@ const configProblemsetRoutes = app => {
     console.log('SCORE', score);
     await saveResponses(studentId, problemsetId, req.body);
     await saveBestScore(studentId, problemsetId, score);
+    res.status(200).send(String(score));
+  });
+
+  app.get('/api/problemsets/:id/score', async (req, res) => {
+    const { id: problemsetId } = req.params;
+    const { id: studentId } = req.user;
+    const score = await getScore(problemsetId, studentId);
     res.status(200).send(String(score));
   });
 };

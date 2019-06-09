@@ -31,12 +31,27 @@ const ProblemsetContainer = ({ problemsetId }) => {
     setProblems(result);
   };
 
+  const fetchBestScore = async () => {
+    const result = await authFetch(
+      `http://localhost:5000/api/problemsets/${problemsetId}/score`
+    ).then(res => res.text());
+    setBestScore(result);
+  };
+
   useEffect(() => {
     fetchProblemSet();
   }, problemsetId);
 
   useEffect(() => {
     fetchProblems();
+  }, problemsetId);
+
+  useEffect(() => {
+    fetchBestScore();
+  }, problemsetId);
+
+  useEffect(() => {
+    setCurrentScore(null);
   }, problemsetId);
 
   useEffect(() => {
