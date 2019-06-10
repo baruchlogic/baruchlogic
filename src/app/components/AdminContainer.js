@@ -21,7 +21,14 @@ const AdminContainer = () => {
     console.log('isAdmin', isAdmin);
   });
 
-  return isAdmin === false ? <Redirect to="/" /> : <AdminHeader />;
+  return isAdmin === false ? (
+    <Redirect to="/" />
+  ) : isAdmin === true ? (
+    <AdminHeader />
+
+  ) : (
+    <div>LOADING...</div>
+  );
 };
 
 export default AdminContainer;
