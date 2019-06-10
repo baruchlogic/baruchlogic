@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import StyledCard from 'app-styled/StyledCard';
 import { Button, Elevation } from '@blueprintjs/core';
+import { authFetch } from '../helpers/auth';
 
 const CourseForm = () => {
   const [formValues, setFormValues] = useState({});
@@ -10,6 +11,23 @@ const CourseForm = () => {
       ...formValues,
       semester: e.target.value
     }));
+  };
+
+  const onSubmit = async () => {
+    const response = await fetch('http://localhost:5000/api/section', {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, cors, *same-origin
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+            'Content-Type': 'application/json',
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrer: 'no-referrer', // no-referrer, *client
+        body: JSON.stringify({a: "b"})
+    }).then( res => res.json() );
+    console.log("RESPONSE", response);
   };
 
   return (
@@ -32,7 +50,7 @@ const CourseForm = () => {
       <div>
         Number of students: <input />
       </div>
-      <Button intent="success" large>
+      <Button intent="success" large onClick={onSubmit}>
         SUBMIT
       </Button>
     </div>
