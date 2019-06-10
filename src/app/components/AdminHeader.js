@@ -19,6 +19,18 @@ const StyledNavbar = styled(Navbar)`
   }
 `;
 
+const StyledLink = styled(Link)`
+  &&& {
+    color: white;
+    font-size: 1.5rem;
+    transition: color 0.1s linear;
+    &:hover {
+      color: #669eff;
+      text-decoration: none;
+    }
+  }
+`;
+
 const StyledUserIcon = styled(Icon)`
   &&& {
     color: white;
@@ -36,15 +48,33 @@ const StyledDivider = styled(Navbar.Divider)`
   }
 `;
 
-const StyledText = styled.div`
+const StyledHomeIcon = styled.i`
   color: white;
-  font-size: 1.5rem;
+  font-size: 2rem;
+  margin-right: 1rem;
+  transition: color 0.1s linear;
+  &:hover {
+    color: #669eff;
+  }
+`;
+
+const StyledFlexDiv = styled.div`
+  align-items: center;
+  display: flex;
+  justify: center;
 `;
 
 const AdminHeader = () => (
   <StyledNavbar>
-    <StyledText>admin dashboard</StyledText>
+    <StyledFlexDiv>
+      <Link to="/">
+        <StyledHomeIcon className="fas fa-home" />
+      </Link>
+      <StyledLink to="/admin">admin dashboard</StyledLink>
+    </StyledFlexDiv>
     <StyledDivider />
+    <StyledLink to="/admin/grades">grades</StyledLink>
+    <StyledLink to="/admin/settings">course settings</StyledLink>
     <Navbar.Group>
       <Link to="/login">
         <StyledUserIcon icon="user" iconSize={32} />
