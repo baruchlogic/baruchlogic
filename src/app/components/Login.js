@@ -54,15 +54,21 @@ const Login = ({ history }) => {
   };
 
   const onLogin = async () => {
-    const { status } = await authFetch(
+    const response = await authFetch(
       'http://localhost:5000/api/login',
       'POST',
       {
         body: JSON.stringify({ key, username: 'foo' })
       }
     );
+    const { admin } = await response.json();
+    const { status } = response;
     if (status === 200) {
-      history.push('/');
+      if (admin) {
+        history.push('/admin');
+      } else {
+        history.push('/');
+      }
     }
   };
 

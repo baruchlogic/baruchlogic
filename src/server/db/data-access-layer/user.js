@@ -7,7 +7,7 @@ const { query } = require('../index');
  */
 const getUserById = async id => {
   try {
-    const user = await query('SELECT * FROM student WHERE id = $1', [id]);
+    const user = await query('SELECT * FROM logic_user WHERE id = $1', [id]);
     return user && user.rows && user.rows[0];
   } catch (e) {}
 };
@@ -19,7 +19,8 @@ const getUserById = async id => {
  */
 const getUserByKey = async key => {
   try {
-    const user = await query('SELECT * FROM student WHERE key = $1', [key]);
+    console.log('getUserByKey', key);
+    const user = await query('SELECT * FROM logic_user WHERE key = $1', [key]);
     return user && user.rows && user.rows[0];
   } catch (e) {}
 };
