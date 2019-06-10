@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Navbar } from '@blueprintjs/core';
 import { Icon } from '@blueprintjs/core';
+import { authFetch } from '../helpers/auth';
 
 const StyledNavbar = styled(Navbar)`
   &&& {
@@ -48,21 +49,37 @@ const StyledDivider = styled(Navbar.Divider)`
   }
 `;
 
-const Header = () => (
-  <StyledNavbar>
-    <StyledLink to="/">home</StyledLink>
-    <StyledLink to="/about">about</StyledLink>
-    <StyledLink to="/text">text</StyledLink>
-    <StyledLink to="/videos">videos</StyledLink>
-    <StyledLink to="/exercises">exercises</StyledLink>
-    <StyledLink to="/problemsets">problemsets</StyledLink>
-    <StyledDivider />
-    <Navbar.Group>
-      <Link to="/login">
-        <StyledUserIcon icon="user" iconSize={32} />
-      </Link>
-    </Navbar.Group>
-  </StyledNavbar>
-);
+const Header = () => {
+  const [isAdmin, setIsAdmin] = useState(false);
+  const getIsAdmin = async () => {
+    const response = await authFetch('http://localhost:5000/api/auth');
+    if (response.status !== 200) {
+      setIsAdmin(false);
+      return;
+    }
+    const admin = await response.json();
+    setIsAdmin(admin.admin);
+  };
+  useEffect(() => {
+    getIsAdmin();
+  });
+  return (
+    <StyledNavbar>
+      <StyledLink to="/">home</StyledLink>
+      <StyledLink to="/about">about</StyledLink>
+      <StyledLink to="/text">text</StyledLink>
+      <StyledLink to="/videos">videos</StyledLink>
+      <StyledLink to="/exercises">exercises</StyledLink>
+      <StyledLink to="/problemsets">problemsets</StyledLink>
+      {isAdmin && <StyledLink to="/admin">admin</StyledLink>}
+      <StyledDivider />
+      <Navbar.Group>
+        <Link to="/login">
+          <StyledUserIcon icon="user" iconSize={32} />
+        </Link>
+      </Navbar.Group>
+    </StyledNavbar>
+  );
+};
 
 export default Header;
