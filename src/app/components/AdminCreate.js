@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import StyledCard from 'app-styled/StyledCard';
-import { Elevation } from '@blueprintjs/core';
+import { Button, Elevation } from '@blueprintjs/core';
 
 const CourseForm = () => {
   const [formValues, setFormValues] = useState({});
@@ -26,6 +26,15 @@ const CourseForm = () => {
           <option value="summer-3">Summer 3</option>
         </select>
       </div>
+      <div>
+        Course Number: <input />
+      </div>
+      <div>
+        Number of students: <input />
+      </div>
+      <Button intent="success" large>
+        SUBMIT
+      </Button>
     </div>
   );
 };

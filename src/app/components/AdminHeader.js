@@ -74,6 +74,7 @@ const AdminHeader = () => (
     </StyledFlexDiv>
     <StyledDivider />
     <StyledLink to="/admin/how-to">how-to</StyledLink>
+    <StyledLink to="/admin/roster">roster</StyledLink>
     <StyledLink to="/admin/create">create section</StyledLink>
     <StyledLink to="/admin/grades">grades</StyledLink>
     <StyledLink to="/admin/settings">course settings</StyledLink>
