@@ -25,7 +25,6 @@ const AdminContainer = () => {
     <Redirect to="/" />
   ) : isAdmin === true ? (
     <AdminHeader />
-
   ) : (
     <div>LOADING...</div>
   );
