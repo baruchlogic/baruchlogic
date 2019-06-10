@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { authFetch } from '../helpers/auth';
+import AdminCreate from './AdminCreate';
 import AdminHeader from './AdminHeader';
 import AdminHome from './AdminHome';
 
@@ -28,6 +29,7 @@ const AdminContainer = () => {
     <>
       <AdminHeader />
       <Route exact path="/admin" component={AdminHome} />
+      <Route exact path="/admin/create" component={AdminCreate} />
     </>
   ) : (
     <div>LOADING...</div>

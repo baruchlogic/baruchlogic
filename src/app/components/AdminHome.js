@@ -15,8 +15,8 @@ const StyledUl = styled.ul`
 `;
 
 const AdminHome = () => (
-  <StyledCard>
-    <StyledContainer elevation={Elevation.THREE}>
+  <StyledCard elevation={Elevation.THREE}>
+    <StyledContainer>
       <h2>Welcome to the baruchlogic admin dashboard!</h2>
       <h3>Here you can...</h3>
       <StyledUl>
