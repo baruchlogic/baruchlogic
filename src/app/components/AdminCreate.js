@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import StyledCard from 'app-styled/StyledCard';
 import { Button, Elevation } from '@blueprintjs/core';
 import { authFetch } from '../helpers/auth';
+
+const StyledLi = styled.li`
+  list-style: none;
+`;
 
 const CourseForm = () => {
   const [formValues, setFormValues] = useState({
@@ -17,6 +22,8 @@ const CourseForm = () => {
     }));
   };
 
+  const [newSection, setNewSection] = useState(null);
+
   const onSubmit = async () => {
     console.log('FORM VALUES', formValues);
     const response = await authFetch(
@@ -25,6 +32,8 @@ const CourseForm = () => {
       { body: JSON.stringify(formValues) }
     );
     console.log('RESPONSE', response);
+    const section = await response.json();
+    setNewSection(section);
   };
 
   return (
@@ -84,13 +93,30 @@ const CourseForm = () => {
       <Button intent="success" large onClick={onSubmit}>
         SUBMIT
       </Button>
+
+      {newSection && (
+        <StyledCard elevation={Elevation.TWO}>
+          <div>
+            <h2>New Section Created!</h2>
+            <h4>Section Number: {newSection.sectionNumber}</h4>
+            <h4>Student Keys:</h4>
+            <ul>
+              {newSection.studentKeys.map(key => (
+                <StyledLi key={key}>
+                  <div>{key}</div>
+                </StyledLi>
+              ))}
+            </ul>
+          </div>
+        </StyledCard>
+      )}
     </div>
   );
 };
 
 const AdminCreate = () => {
   return (
-    <StyledCard elevation={Elevation.TWO}>
+    <StyledCard elevation={Elevation.THREE}>
       <h3>Use this interface to create a new course section.</h3>
       <br />
       <CourseForm />

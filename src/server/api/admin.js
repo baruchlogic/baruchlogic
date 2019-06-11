@@ -30,6 +30,10 @@ const configAdminRoutes = app => {
     }
     await addStudents(studentKeys);
     await addStudentsToSection({ sectionNumber, term, year }, studentKeys);
+    res.status(200).send({
+      sectionNumber,
+      studentKeys
+    });
   });
 };
 

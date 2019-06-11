@@ -5,13 +5,12 @@ const { query } = require('../index');
  * @param {string[]} studentKeys
  * @return {void}
  */
-const addStudents = async (studentKeys) => {
+const addStudents = async studentKeys => {
   Promise.all(
     studentKeys.map(async studentKey => {
-      query(
-        'INSERT INTO logic_user (key, admin) VALUES ($1, false);',
-        [studentKey]
-      );
+      query('INSERT INTO logic_user (key, admin) VALUES ($1, false);', [
+        studentKey
+      ]);
     })
   );
 };
@@ -94,14 +93,16 @@ const addStudentToSection = async (sectionId, studentId) => {
 const createNewSection = async ({ sectionNumber, term, year }) => {
   console.log('CREATE NEW SECTION');
   try {
-    const q = await query(`INSERT INTO section (section_number, term, year) VALUES ($1, $2, $3) RETURNING id`, [
-      sectionNumber,
-      term,
-      year
-    ]);
+    const q = await query(
+      `INSERT INTO section (section_number, term, year)
+      VALUES ($1, $2, $3) RETURNING id`,
+      [sectionNumber, term, year]
+    );
     const newSectionId = q.rows[0].id;
     return newSectionId;
-  } catch (e) {console.log(e)}
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 /**

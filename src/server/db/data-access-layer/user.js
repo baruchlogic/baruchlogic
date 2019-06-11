@@ -2,7 +2,7 @@ const { query } = require('../index');
 
 /**
  * Check if a user exists with the given key.
- * @param  {string}
+ * @param  {string} key
  * @return {boolean}
  */
 const checkIfKeyExists = async key => {
