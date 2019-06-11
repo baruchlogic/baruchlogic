@@ -90,6 +90,24 @@ const getUserIdFromKey = async key => {
   } catch (e) {}
 };
 
+const getStudentsInSection = async sectionId => {
+  console.log('getStudentsInSection HERE', sectionId, typeof sectionId);
+  try {
+    const q = await query(
+      `SELECT key FROM logic_user
+      INNER JOIN student_roster
+      ON logic_user.id = student_roster.student_id
+      WHERE logic_user.admin = false
+      AND student_roster.section_id = $1`,
+      [sectionId]
+    );
+    console.log('q', q);
+    return q.rows.map( el => el.key );
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 /**
  * Add individual student to section by ID's.
  * @param  {string}  sectionId
@@ -158,5 +176,6 @@ module.exports = {
   addStudents,
   addStudentsToSection,
   getInstructorSections,
+  getStudentsInSection,
   createNewSectionWithInstructor
 };

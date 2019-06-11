@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import StyledCard from 'app-styled/StyledCard';
 import { Elevation } from '@blueprintjs/core';
 import { authFetch } from '../helpers/auth';
-
+import Roster from './Roster';
 /**
  * Container for list of student rosters.
  * @return {React.Component}
@@ -35,34 +35,39 @@ const RosterContainer = () => {
   });
   console.log('currentSection', currentSection);
   return (
-    <StyledCard elevation={Elevation.THREE}>
-      <div>Manage the rosters for your course sections.</div>
-      <div>Select your course section below:</div>
-      <div>
-        <select
-          value={inputCourseNumber}
-          onBlur={e => {
-            setInputCourseNumber(e.target.value);
-          }}
-          onChange={e => {
-            setInputCourseNumber(e.target.value);
-          }}
-        >
-          {instructorSections.map(section => (
-            <option
-              key={section.section_number}
-              value={section.section_number}
-              selected={
-                currentSection &&
-                currentSection.section_number === section.section_number
-              }
-            >
-              {`${section.section_number}: ${section.term} ${section.year}`}
-            </option>
-          ))}
-        </select>
-      </div>
-    </StyledCard>
+    <div>
+      <StyledCard elevation={Elevation.THREE}>
+        <div>Manage the rosters for your course sections.</div>
+        <div>Select your course section below:</div>
+        <div>
+          <select
+            value={inputCourseNumber}
+            onBlur={e => {
+              setInputCourseNumber(Number(e.target.value));
+            }}
+            onChange={e => {
+              setInputCourseNumber(Number(e.target.value));
+            }}
+          >
+            {instructorSections.map(section => (
+              <option
+                key={section.section_number}
+                value={section.section_number}
+                selected={
+                  currentSection &&
+                  currentSection.section_number === section.section_number
+                }
+              >
+                {`${section.section_number}: ${section.term} ${section.year}`}
+              </option>
+            ))}
+          </select>
+        </div>
+      </StyledCard>
+      {currentSection && currentSection.id && (
+        <Roster sectionId={Number(currentSection.id)} />
+      )}
+    </div>
   );
 };
 
