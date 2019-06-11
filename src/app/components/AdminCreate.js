@@ -4,7 +4,10 @@ import { Button, Elevation } from '@blueprintjs/core';
 import { authFetch } from '../helpers/auth';
 
 const CourseForm = () => {
-  const [formValues, setFormValues] = useState({});
+  const [formValues, setFormValues] = useState({
+    semester: 'fall',
+    year: 2019
+  });
   const setFormValue = e => {
     e.persist();
     const { name, value } = e.target;
@@ -41,6 +44,25 @@ const CourseForm = () => {
           <option value="summer-1">Summer 1</option>
           <option value="summer-2">Summer 2</option>
           <option value="summer-3">Summer 3</option>
+        </select>
+      </div>
+      <div>
+        Year:
+        <select
+          value={formValues.year}
+          onBlur={setFormValue}
+          onChange={setFormValue}
+          name="year"
+        >
+          {new Array(50).fill(0).map((el, idx) => (
+            <option
+              key={2000 + idx}
+              value={2000 + idx}
+              selected={formValues.year === 2000 + idx}
+            >
+              {2000 + idx}
+            </option>
+          ))}
         </select>
       </div>
       <div>
