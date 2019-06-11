@@ -5,7 +5,7 @@ import { authFetch } from '../helpers/auth';
 
 const CourseForm = () => {
   const [formValues, setFormValues] = useState({
-    semester: 'fall',
+    term: 'fall',
     year: 2019
   });
   const setFormValue = e => {
@@ -30,12 +30,12 @@ const CourseForm = () => {
   return (
     <div>
       <div>
-        Semester:
+        Term:
         <select
-          value={formValues.semester}
+          value={formValues.term}
           onBlur={setFormValue}
           onChange={setFormValue}
-          name="semester"
+          name="term"
         >
           <option value="fall">Fall</option>
           <option value="winter-1">Winter 1</option>
@@ -68,8 +68,8 @@ const CourseForm = () => {
       <div>
         Course Number:{' '}
         <input
-          name="courseNumber"
-          value={formValues.courseNumber || ''}
+          name="sectionNumber"
+          value={formValues.sectionNumber || ''}
           onChange={setFormValue}
         />
       </div>
