@@ -1,6 +1,16 @@
 const { query } = require('../index');
 
 /**
+ * Check if a user exists with the given key.
+ * @param  {string}
+ * @return {boolean}
+ */
+const checkIfKeyExists = async key => {
+  const user = await getUserByKey(key);
+  return !!user;
+};
+
+/**
  * Get user from user table by user.id
  * @param  {string} id - id of the desired user
  * @return {object|undefined} - the desired user, if found
@@ -26,6 +36,7 @@ const getUserByKey = async key => {
 };
 
 module.exports = {
+  checkIfKeyExists,
   getUserById,
   getUserByKey
 };
