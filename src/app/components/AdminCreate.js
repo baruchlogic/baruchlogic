@@ -46,13 +46,27 @@ const CourseForm = () => {
           onChange={setFormValue}
           name="term"
         >
-          <option value="fall">Fall</option>
-          <option value="winter-1">Winter 1</option>
-          <option value="winter-2">Winter 2</option>
-          <option value="spring">Spring</option>
-          <option value="summer-1">Summer 1</option>
-          <option value="summer-2">Summer 2</option>
-          <option value="summer-3">Summer 3</option>
+          <option key="fall" value="fall">
+            Fall
+          </option>
+          <option key="winter-1" value="winter-1">
+            Winter 1
+          </option>
+          <option key="winter-2" value="winter-2">
+            Winter 2
+          </option>
+          <option key="spring" value="spring">
+            Spring
+          </option>
+          <option key="summer-1" value="summer-1">
+            Summer 1
+          </option>
+          <option key="summer-2" value="summer-2">
+            Summer 2
+          </option>
+          <option key="summer-3" value="summer-3">
+            Summer 3
+          </option>
         </select>
       </div>
       <div>

@@ -32,6 +32,28 @@ const addStudentsToSection = async (sectionData, studentKeys) => {
 };
 
 /**
+ * Get the section data for an instructor
+ * @param  {string}  instructorId
+ * @return {object[]} Array of section data led by instructor
+ */
+const getInstructorSections = async instructorId => {
+  try {
+    console.log('getInstructorSections', instructorId);
+    const q = await query(
+      `SELECT * FROM section
+      INNER JOIN instructor_v_section
+      ON instructor_v_section.section_id = section.id
+      WHERE instructor_id = $1`,
+      [instructorId]
+    );
+    console.log('Q!!!!', q);
+    return q.rows;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+/**
  * Get the section ID for a section, given the section number.
  * @param  {string}  sectionNumber
  * @return {string} The section ID.
@@ -135,5 +157,6 @@ const createNewSectionWithInstructor = async (sectionData, instructorId) => {
 module.exports = {
   addStudents,
   addStudentsToSection,
+  getInstructorSections,
   createNewSectionWithInstructor
 };
