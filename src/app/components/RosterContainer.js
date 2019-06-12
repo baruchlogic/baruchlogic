@@ -51,9 +51,7 @@ const RosterContainer = () => {
           >
             {instructorSections.map(section => (
               <option
-                key={`${section.section_number}-${section.term}-${
-                  section.year
-                }`}
+                key={`${section.section_number}-${section.term}-${section.year}`}
                 value={section.section_number}
                 selected={
                   currentSection &&
