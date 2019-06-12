@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Parser } from 'json2csv';
 import StyledCard from 'app-styled/StyledCard';
 import { number } from 'prop-types';
 import { authFetch } from '../helpers/auth';
@@ -7,12 +8,7 @@ import {
   saveToLocalStorage
 } from '../helpers/localStorage';
 
-/**
- * Roster of student keys for a given section
- * @param {string} sectionId
- * @return {React.Component}
- */
-const Roster = ({ sectionId }) => {
+const Roster = ({ sectionId, sectionNumber }) => {
   const [studentKeys, setStudentKeys] = useState([]);
   const [studentNames, setStudentNames] = useState({});
 
@@ -69,6 +65,23 @@ const Roster = ({ sectionId }) => {
     setStudentNames(localStudentNames);
   };
 
+  const onDownloadCSV = () => {
+    console.log('onDownloadCSV');
+    try {
+      const parser = new Parser({ fields: Object.keys(studentNames) });
+      const csv = parser.parse(studentNames);
+      console.log(csv);
+
+      const hiddenElement = document.createElement('a');
+      hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+      hiddenElement.target = '_blank';
+      hiddenElement.download = `roster-${sectionNumber}.csv`;
+      hiddenElement.click();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <StyledCard>
       <h2>ROSTER</h2>
@@ -87,12 +100,15 @@ const Roster = ({ sectionId }) => {
           </li>
         ))}
       </ul>
+      <br />
+      <button onClick={onDownloadCSV}>Download .csv</button>
     </StyledCard>
   );
 };
 
 Roster.propTypes = {
-  sectionId: number
+  sectionId: number,
+  sectionNumber: number
 };
 
 export default Roster;

@@ -65,7 +65,10 @@ const RosterContainer = () => {
         </div>
       </StyledCard>
       {currentSection && currentSection.id && (
-        <Roster sectionId={Number(currentSection.id)} />
+        <Roster
+          sectionId={Number(currentSection.id)}
+          sectionNumber={currentSection.section_number}
+        />
       )}
     </div>
   );
