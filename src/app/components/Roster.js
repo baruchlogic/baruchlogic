@@ -82,7 +82,7 @@ const Roster = ({ sectionId }) => {
             <input
               data-key={key}
               onChange={onAddName}
-              value={studentNames[key]}
+              value={(studentNames && studentNames[key]) || ''}
             />
           </li>
         ))}
