@@ -2,15 +2,10 @@ import React, { useEffect, useState } from 'react';
 import StyledCard from 'app-styled/StyledCard';
 import { number } from 'prop-types';
 import { authFetch } from '../helpers/auth';
-
-const saveToLocalStorage = (key, value) => {
-  const jsonValue = JSON.stringify(value);
-  localStorage.setItem(key, jsonValue);
-};
-
-const clearKeyFromLocalStorage = key => {
-  localStorage.removeItem(key);
-};
+import {
+  getValueFromLocalStorageByKey,
+  saveToLocalStorage
+} from '../helpers/localStorage';
 
 /**
  * Roster of student keys for a given section
@@ -32,6 +27,10 @@ const Roster = ({ sectionId }) => {
   useEffect(() => {
     getStudentKeysForSectionId(sectionId);
   }, [sectionId]);
+
+  useEffect(() => {
+    hydrateStudentNames();
+  }, [studentKeys]);
 
   useEffect(() => {
     saveToLocalStorage('studentNames', studentNames);
@@ -63,6 +62,13 @@ const Roster = ({ sectionId }) => {
     });
   };
 
+  const hydrateStudentNames = () => {
+    console.log('hydrateStudentNames');
+    const localStudentNames = getValueFromLocalStorageByKey('studentNames');
+    console.log('localStudentNames', localStudentNames);
+    setStudentNames(localStudentNames);
+  };
+
   return (
     <StyledCard>
       <h2>ROSTER</h2>
@@ -73,7 +79,11 @@ const Roster = ({ sectionId }) => {
         {studentKeys.map(key => (
           <li key={key}>
             <div>{key}</div>
-            <input data-key={key} onChange={onAddName}/>
+            <input
+              data-key={key}
+              onChange={onAddName}
+              value={studentNames[key]}
+            />
           </li>
         ))}
       </ul>
