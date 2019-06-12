@@ -26,6 +26,7 @@ const addStudentsToSection = async (sectionData, studentKeys) => {
   Promise.all(
     studentKeys.map(async studentKey => {
       const studentId = await getUserIdFromKey(studentKey);
+      console.log('new student ID', studentId);
       addStudentToSection(sectionId, studentId);
     })
   );
@@ -44,6 +45,24 @@ const addStudentsToSectionById = async (sectionId, studentKeys) => {
       addStudentToSection(sectionId, studentId);
     })
   );
+};
+
+/**
+ * Checks if a section with the given data exists.
+ * @param  {integer}  sectionNumber
+ * @param  {string}  term
+ * @param  {integer}  year
+ * @return {Promise}
+ */
+const checkIfSectionExists = async ({ sectionNumber, term, year }) => {
+  const q = await query(
+    `SELECT id FROM section
+    WHERE section_number = $1
+    AND term = $2
+    AND year = $3`,
+    [sectionNumber, term, year]
+  );
+  return q.rows.length > 0;
 };
 
 /**
@@ -191,6 +210,7 @@ module.exports = {
   addStudents,
   addStudentsToSection,
   addStudentsToSectionById,
+  checkIfSectionExists,
   getInstructorSections,
   getStudentsInSection,
   createNewSectionWithInstructor

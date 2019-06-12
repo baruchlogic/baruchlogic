@@ -31,6 +31,11 @@ const CourseForm = () => {
       'POST',
       { body: JSON.stringify(formValues) }
     );
+    const { status } = response;
+    if (status === 400) {
+      alert('Duplicate section!');
+      return;
+    }
     console.log('RESPONSE', response);
     const section = await response.json();
     setNewSection(section);

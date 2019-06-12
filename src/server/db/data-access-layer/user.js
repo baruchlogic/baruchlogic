@@ -64,6 +64,7 @@ const getUserByKey = async key => {
 };
 
 module.exports = {
+  createNewKey,
   createNewUser,
   getUserById,
   getUserByKey
