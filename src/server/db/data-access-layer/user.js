@@ -1,3 +1,4 @@
+const randomstring = require('randomstring');
 const { query } = require('../index');
 
 /**
@@ -8,6 +9,33 @@ const { query } = require('../index');
 const checkIfKeyExists = async key => {
   const user = await getUserByKey(key);
   return !!user;
+};
+
+/**
+ * Create a new unique user key
+ * @return {string} The new user key
+ */
+const createNewKey = async () => {
+  let newKey = randomstring.generate(8);
+  let keyExists = await checkIfKeyExists(newKey);
+  while (keyExists) {
+    newKey = randomstring.generate(8);
+    keyExists = await checkIfKeyExists(newKey);
+  }
+  return newKey;
+};
+
+const createNewUser = async (admin = false) => {
+  try {
+    const newKey = await createNewKey();
+    await query(`INSERT INTO logic_user (key, admin) VALUES ($1, $2)`, [
+      newKey,
+      admin
+    ]);
+    return newKey;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 /**
@@ -36,7 +64,7 @@ const getUserByKey = async key => {
 };
 
 module.exports = {
-  checkIfKeyExists,
+  createNewUser,
   getUserById,
   getUserByKey
 };

@@ -17,12 +17,27 @@ const addStudents = async studentKeys => {
 
 /**
  * Add students to a section
- * @param {string} sectionData
+ * @param {object} sectionData
  * @param {string[]} studentKeys    Array of student keys
  */
 const addStudentsToSection = async (sectionData, studentKeys) => {
   const sectionId = await getSectionIdFromSectionNumber(sectionData);
   console.log('HERE', sectionId);
+  Promise.all(
+    studentKeys.map(async studentKey => {
+      const studentId = await getUserIdFromKey(studentKey);
+      addStudentToSection(sectionId, studentId);
+    })
+  );
+};
+
+/**
+ * Add students to a section by section ID
+ * @param {string} sectionId
+ * @param {string[]} studentKeys    Array of student keys
+ */
+const addStudentsToSectionById = async (sectionId, studentKeys) => {
+  console.log('addStudentsToSectionById', sectionId);
   Promise.all(
     studentKeys.map(async studentKey => {
       const studentId = await getUserIdFromKey(studentKey);
@@ -102,7 +117,7 @@ const getStudentsInSection = async sectionId => {
       [sectionId]
     );
     console.log('q', q);
-    return q.rows.map( el => el.key );
+    return q.rows.map(el => el.key);
   } catch (e) {
     console.log(e);
   }
@@ -175,6 +190,7 @@ const createNewSectionWithInstructor = async (sectionData, instructorId) => {
 module.exports = {
   addStudents,
   addStudentsToSection,
+  addStudentsToSectionById,
   getInstructorSections,
   getStudentsInSection,
   createNewSectionWithInstructor
