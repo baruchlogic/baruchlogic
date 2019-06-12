@@ -3,6 +3,15 @@ import StyledCard from 'app-styled/StyledCard';
 import { number } from 'prop-types';
 import { authFetch } from '../helpers/auth';
 
+const saveToLocalStorage = (key, value) => {
+  const jsonValue = JSON.stringify(value);
+  localStorage.setItem(key, jsonValue);
+};
+
+const clearKeyFromLocalStorage = key => {
+  localStorage.removeItem(key);
+};
+
 /**
  * Roster of student keys for a given section
  * @param {string} sectionId
@@ -10,6 +19,8 @@ import { authFetch } from '../helpers/auth';
  */
 const Roster = ({ sectionId }) => {
   const [studentKeys, setStudentKeys] = useState([]);
+  const [studentNames, setStudentNames] = useState({});
+
   const getStudentKeysForSectionId = async sectionId => {
     let keys = await fetch(
       `http://localhost:5000/api/sections/${sectionId}/roster`
@@ -22,6 +33,11 @@ const Roster = ({ sectionId }) => {
     getStudentKeysForSectionId(sectionId);
   }, [sectionId]);
 
+  useEffect(() => {
+    saveToLocalStorage('studentNames', studentNames);
+    console.log('studentNames', studentNames);
+  }, [studentNames]);
+
   const onAddStudent = async () => {
     let newStudentKey = await authFetch(
       `http://localhost:5000/api/user`,
@@ -33,6 +49,20 @@ const Roster = ({ sectionId }) => {
     getStudentKeysForSectionId(sectionId);
   };
 
+  const onAddName = e => {
+    const {
+      target: {
+        dataset: { key },
+        value
+      }
+    } = e;
+    console.log('onAddName', key, value);
+    setStudentNames({
+      ...studentNames,
+      [key]: value
+    });
+  };
+
   return (
     <StyledCard>
       <h2>ROSTER</h2>
@@ -41,7 +71,10 @@ const Roster = ({ sectionId }) => {
       </div>
       <ul>
         {studentKeys.map(key => (
-          <li key={key}>{key}</li>
+          <li key={key}>
+            <div>{key}</div>
+            <input data-key={key} onChange={onAddName}/>
+          </li>
         ))}
       </ul>
     </StyledCard>
