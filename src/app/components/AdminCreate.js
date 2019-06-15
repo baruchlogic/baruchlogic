@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import StyledCard from 'app-styled/StyledCard';
 import { Button, Elevation } from '@blueprintjs/core';
@@ -11,16 +11,35 @@ const StyledLi = styled.li`
 const CourseForm = () => {
   const [formValues, setFormValues] = useState({
     term: 'fall',
-    year: 2019
+    year: 2019,
+    sectionNumber: '',
+    nStudents: ''
   });
+  const [submitButtonIsEnabled, setSubmitButtonIsEnabled] = useState(false);
   const setFormValue = e => {
     e.persist();
     const { name, value } = e.target;
+    if (
+      (name === 'sectionNumber' && isNaN(Number(value))) ||
+      (name === 'sectionNumber' && value.length === 6) ||
+      (name === 'nStudents' && isNaN(Number(value)))
+    ) {
+      return;
+    }
     setFormValues(formValues => ({
       ...formValues,
       [name]: value
     }));
   };
+  useEffect(() => {
+    const { sectionNumber, nStudents } = formValues;
+    console.log('Submit button', sectionNumber.length, nStudents);
+    if (sectionNumber.length === 5 && nStudents !== '') {
+      setSubmitButtonIsEnabled(true);
+    } else {
+      setSubmitButtonIsEnabled(false);
+    }
+  }, [formValues]);
 
   const [newSection, setNewSection] = useState(null);
 
@@ -31,6 +50,11 @@ const CourseForm = () => {
       'POST',
       { body: JSON.stringify(formValues) }
     );
+    const { status } = response;
+    if (status === 400) {
+      alert('Duplicate section!');
+      return;
+    }
     console.log('RESPONSE', response);
     const section = await response.json();
     setNewSection(section);
@@ -46,13 +70,27 @@ const CourseForm = () => {
           onChange={setFormValue}
           name="term"
         >
-          <option value="fall">Fall</option>
-          <option value="winter-1">Winter 1</option>
-          <option value="winter-2">Winter 2</option>
-          <option value="spring">Spring</option>
-          <option value="summer-1">Summer 1</option>
-          <option value="summer-2">Summer 2</option>
-          <option value="summer-3">Summer 3</option>
+          <option key="fall" value="fall">
+            Fall
+          </option>
+          <option key="winter-1" value="winter-1">
+            Winter 1
+          </option>
+          <option key="winter-2" value="winter-2">
+            Winter 2
+          </option>
+          <option key="spring" value="spring">
+            Spring
+          </option>
+          <option key="summer-1" value="summer-1">
+            Summer 1
+          </option>
+          <option key="summer-2" value="summer-2">
+            Summer 2
+          </option>
+          <option key="summer-3" value="summer-3">
+            Summer 3
+          </option>
         </select>
       </div>
       <div>
@@ -75,7 +113,7 @@ const CourseForm = () => {
         </select>
       </div>
       <div>
-        Course Number:{' '}
+        CUNY Course Number:{' '}
         <input
           name="sectionNumber"
           value={formValues.sectionNumber || ''}
@@ -90,7 +128,12 @@ const CourseForm = () => {
           onChange={setFormValue}
         />
       </div>
-      <Button intent="success" large onClick={onSubmit}>
+      <Button
+        intent="success"
+        large
+        onClick={onSubmit}
+        disabled={!submitButtonIsEnabled}
+      >
         SUBMIT
       </Button>
 

@@ -4,6 +4,7 @@ import { authFetch } from '../helpers/auth';
 import AdminCreate from './AdminCreate';
 import AdminHeader from './AdminHeader';
 import AdminHome from './AdminHome';
+import RosterContainer from './RosterContainer';
 
 const AdminContainer = () => {
   const [isAdmin, setIsAdmin] = useState(null);
@@ -30,6 +31,7 @@ const AdminContainer = () => {
       <AdminHeader />
       <Route exact path="/admin" component={AdminHome} />
       <Route exact path="/admin/create" component={AdminCreate} />
+      <Route exact path="/admin/roster" component={RosterContainer} />
     </>
   ) : (
     <div>LOADING...</div>

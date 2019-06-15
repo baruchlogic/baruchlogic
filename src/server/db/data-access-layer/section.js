@@ -17,7 +17,7 @@ const addStudents = async studentKeys => {
 
 /**
  * Add students to a section
- * @param {string} sectionData
+ * @param {object} sectionData
  * @param {string[]} studentKeys    Array of student keys
  */
 const addStudentsToSection = async (sectionData, studentKeys) => {
@@ -26,9 +26,65 @@ const addStudentsToSection = async (sectionData, studentKeys) => {
   Promise.all(
     studentKeys.map(async studentKey => {
       const studentId = await getUserIdFromKey(studentKey);
+      console.log('new student ID', studentId);
       addStudentToSection(sectionId, studentId);
     })
   );
+};
+
+/**
+ * Add students to a section by section ID
+ * @param {string} sectionId
+ * @param {string[]} studentKeys    Array of student keys
+ */
+const addStudentsToSectionById = async (sectionId, studentKeys) => {
+  console.log('addStudentsToSectionById', sectionId);
+  Promise.all(
+    studentKeys.map(async studentKey => {
+      const studentId = await getUserIdFromKey(studentKey);
+      addStudentToSection(sectionId, studentId);
+    })
+  );
+};
+
+/**
+ * Checks if a section with the given data exists.
+ * @param  {integer}  sectionNumber
+ * @param  {string}  term
+ * @param  {integer}  year
+ * @return {Promise}
+ */
+const checkIfSectionExists = async ({ sectionNumber, term, year }) => {
+  const q = await query(
+    `SELECT id FROM section
+    WHERE section_number = $1
+    AND term = $2
+    AND year = $3`,
+    [sectionNumber, term, year]
+  );
+  return q.rows.length > 0;
+};
+
+/**
+ * Get the section data for an instructor
+ * @param  {string}  instructorId
+ * @return {object[]} Array of section data led by instructor
+ */
+const getInstructorSections = async instructorId => {
+  try {
+    console.log('getInstructorSections', instructorId);
+    const q = await query(
+      `SELECT * FROM section
+      INNER JOIN instructor_v_section
+      ON instructor_v_section.section_id = section.id
+      WHERE instructor_id = $1`,
+      [instructorId]
+    );
+    console.log('Q!!!!', q);
+    return q.rows;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 /**
@@ -66,6 +122,24 @@ const getUserIdFromKey = async key => {
     const id = q.rows[0].id;
     return id;
   } catch (e) {}
+};
+
+const getStudentsInSection = async sectionId => {
+  console.log('getStudentsInSection HERE', sectionId, typeof sectionId);
+  try {
+    const q = await query(
+      `SELECT key FROM logic_user
+      INNER JOIN student_roster
+      ON logic_user.id = student_roster.student_id
+      WHERE logic_user.admin = false
+      AND student_roster.section_id = $1`,
+      [sectionId]
+    );
+    console.log('q', q);
+    return q.rows.map(el => el.key);
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 /**
@@ -135,5 +209,9 @@ const createNewSectionWithInstructor = async (sectionData, instructorId) => {
 module.exports = {
   addStudents,
   addStudentsToSection,
+  addStudentsToSectionById,
+  checkIfSectionExists,
+  getInstructorSections,
+  getStudentsInSection,
   createNewSectionWithInstructor
 };
