@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import StyledCard from 'app-styled/StyledCard';
 import { Button, Elevation } from '@blueprintjs/core';
@@ -11,16 +11,35 @@ const StyledLi = styled.li`
 const CourseForm = () => {
   const [formValues, setFormValues] = useState({
     term: 'fall',
-    year: 2019
+    year: 2019,
+    sectionNumber: '',
+    nStudents: ''
   });
+  const [submitButtonIsEnabled, setSubmitButtonIsEnabled] = useState(false);
   const setFormValue = e => {
     e.persist();
     const { name, value } = e.target;
+    if (
+      (name === 'sectionNumber' && isNaN(Number(value))) ||
+      (name === 'sectionNumber' && value.length === 6) ||
+      (name === 'nStudents' && isNaN(Number(value)))
+    ) {
+      return;
+    }
     setFormValues(formValues => ({
       ...formValues,
       [name]: value
     }));
   };
+  useEffect(() => {
+    const { sectionNumber, nStudents } = formValues;
+    console.log('Submit button', sectionNumber.length, nStudents);
+    if (sectionNumber.length === 5 && nStudents !== '') {
+      setSubmitButtonIsEnabled(true);
+    } else {
+      setSubmitButtonIsEnabled(false);
+    }
+  }, [formValues]);
 
   const [newSection, setNewSection] = useState(null);
 
@@ -94,7 +113,7 @@ const CourseForm = () => {
         </select>
       </div>
       <div>
-        Course Number:{' '}
+        CUNY Course Number:{' '}
         <input
           name="sectionNumber"
           value={formValues.sectionNumber || ''}
@@ -109,7 +128,12 @@ const CourseForm = () => {
           onChange={setFormValue}
         />
       </div>
-      <Button intent="success" large onClick={onSubmit}>
+      <Button
+        intent="success"
+        large
+        onClick={onSubmit}
+        disabled={!submitButtonIsEnabled}
+      >
         SUBMIT
       </Button>
 
