@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Parser } from 'json2csv';
 import StyledCard from 'app-styled/StyledCard';
 import { number } from 'prop-types';
-import { authFetch } from '../helpers/auth';
+import { authFetch } from 'helpers/auth';
 import {
   getValueFromLocalStorageByKey,
   saveToLocalStorage
-} from '../helpers/localStorage';
+} from 'helpers/localStorage';
 
 const Roster = ({ sectionId, sectionNumber }) => {
   const [studentKeys, setStudentKeys] = useState([]);

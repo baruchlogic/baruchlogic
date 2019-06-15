@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { authFetch } from '../helpers/auth';
+import { authFetch } from 'helpers/auth';
 
 export const useInstructorSections = () => {
   const [instructorSections, setInstructorSections] = useState([]);

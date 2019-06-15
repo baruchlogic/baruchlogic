@@ -45,7 +45,9 @@ module.exports = {
   resolve: {
     alias: {
       'app-styled': path.resolve(__dirname, 'src/app/styled-components'),
-      constants: path.resolve(__dirname, 'src/constants')
+      constants: path.resolve(__dirname, 'src/constants'),
+      helpers: path.resolve(__dirname, 'src/app/helpers'),
+      hooks: path.resolve(__dirname, 'src/app/hooks')
     }
   }
 };

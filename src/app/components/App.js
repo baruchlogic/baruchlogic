@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import About from './About';
-import AdminContainer from './AdminContainer';
+import AdminContainer from './admin/AdminContainer';
 import Header from './Header';
 import Home from './Home';
 import Login from './Login';

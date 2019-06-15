@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import StyledCard from 'app-styled/StyledCard';
 import { Elevation } from '@blueprintjs/core';
-import { useInstructorSections } from '../hooks/admin';
+import { useInstructorSections } from 'hooks/admin';
 import Roster from './Roster';
 
 /**
