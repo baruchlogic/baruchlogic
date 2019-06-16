@@ -65,10 +65,12 @@ const Grades = () => {
       <StyledCard elevation={Elevation.TWO}>
         <table>
           <thead>
-            <th />
-            {currentProblemsets.map(problemset => (
-              <th key={problemset.id}>{problemset.order}</th>
-            ))}
+            <tr>
+              <th />
+              {currentProblemsets.map(problemset => (
+                <th key={problemset.id}>{problemset.order}</th>
+              ))}
+            </tr>
           </thead>
           <tbody>
             <tr />
