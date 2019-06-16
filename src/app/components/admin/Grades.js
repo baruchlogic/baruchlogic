@@ -94,7 +94,7 @@ const Grades = () => {
                 <StyledTd>{studentNames[userId] || userId}</StyledTd>
                 {currentProblemsets.map(problemset => (
                   <StyledTd key={problemset.id}>
-                    {currentGrades[userId][problemset.id]}
+                    {currentGrades[userId][problemset.id] || 0}
                   </StyledTd>
                 ))}
               </tr>
