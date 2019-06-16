@@ -1,5 +1,7 @@
 const {
   getInstructorSections,
+  getSectionGrades,
+  getSectionProblemsetIds,
   getStudentsInSection
 } = require('../db/data-access-layer/section');
 
@@ -19,6 +21,22 @@ const configSectionRoutes = app => {
     const students = await getStudentsInSection(sectionId);
     console.log('STUDENTS', students);
     res.status(200).send(students);
+  });
+
+  app.get('/api/sections/:sectionId/grades', async (req, res) => {
+    const { sectionId } = req.params;
+    console.log('/api/sections/:sectionId/grades', sectionId);
+    const grades = await getSectionGrades(Number(sectionId));
+    console.log('GOT THE GRADES', grades);
+    res.send(grades);
+  });
+
+  app.get('/api/sections/:sectionId/problemsets', async (req, res) => {
+    const { sectionId } = req.params;
+    console.log('/api/sections/:sectionId/problemsets', sectionId);
+    const problemsets = await getSectionProblemsetIds(Number(sectionId));
+    console.log('GOT THE PROBLEMSETS', problemsets);
+    res.send(problemsets);
   });
 };
 

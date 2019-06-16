@@ -13,10 +13,9 @@ const Roster = ({ sectionId, sectionNumber }) => {
   const [studentNames, setStudentNames] = useState({});
 
   const getStudentKeysForSectionId = async sectionId => {
-    let keys = await fetch(
+    const keys = await fetch(
       `http://localhost:5000/api/sections/${sectionId}/roster`
-    );
-    keys = await keys.json();
+    ).then(res => res.json());
     setStudentKeys(keys);
   };
 
