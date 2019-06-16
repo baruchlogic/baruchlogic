@@ -2,7 +2,8 @@ const {
   getInstructorSections,
   getSectionGrades,
   getSectionProblemsetIds,
-  getStudentsInSection
+  getStudentsInSection,
+  removeUserFromSection
 } = require('../db/data-access-layer/section');
 
 const configSectionRoutes = app => {
@@ -12,15 +13,22 @@ const configSectionRoutes = app => {
     console.log('ID', instructorId);
     const sections = await getInstructorSections(instructorId);
     console.log('SECTIONS', sections);
-    res.status(200).send(sections);
+    res.send(sections);
   });
 
-  app.get('/api/sections/:sectionId/roster', async (req, res) => {
-    console.log('/api/sections/:sectionId/roster');
+  app.get('/api/sections/:sectionId/users', async (req, res) => {
+    console.log('/api/sections/:sectionId/users');
     const { sectionId } = req.params;
     const students = await getStudentsInSection(sectionId);
     console.log('STUDENTS', students);
-    res.status(200).send(students);
+    res.send(students);
+  });
+
+  app.delete('/api/sections/:sectionId/users/:userId', async (req, res) => {
+    console.log('/api/sections/:sectionId/users/:userId');
+    const { sectionId, userId } = req.params;
+    await removeUserFromSection(userId, sectionId);
+    res.status(200).send(userId);
   });
 
   app.get('/api/sections/:sectionId/grades', async (req, res) => {

@@ -128,7 +128,7 @@ const getStudentsInSection = async sectionId => {
   console.log('getStudentsInSection HERE', sectionId, typeof sectionId);
   try {
     const q = await query(
-      `SELECT key FROM logic_user
+      `SELECT id, key FROM logic_user
       INNER JOIN student_roster
       ON logic_user.id = student_roster.student_id
       WHERE logic_user.admin = false
@@ -136,7 +136,7 @@ const getStudentsInSection = async sectionId => {
       [sectionId]
     );
     console.log('q', q);
-    return q.rows.map(el => el.key);
+    return q.rows;
   } catch (e) {
     console.log(e);
   }
@@ -221,11 +221,12 @@ const getUserGrades = async userId => {
 
 const getUserGradesByUserKey = async key => {
   console.log('getUserGradesByKey');
-  const { id: userId } = await getUserByKey(key);
+  const { id } = await getUserByKey(key);
+  console.log('id', id);
   const q = await query(
     `SELECT problemset_id, score FROM problemset_score
     WHERE student_id = $1`,
-    [userId]
+    [id]
   );
   // console.log('QUERY', q);
   const grades = q.rows.reduce(
@@ -245,9 +246,9 @@ const getSectionGrades = async sectionId => {
   const result = {};
   const users = await getStudentsInSection(sectionId);
   console.log('got users');
-  const grades = users.map(async key => {
-    const grades = await getUserGradesByUserKey(key);
-    result[key] = grades;
+  const grades = users.map(async user => {
+    const grades = await getUserGradesByUserKey(user.key);
+    result[user.key] = grades;
   });
   await Promise.all(grades);
   return result;
@@ -264,14 +265,25 @@ const getSectionProblemsetIds = async sectionId => {
   return q.rows;
 };
 
+const removeUserFromSection = async (userId, sectionId) => {
+  const q = await query(
+    `DELETE FROM student_roster WHERE student_id = $1 AND section_id = $2`,
+    [userId, sectionId]
+  );
+  console.log('DELETE user', q);
+  return;
+};
+
 module.exports = {
   addStudents,
   addStudentsToSection,
   addStudentsToSectionById,
   checkIfSectionExists,
+  createNewSectionWithInstructor,
   getInstructorSections,
   getSectionGrades,
   getSectionProblemsetIds,
   getStudentsInSection,
-  createNewSectionWithInstructor
+  getUserGrades,
+  removeUserFromSection
 };

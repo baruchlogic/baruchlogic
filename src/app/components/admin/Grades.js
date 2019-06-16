@@ -11,7 +11,7 @@ const StyledTd = styled.td`
 const Grades = () => {
   const instructorSections = useInstructorSections();
   const [currentSection, setCurrentSection] = useState({});
-  const [currentSectionId, setCurrentSectionId] = useState('');
+  const [currentSectionId, setCurrentSectionId] = useState(null);
   const [currentGrades, setCurrentGrades] = useState({});
   const [currentProblemsets, setCurrentProblemsets] = useState([]);
   const [studentNames, setStudentNames] = useState({});
@@ -19,14 +19,16 @@ const Grades = () => {
   const localStorageNames =
     JSON.parse(localStorage.getItem('studentNames')) || {};
 
-  const onChange = ({ target: { value } }) => {
-    setCurrentSectionId(value);
+  const onSectionChange = ({ target: { value } }) => {
+    console.log('value', value);
+    setCurrentSectionId(Number(value));
   };
 
   const setCurrentSectionGrades = async () => {
     const grades = await fetch(
       `http://localhost:5000/api/sections/${currentSectionId}/grades`
     ).then(res => res.json());
+    console.log('Grades!!', grades);
     setCurrentGrades(grades);
   };
 
@@ -34,6 +36,7 @@ const Grades = () => {
     const problemsets = await fetch(
       `http://localhost:5000/api/sections/${currentSectionId}/problemsets`
     ).then(res => res.json());
+    console.log('setCurrentProblemsetsHelper', problemsets);
     setCurrentProblemsets(problemsets);
   };
 
@@ -41,7 +44,7 @@ const Grades = () => {
     if (currentSectionId) {
       setCurrentSectionGrades();
       setCurrentProblemsetsHelper();
-      const section = instructorSections.find(x => (x.id = currentSectionId));
+      const section = instructorSections.find(x => x.id === currentSectionId);
       setCurrentSection(section);
     }
   }, [currentSectionId]);
@@ -63,6 +66,7 @@ const Grades = () => {
   }, [currentGrades]);
 
   useEffect(() => {
+    console.log('instructorSections', instructorSections);
     console.log('currentGrades', currentGrades);
     console.log('currentProblemsets', currentProblemsets);
     console.log('studentNames', studentNames);
@@ -102,7 +106,11 @@ const Grades = () => {
     <div>
       <StyledCard elevation={Elevation.THREE}>
         <div>Select a course section:</div>
-        <select value={currentSectionId} onChange={onChange} onBlur={onChange}>
+        <select
+          value={currentSectionId}
+          onChange={onSectionChange}
+          onBlur={onSectionChange}
+        >
           {instructorSections.map(section => (
             <option key={section.id} value={section.id}>
               {`${section.section_number}: ${section.term} ${section.year}`}

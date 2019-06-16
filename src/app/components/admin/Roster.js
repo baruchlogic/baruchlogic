@@ -10,23 +10,23 @@ import {
 } from 'helpers/localStorage';
 
 const Roster = ({ sectionId, sectionNumber }) => {
-  const [studentKeys, setStudentKeys] = useState([]);
+  const [students, setStudents] = useState([]);
   const [studentNames, setStudentNames] = useState({});
 
-  const getStudentKeysForSectionId = async sectionId => {
-    const keys = await fetch(
-      `http://localhost:5000/api/sections/${sectionId}/roster`
+  const getStudentsInSection = async sectionId => {
+    const users = await fetch(
+      `http://localhost:5000/api/sections/${sectionId}/users`
     ).then(res => res.json());
-    setStudentKeys(keys);
+    setStudents(users);
   };
 
   useEffect(() => {
-    getStudentKeysForSectionId(sectionId);
+    getStudentsInSection(sectionId);
   }, [sectionId]);
 
   useEffect(() => {
     hydrateStudentNames();
-  }, [studentKeys]);
+  }, [students]);
 
   useEffect(() => {
     saveToLocalStorage('studentNames', studentNames);
@@ -35,23 +35,23 @@ const Roster = ({ sectionId, sectionNumber }) => {
 
   const onAddStudent = async () => {
     let newStudentKey = await authFetch(
-      `http://localhost:5000/api/user`,
+      `http://localhost:5000/api/users`,
       'POST',
-      { body: JSON.stringify({ action: 'CREATE', sectionId }) }
+      { body: JSON.stringify({ sectionId }) }
     );
     newStudentKey = await newStudentKey.text();
     console.log('NEW STUDENT KEY', newStudentKey);
-    getStudentKeysForSectionId(sectionId);
+    getStudentsInSection(sectionId);
   };
 
-  const onAddName = e => {
+  const onNameInputChange = e => {
     const {
       target: {
         dataset: { key },
         value
       }
     } = e;
-    console.log('onAddName', key, value);
+    console.log('onNameInputChange', key, value);
     setStudentNames({
       ...studentNames,
       [key]: value
@@ -82,6 +82,18 @@ const Roster = ({ sectionId, sectionNumber }) => {
     }
   };
 
+  const onRemoveUser = async userId => {
+    console.log('onRemoveUser', userId);
+    const res = await authFetch(
+      `http://localhost:5000/api/sections/${sectionId}/users/${userId}`,
+      'DELETE'
+    );
+    console.log('res', res);
+    if (res.status === 200) {
+      setStudents(students.filter(student => student.id !== userId));
+    }
+  };
+
   return (
     <StyledCard elevation={Elevation.TWO}>
       <h2>ROSTER</h2>
@@ -89,13 +101,28 @@ const Roster = ({ sectionId, sectionNumber }) => {
         <button onClick={onAddStudent}>Add student to roster</button>
       </div>
       <ul style={{ maxWidth: '350px', margin: 'auto' }}>
-        {studentKeys.map(key => (
-          <li key={key} style={{ display: 'flex', justifyContent: 'space-between', margin: '1rem 0' }}>
-            <div>{key}</div>
+        {students.map(student => (
+          <li
+            key={student.key}
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              margin: '1rem 0'
+            }}
+          >
+            <button
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                onRemoveUser(student.id);
+              }}
+            >
+              X
+            </button>
+            <div>{student.key}</div>
             <input
-              data-key={key}
-              onChange={onAddName}
-              value={(studentNames && studentNames[key]) || ''}
+              data-key={student.key}
+              onChange={onNameInputChange}
+              value={(studentNames && studentNames[student.key]) || ''}
             />
           </li>
         ))}
