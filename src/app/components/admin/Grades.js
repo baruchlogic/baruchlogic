@@ -13,6 +13,10 @@ const Grades = () => {
   const [currentSectionId, setCurrentSectionId] = useState('');
   const [currentGrades, setCurrentGrades] = useState({});
   const [currentProblemsets, setCurrentProblemsets] = useState([]);
+  const [studentNames, setStudentNames] = useState({});
+
+  const localStorageNames =
+    JSON.parse(localStorage.getItem('studentNames')) || {};
 
   const onChange = ({ target: { value } }) => {
     setCurrentSectionId(value);
@@ -46,8 +50,19 @@ const Grades = () => {
   }, [instructorSections]);
 
   useEffect(() => {
+    const newStudentNames = {};
+    Object.keys(currentGrades).forEach(studentId => {
+      const name = localStorageNames[studentId];
+      console.log('studentId', studentId, 'name', name);
+      newStudentNames[studentId] = name;
+    });
+    setStudentNames(newStudentNames);
+  }, [currentGrades]);
+
+  useEffect(() => {
     console.log('currentGrades', currentGrades);
     console.log('currentProblemsets', currentProblemsets);
+    console.log('studentNames', studentNames);
   });
 
   return (
@@ -76,7 +91,7 @@ const Grades = () => {
             <tr />
             {Object.keys(currentGrades).map(userId => (
               <tr key={userId}>
-                <StyledTd>{userId}</StyledTd>
+                <StyledTd>{studentNames[userId] || userId}</StyledTd>
                 {currentProblemsets.map(problemset => (
                   <StyledTd key={problemset.id}>
                     {currentGrades[userId][problemset.id]}
