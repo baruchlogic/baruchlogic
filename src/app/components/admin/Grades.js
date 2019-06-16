@@ -10,6 +10,7 @@ const StyledTd = styled.td`
 
 const Grades = () => {
   const instructorSections = useInstructorSections();
+  const [currentSection, setCurrentSection] = useState({});
   const [currentSectionId, setCurrentSectionId] = useState('');
   const [currentGrades, setCurrentGrades] = useState({});
   const [currentProblemsets, setCurrentProblemsets] = useState([]);
@@ -40,6 +41,8 @@ const Grades = () => {
     if (currentSectionId) {
       setCurrentSectionGrades();
       setCurrentProblemsetsHelper();
+      const section = instructorSections.find(x => (x.id = currentSectionId));
+      setCurrentSection(section);
     }
   }, [currentSectionId]);
 
@@ -63,7 +66,37 @@ const Grades = () => {
     console.log('currentGrades', currentGrades);
     console.log('currentProblemsets', currentProblemsets);
     console.log('studentNames', studentNames);
+    console.log('currentSection', currentSection);
   });
+
+  const onDownloadCSV = () => {
+    console.log('onDownloadCSV');
+    try {
+      const row1 = ` ,${currentProblemsets
+        .map(problemset => problemset.order)
+        .join(',')}
+        `;
+
+      const body =
+        row1 +
+        Object.keys(currentGrades).map(
+          userId =>
+            `${localStorageNames[userId] || userId},${currentProblemsets
+              .map(problemset => currentGrades[userId][problemset.id])
+              .join(',')}`
+        ).join(`
+          `);
+      console.log(body);
+
+      const hiddenElement = document.createElement('a');
+      hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(body);
+      hiddenElement.target = '_blank';
+      hiddenElement.download = `grades-${currentSection.section_number}.csv`;
+      hiddenElement.click();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div>
@@ -91,7 +124,9 @@ const Grades = () => {
             <tr />
             {Object.keys(currentGrades).map(userId => (
               <tr key={userId}>
-                <StyledTd>{studentNames[userId] || userId}</StyledTd>
+                <StyledTd>
+                  <pre>{studentNames[userId] || userId}</pre>
+                </StyledTd>
                 {currentProblemsets.map(problemset => (
                   <StyledTd key={problemset.id}>
                     {currentGrades[userId][problemset.id] || 0}
@@ -101,6 +136,9 @@ const Grades = () => {
             ))}
           </tbody>
         </table>
+        <div>
+          <button onClick={onDownloadCSV}>Download .csv</button>
+        </div>
       </StyledCard>
     </div>
   );
