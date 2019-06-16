@@ -153,7 +153,7 @@ const getScore = async (problemsetId, studentId) => {
     [problemsetId, studentId]
   );
   console.log('QUERY', q);
-  return q.rows[0].score;
+  return q.rows[0] && q.rows[0].score;
 };
 
 module.exports = {

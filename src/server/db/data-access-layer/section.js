@@ -1,5 +1,5 @@
 const { query } = require('../index');
-
+const { getUserByKey } = require('./user');
 /**
  * Add students to db
  * @param {string[]} studentKeys
@@ -206,12 +206,72 @@ const createNewSectionWithInstructor = async (sectionData, instructorId) => {
   await addInstructorToSection(instructorId, newSectionId);
 };
 
+const getUserGrades = async userId => {
+  console.log('getUserGrades');
+  const q = await query(
+    `SELECT problemset_id, score FROM problemset_score
+    WHERE student_id = $1`,
+    [userId]
+  );
+  // console.log("QUERY", q);
+  const grades = q.rows;
+  console.log('grades', grades);
+  return grades;
+};
+
+const getUserGradesByUserKey = async key => {
+  console.log('getUserGradesByKey');
+  const { id: userId } = await getUserByKey(key);
+  const q = await query(
+    `SELECT problemset_id, score FROM problemset_score
+    WHERE student_id = $1`,
+    [userId]
+  );
+  // console.log('QUERY', q);
+  const grades = q.rows.reduce(
+    (acc, row) => Object.assign(acc, { [row.problemset_id]: row.score }),
+    {}
+  );
+  console.log('grades', grades);
+  return grades;
+};
+
+/**
+ * Get the grades for all students in a section.
+ * @param  {string}  sectionId
+ * @return {object}  Map from user ID's to their grades.
+ */
+const getSectionGrades = async sectionId => {
+  const result = {};
+  const users = await getStudentsInSection(sectionId);
+  console.log('got users');
+  const grades = users.map(async key => {
+    const grades = await getUserGradesByUserKey(key);
+    result[key] = grades;
+  });
+  await Promise.all(grades);
+  return result;
+};
+
+const getSectionProblemsetIds = async sectionId => {
+  const q = await query(
+    `SELECT problemset_id AS id, section_problemset.order
+    FROM section_problemset WHERE section_id = $1
+    ORDER BY section_problemset.order`,
+    [sectionId]
+  );
+  console.log('sectionProblemsetIds', q);
+  return q.rows;
+};
+
 module.exports = {
   addStudents,
   addStudentsToSection,
   addStudentsToSectionById,
   checkIfSectionExists,
   getInstructorSections,
+  getSectionGrades,
+  getSectionProblemsetIds,
   getStudentsInSection,
   createNewSectionWithInstructor
 };

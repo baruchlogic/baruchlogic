@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import StyledCard from 'app-styled/StyledCard';
 import { Button, Elevation } from '@blueprintjs/core';
-import { authFetch } from '../helpers/auth';
+import { authFetch } from 'helpers/auth';
 
 const StyledLi = styled.li`
   list-style: none;

@@ -1,27 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import StyledCard from 'app-styled/StyledCard';
 import { Elevation } from '@blueprintjs/core';
-import { authFetch } from '../helpers/auth';
+import { useInstructorSections } from 'hooks/admin';
 import Roster from './Roster';
+
 /**
  * Container for list of student rosters.
  * @return {React.Component}
  */
 const RosterContainer = () => {
+  const instructorSections = useInstructorSections();
   const [currentSection, setCurrentSection] = useState({});
-  const [instructorSections, setInstructorSections] = useState([]);
   const [inputCourseNumber, setInputCourseNumber] = useState();
-  const getInstructorCourseNumbers = async () => {
-    let sections = await authFetch(`http://localhost:5000/api/sections`);
-    sections = await sections.json();
-    console.log('SECTIONS', sections);
-    setInstructorSections(sections);
-    setCurrentSection(sections[0]);
-    setInputCourseNumber(sections[0].section_number);
-  };
-  useEffect(() => {
-    getInstructorCourseNumbers();
-  }, []);
+  useEffect(()=> {
+    if (instructorSections.length) {
+      setCurrentSection(instructorSections[0]);
+      setInputCourseNumber(instructorSections[0].section_number);
+    }
+  }, [instructorSections]);
   useEffect(() => {
     console.log('inputCourseNumber', inputCourseNumber);
     const section = instructorSections.find(

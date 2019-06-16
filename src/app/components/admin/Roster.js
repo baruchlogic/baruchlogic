@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Parser } from 'json2csv';
+import { Elevation } from '@blueprintjs/core';
 import StyledCard from 'app-styled/StyledCard';
 import { number } from 'prop-types';
-import { authFetch } from '../helpers/auth';
+import { authFetch } from 'helpers/auth';
 import {
   getValueFromLocalStorageByKey,
   saveToLocalStorage
-} from '../helpers/localStorage';
+} from 'helpers/localStorage';
 
 const Roster = ({ sectionId, sectionNumber }) => {
   const [studentKeys, setStudentKeys] = useState([]);
   const [studentNames, setStudentNames] = useState({});
 
   const getStudentKeysForSectionId = async sectionId => {
-    let keys = await fetch(
+    const keys = await fetch(
       `http://localhost:5000/api/sections/${sectionId}/roster`
-    );
-    keys = await keys.json();
+    ).then(res => res.json());
     setStudentKeys(keys);
   };
 
@@ -83,14 +83,14 @@ const Roster = ({ sectionId, sectionNumber }) => {
   };
 
   return (
-    <StyledCard>
+    <StyledCard elevation={Elevation.TWO}>
       <h2>ROSTER</h2>
       <div>
         <button onClick={onAddStudent}>Add student to roster</button>
       </div>
-      <ul>
+      <ul style={{ maxWidth: '350px', margin: 'auto' }}>
         {studentKeys.map(key => (
-          <li key={key}>
+          <li key={key} style={{ display: 'flex', justifyContent: 'space-between', margin: '1rem 0' }}>
             <div>{key}</div>
             <input
               data-key={key}
