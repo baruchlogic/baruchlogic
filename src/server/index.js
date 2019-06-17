@@ -4,7 +4,10 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const configApp = require('./config');
 const configEndpoints = require('./api');
-require('dotenv').config();
+const config = require('dotenv').config();
+
+// console.log('FOO', FOO);
+console.log('CONFIG', config.parsed);
 
 const app = express();
 
@@ -26,7 +29,7 @@ configApp(app);
 
 configEndpoints(app);
 
-const port = process.env.PORT || 5000;
+const port = process.env.API_PORT || 5000;
 app.listen(port);
 
 console.log('App is listening on port ' + port);

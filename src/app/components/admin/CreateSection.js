@@ -45,11 +45,9 @@ const CourseForm = () => {
 
   const onSubmit = async () => {
     console.log('FORM VALUES', formValues);
-    const response = await authFetch(
-      'http://localhost:5000/api/section',
-      'POST',
-      { body: JSON.stringify(formValues) }
-    );
+    const response = await authFetch(`${API_BASE_URL}/api/section`, 'POST', {
+      body: JSON.stringify(formValues)
+    });
     const { status } = response;
     if (status === 400) {
       alert('Duplicate section!');

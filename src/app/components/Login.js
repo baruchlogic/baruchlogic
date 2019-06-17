@@ -32,7 +32,7 @@ const Login = ({ history }) => {
   const [isAuth, setIsAuth] = useState(false);
 
   const fetchIsAuth = async () => {
-    authFetch('http://localhost:5000/api/auth', 'GET').then(res => {
+    authFetch(`${API_BASE_URL}/api/auth`, 'GET').then(res => {
       if (res.status === 200) {
         setIsAuth(true);
       }
@@ -54,13 +54,9 @@ const Login = ({ history }) => {
   };
 
   const onLogin = async () => {
-    const response = await authFetch(
-      'http://localhost:5000/api/login',
-      'POST',
-      {
-        body: JSON.stringify({ key, username: 'foo' })
-      }
-    );
+    const response = await authFetch(`${API_BASE_URL}/api/login`, 'POST', {
+      body: JSON.stringify({ key, username: 'foo' })
+    });
     const { admin } = await response.json();
     const { status } = response;
     if (status === 200) {
@@ -73,10 +69,7 @@ const Login = ({ history }) => {
   };
 
   const onLogout = async () => {
-    const { status } = await authFetch(
-      'http://localhost:5000/api/logout',
-      'GET'
-    );
+    const { status } = await authFetch(`${API_BASE_URL}/api/logout`, 'GET');
     if (status === 200) {
       history.push('/');
     }

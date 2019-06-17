@@ -19,21 +19,21 @@ const ProblemsetContainer = ({ problemsetId }) => {
 
   const fetchProblemSet = async () => {
     const result = await fetch(
-      `http://localhost:5000/api/problemsets/${problemsetId}`
+      `${API_BASE_URL}/api/problemsets/${problemsetId}`
     ).then(res => res.json());
     setProblemset(result);
   };
 
   const fetchProblems = async () => {
     const result = await fetch(
-      `http://localhost:5000/api/problemsets/${problemsetId}/problems`
+      `${API_BASE_URL}/api/problemsets/${problemsetId}/problems`
     ).then(res => res.json());
     setProblems(result);
   };
 
   const fetchBestScore = async () => {
     const result = await authFetch(
-      `http://localhost:5000/api/problemsets/${problemsetId}/score`
+      `${API_BASE_URL}/api/problemsets/${problemsetId}/score`
     ).then(res => res.text());
     setBestScore(result);
   };
@@ -69,7 +69,7 @@ const ProblemsetContainer = ({ problemsetId }) => {
   const onSubmit = async () => {
     console.log(JSON.stringify(problemsetResponses));
     const score = await authFetch(
-      `http://localhost:5000/api/problemsets/${problemsetId}`,
+      `${API_BASE_URL}/api/problemsets/${problemsetId}`,
       'POST',
       { body: JSON.stringify(problemsetResponses) }
     );
