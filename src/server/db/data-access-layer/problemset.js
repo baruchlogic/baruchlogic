@@ -75,6 +75,30 @@ const saveResponses = async (studentId, problemsetId, responses) => {
   console.log('q', q);
   const r = await query('SELECT * FROM problemset_last_response');
   console.log('r', r);
+  const bestScore = await query(`
+    SELECT score FROM problemset_score
+    WHERE problemset_id = $1 AND student_id = $2
+  `,
+    [problemsetId, studentId]
+  );
+  console.log('BEST SCORE', bestScore);
+  const currentScore = scoreResponses(responses, problemsetId);
+  console.log('CURRENT SCORE', currentScore);
+  if (!bestScore || currentScore > bestScore) {
+    await query(`
+      INSERT INTO problemset_best_response
+      (user_id, problemset_id, response)
+      VALUES
+      ($1, $2, $3)
+      ON CONFLICT ON CONSTRAINT unique_problemset_id_user_id
+      DO
+      UPDATE SET response = $3
+      WHERE problemset_best_response.problemset_id = $2
+      AND problemset_best_response.user_id = $1
+    `,
+      [studentId, problemsetId, responses]
+    );
+  }
 };
 
 /**

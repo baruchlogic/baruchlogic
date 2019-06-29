@@ -14,9 +14,12 @@ const StyledDiv = styled.div`
   justify-content: center;
 `;
 
+// React complains if I pass `isIncorrectResponse`
+// instead of `isincorrectresponse`
 const PossiblyIncorrectStyledCard = styled(StyledCard)`
-  ${props => props.isIncorrectResponse && 'border: 3px solid red;'}
-  ${props => props.isIncorrectResponse && '.problem__index { color: red; }'}
+  ${props =>
+    props.isincorrectresponse === 'true' &&
+    'border: 3px solid red; .problem__index { color: red; }'}
 `;
 
 const Problem = ({
@@ -43,7 +46,7 @@ const Problem = ({
     <PossiblyIncorrectStyledCard
       key={problem.id}
       elevation={Elevation.TWO}
-      isIncorrectResponse={isIncorrectResponse}
+      isincorrectresponse={`${isIncorrectResponse}`}
     >
       <div className="problem__index">({problem.problem_index})</div>
       <StyledDiv>
