@@ -75,17 +75,19 @@ const saveResponses = async (studentId, problemsetId, responses) => {
   console.log('q', q);
   const r = await query('SELECT * FROM problemset_last_response');
   console.log('r', r);
-  const bestScore = await query(`
+  const bestScore = await query(
+    `
     SELECT score FROM problemset_score
     WHERE problemset_id = $1 AND student_id = $2
   `,
     [problemsetId, studentId]
   );
   console.log('BEST SCORE', bestScore);
-  const currentScore = scoreResponses(responses, problemsetId);
+  const currentScore = await scoreResponses(responses, problemsetId);
   console.log('CURRENT SCORE', currentScore);
   if (!bestScore || currentScore > bestScore) {
-    await query(`
+    await query(
+      `
       INSERT INTO problemset_best_response
       (user_id, problemset_id, response)
       VALUES
@@ -123,7 +125,7 @@ const scoreSelectedResponse = (problem, response) =>
 
 const scoreTruthTable = (problem, response) => {
   response = response.map(row =>
-    row.map(el => (el === 't' ? true : el === 'f' ? false : null))
+    row.map(el => (el === 'T' ? true : el === 'F' ? false : null))
   );
   const formula = new Formula();
   const truthTable = formula.generateTruthTable(problem.prompt);
