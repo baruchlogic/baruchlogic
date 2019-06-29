@@ -12,7 +12,7 @@ const RosterContainer = () => {
   const instructorSections = useInstructorSections();
   const [currentSection, setCurrentSection] = useState({});
   const [inputCourseNumber, setInputCourseNumber] = useState();
-  useEffect(()=> {
+  useEffect(() => {
     if (instructorSections.length) {
       setCurrentSection(instructorSections[0]);
       setInputCourseNumber(instructorSections[0].section_number);
@@ -47,7 +47,9 @@ const RosterContainer = () => {
           >
             {instructorSections.map(section => (
               <option
-                key={`${section.section_number}-${section.term}-${section.year}`}
+                key={`${section.section_number}-${section.term}-${
+                  section.year
+                }`}
                 value={section.section_number}
                 selected={
                   currentSection &&

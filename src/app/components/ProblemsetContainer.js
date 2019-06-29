@@ -40,19 +40,19 @@ const ProblemsetContainer = ({ problemsetId }) => {
 
   useEffect(() => {
     fetchProblemSet();
-  }, problemsetId);
+  }, [problemsetId]);
 
   useEffect(() => {
     fetchProblems();
-  }, problemsetId);
+  }, [problemsetId]);
 
   useEffect(() => {
     fetchBestScore();
-  }, problemsetId);
+  }, [problemsetId]);
 
   useEffect(() => {
     setCurrentScore(null);
-  }, problemsetId);
+  }, [problemsetId]);
 
   useEffect(() => {
     console.log('problemsetResponses', problemsetResponses);
@@ -76,6 +76,7 @@ const ProblemsetContainer = ({ problemsetId }) => {
     score.text().then(score => {
       setCurrentScore(score);
     });
+    fetchBestScore();
   };
 
   const problemsetNumber =

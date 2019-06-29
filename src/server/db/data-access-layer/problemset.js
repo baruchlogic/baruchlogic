@@ -126,12 +126,17 @@ const scoreResponses = async (responses, problemsetId) => {
   console.log('scoreResponses', responses);
   const ids = Object.keys(responses);
   let score = 0;
+  const incorrectProblemIDs = [];
   for (const id of ids) {
     console.log(id);
     const q = await query('SELECT * FROM problem WHERE id = $1', [id]);
     const problem = q.rows[0];
     const response = responses[id];
-    score += scoreProblemResponse(problem, response);
+    const isCorrectResponse = scoreProblemResponse(problem, response);
+    if (!isCorrectResponse) {
+      incorrectProblemIDs.push(id);
+    }
+    score += isCorrectResponse;
   }
   console.log(Math.floor(score));
   const q = await query(
@@ -140,7 +145,10 @@ const scoreResponses = async (responses, problemsetId) => {
   );
   const count = Number(q.rows[0].count);
   console.log('COUNT!', count);
-  return Math.floor((score / count) * 100);
+  return {
+    score: Math.floor((score / count) * 100),
+    incorrectProblemIDs
+  };
 };
 
 const getScore = async (problemsetId, studentId) => {

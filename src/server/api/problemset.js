@@ -25,11 +25,13 @@ const configProblemsetRoutes = app => {
   });
 
   app.post('/api/problemsets/:id', async (req, res) => {
-    console.log('POST', req.body);
-    console.log('USER', req.user);
+    console.log('PROBLEMSETS POST', req.body);
+    // console.log('USER', req.user);
+    // const json = await req.json();
+    // console.log('JSON', json);
     const { id: problemsetId } = req.params;
     const { id: studentId } = req.user;
-    const score = await scoreResponses(req.body, problemsetId);
+    const { score } = await scoreResponses(req.body, problemsetId);
     console.log('SCORE', score);
     await saveResponses(studentId, problemsetId, req.body);
     await saveBestScore(studentId, problemsetId, score);
