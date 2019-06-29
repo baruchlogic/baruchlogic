@@ -1,5 +1,5 @@
 import React from 'react';
-import { any, func, object } from 'prop-types';
+import { any, boolean, func, object } from 'prop-types';
 import StyledCard from 'app-styled/StyledCard';
 import { Elevation } from '@blueprintjs/core';
 import styled from 'styled-components';
