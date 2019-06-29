@@ -22,10 +22,11 @@ const getProblemSetById = async id => {
 };
 
 const getProblemsByProblemsetId = async id => {
+  console.log('getProblemsByProblemsetId', id);
   try {
     const response = await query(
       `SELECT row_to_json(problem)
-      FROM (select id, type, prompt, choices,
+      FROM (select id, type, prompt, choices, deduction_prompt,
       problem_v_problemset.problem_index
       FROM problem
       INNER JOIN problem_v_problemset
@@ -34,6 +35,7 @@ const getProblemsByProblemsetId = async id => {
       ORDER BY problem_index ASC;`,
       [id]
     );
+    console.log('response', response);
     return response.rows.map(row => row.row_to_json);
   } catch (e) {
     console.log(e);

@@ -4,6 +4,7 @@ import StyledCard from 'app-styled/StyledCard';
 import { Elevation } from '@blueprintjs/core';
 import styled from 'styled-components';
 import MultipleChoice from './problem-types/MultipleChoice';
+import NaturalDeduction from './problem-types/NaturalDeduction';
 import TrueFalse from './problem-types/TrueFalse';
 import TruthTable from './problem-types/TruthTable';
 
@@ -30,11 +31,14 @@ const Problem = ({
 }) => {
   let ProblemType;
   switch (problem.type) {
-    case 'true_false':
-      ProblemType = TrueFalse;
-      break;
     case 'multiple_choice':
       ProblemType = MultipleChoice;
+      break;
+    case 'natural_deduction':
+      ProblemType = NaturalDeduction;
+      break;
+    case 'true_false':
+      ProblemType = TrueFalse;
       break;
     case 'truth_table':
       ProblemType = TruthTable;
