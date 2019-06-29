@@ -1,5 +1,5 @@
 import React from 'react';
-import { any, boolean, func, object } from 'prop-types';
+import { any, bool, func, object } from 'prop-types';
 import StyledCard from 'app-styled/StyledCard';
 import { Elevation } from '@blueprintjs/core';
 import styled from 'styled-components';
@@ -61,7 +61,7 @@ const Problem = ({
 };
 
 Problem.propTypes = {
-  isIncorrectResponse: boolean.isRequired,
+  isIncorrectResponse: bool.isRequired,
   problem: object.isRequired,
   setProblemResponse: func.isRequired,
   value: any
