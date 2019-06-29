@@ -31,11 +31,15 @@ const configProblemsetRoutes = app => {
     // console.log('JSON', json);
     const { id: problemsetId } = req.params;
     const { id: studentId } = req.user;
-    const { score } = await scoreResponses(req.body, problemsetId);
+    const { incorrectProblemIDs, score } = await scoreResponses(
+      req.body,
+      problemsetId
+    );
     console.log('SCORE', score);
     await saveResponses(studentId, problemsetId, req.body);
     await saveBestScore(studentId, problemsetId, score);
-    res.status(200).send(String(score));
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ incorrectProblemIDs, score }));
   });
 
   app.get('/api/problemsets/:id/score', async (req, res) => {

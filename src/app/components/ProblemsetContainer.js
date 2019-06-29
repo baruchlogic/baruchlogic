@@ -16,6 +16,8 @@ const ProblemsetContainer = ({ problemsetId }) => {
   const [problemsetResponses, setProblemsetResponses] = useState({});
   const [currentScore, setCurrentScore] = useState(null);
   const [bestScore, setBestScore] = useState(null);
+  const [incorrectProblemIDs, setIncorrectProblemIDs] = useState(new Set());
+  const [hasSubmitted, setHasSubmitted] = useState(false);
 
   const fetchProblemSet = async () => {
     const result = await fetch(
@@ -68,15 +70,17 @@ const ProblemsetContainer = ({ problemsetId }) => {
 
   const onSubmit = async () => {
     console.log(JSON.stringify(problemsetResponses));
-    const score = await authFetch(
+    const response = await authFetch(
       `http://localhost:5000/api/problemsets/${problemsetId}`,
       'POST',
       { body: JSON.stringify(problemsetResponses) }
     );
-    score.text().then(score => {
-      setCurrentScore(score);
-    });
+    const { incorrectProblemIDs, score } = await response.json();
+    console.log('incorrectProblemIDs', incorrectProblemIDs);
+    setCurrentScore(score);
+    setIncorrectProblemIDs(new Set(incorrectProblemIDs.map(id => Number(id))));
     fetchBestScore();
+    setHasSubmitted(true);
   };
 
   const problemsetNumber =
@@ -88,6 +92,10 @@ const ProblemsetContainer = ({ problemsetId }) => {
       {problems.map(problem => (
         <Problem
           key={problem.id}
+          isIncorrectResponse={
+            incorrectProblemIDs.has(problem.id) ||
+            (hasSubmitted && problemsetResponses[problem.id] === undefined)
+          }
           value={problemsetResponses[problem.id]}
           problem={problem}
           setProblemResponse={setProblemResponse}

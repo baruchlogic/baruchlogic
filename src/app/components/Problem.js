@@ -14,7 +14,17 @@ const StyledDiv = styled.div`
   justify-content: center;
 `;
 
-const Problem = ({ problem, setProblemResponse, value }) => {
+const PossiblyIncorrectStyledCard = styled(StyledCard)`
+  ${props => props.isIncorrectResponse && 'border: 3px solid red;'}
+  ${props => props.isIncorrectResponse && '.problem__index { color: red; }'}
+`;
+
+const Problem = ({
+  isIncorrectResponse,
+  problem,
+  setProblemResponse,
+  value
+}) => {
   let ProblemType;
   switch (problem.type) {
     case 'true_false':
@@ -30,8 +40,12 @@ const Problem = ({ problem, setProblemResponse, value }) => {
       break;
   }
   return (
-    <StyledCard key={problem.id} elevation={Elevation.TWO}>
-      <div>({problem.problem_index})</div>
+    <PossiblyIncorrectStyledCard
+      key={problem.id}
+      elevation={Elevation.TWO}
+      isIncorrectResponse={isIncorrectResponse}
+    >
+      <div className="problem__index">({problem.problem_index})</div>
       <StyledDiv>
         {problem.type === 'truth_table' &&
           'Complete the truth table for the following proposition:'}
@@ -42,11 +56,12 @@ const Problem = ({ problem, setProblemResponse, value }) => {
           value={value}
         />
       </StyledDiv>
-    </StyledCard>
+    </PossiblyIncorrectStyledCard>
   );
 };
 
 Problem.propTypes = {
+  isIncorrectResponse: boolean.isRequired,
   problem: object.isRequired,
   setProblemResponse: func.isRequired,
   value: any
