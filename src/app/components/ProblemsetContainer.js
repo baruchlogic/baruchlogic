@@ -10,6 +10,14 @@ const StyledContainer = styled.div`
   width: 80%;
 `;
 
+const StyledButton = styled(Button)`
+  margin: 8px;
+`;
+
+const StyledResetButton = styled(StyledButton)`
+  background-color: #2e0f4c !important;
+`;
+
 const ProblemsetContainer = ({ problemsetId }) => {
   const [problemset, setProblemset] = useState(null);
   const [problems, setProblems] = useState([]);
@@ -68,6 +76,13 @@ const ProblemsetContainer = ({ problemsetId }) => {
     }));
   };
 
+  const onReset = () => {
+    setProblemsetResponses({});
+    setCurrentScore(null);
+    setIncorrectProblemIDs(new Set());
+    setHasSubmitted(false);
+  };
+
   const onSubmit = async () => {
     console.log(JSON.stringify(problemsetResponses));
     const response = await authFetch(
@@ -102,9 +117,16 @@ const ProblemsetContainer = ({ problemsetId }) => {
         />
       ))}
       <StyledCard elevation={Elevation.THREE}>
-        <Button intent="success" large onClick={onSubmit}>
-          SUBMIT
-        </Button>
+        <div>
+          <StyledButton intent="success" large onClick={onSubmit}>
+            SUBMIT
+          </StyledButton>
+        </div>
+        <div>
+          <StyledResetButton intent="success" large onClick={onReset}>
+            RESET RESPONSES
+          </StyledResetButton>
+        </div>
       </StyledCard>
 
       <StyledCard elevation={Elevation.THREE}>
