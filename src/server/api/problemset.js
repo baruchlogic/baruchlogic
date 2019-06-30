@@ -33,15 +33,16 @@ const configProblemsetRoutes = app => {
     // console.log('JSON', json);
     const { id: problemsetId } = req.params;
     const { id: studentId } = req.user;
-    const { incorrectProblemIDs, score } = await scoreResponses(
+    const { incorrectProblems, score } = await scoreResponses(
       req.body,
       problemsetId
     );
     console.log('SCORE', score);
+    console.log('INCORRECT PROBLEMS', incorrectProblems);
     await saveResponses(studentId, problemsetId, req.body);
     await saveBestScore(studentId, problemsetId, score);
     res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({ incorrectProblemIDs, score }));
+    res.send(JSON.stringify({ incorrectProblems, score }));
   });
 
   app.get('/api/problemsets/:id/score', async (req, res) => {

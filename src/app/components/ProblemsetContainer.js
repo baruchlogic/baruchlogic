@@ -24,7 +24,7 @@ const ProblemsetContainer = ({ problemsetId }) => {
   const [problemsetResponses, setProblemsetResponses] = useState({});
   const [currentScore, setCurrentScore] = useState(null);
   const [bestScore, setBestScore] = useState(null);
-  const [incorrectProblemIDs, setIncorrectProblemIDs] = useState(new Set());
+  const [incorrectProblems, setIncorrectProblems] = useState({});
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
   const fetchProblemSet = async () => {
@@ -62,7 +62,7 @@ const ProblemsetContainer = ({ problemsetId }) => {
   }, [problemsetId]);
 
   useEffect(() => {
-    setCurrentScore(null);
+    onReset();
   }, [problemsetId]);
 
   useEffect(() => {
@@ -80,7 +80,7 @@ const ProblemsetContainer = ({ problemsetId }) => {
   const onReset = () => {
     setProblemsetResponses({});
     setCurrentScore(null);
-    setIncorrectProblemIDs(new Set());
+    setIncorrectProblems({});
     setHasSubmitted(false);
   };
 
@@ -91,10 +91,18 @@ const ProblemsetContainer = ({ problemsetId }) => {
       'POST',
       { body: JSON.stringify(problemsetResponses) }
     );
-    const { incorrectProblemIDs, score } = await response.json();
-    console.log('incorrectProblemIDs', incorrectProblemIDs);
+    const {
+      incorrectProblems: incorrectProblemsResponse,
+      score
+    } = await response.json();
+    console.log('incorrectProblemsResponse', incorrectProblemsResponse);
     setCurrentScore(score);
-    setIncorrectProblemIDs(new Set(incorrectProblemIDs.map(id => Number(id))));
+    setIncorrectProblems(
+      incorrectProblemsResponse.reduce(
+        (acc, problem) => ({ ...acc, [problem.id]: problem }),
+        {}
+      )
+    );
     fetchBestScore();
     setHasSubmitted(true);
   };
@@ -109,8 +117,12 @@ const ProblemsetContainer = ({ problemsetId }) => {
         <Problem
           key={problem.id}
           isIncorrectResponse={
-            incorrectProblemIDs.has(problem.id) ||
+            !!incorrectProblems[problem.id] ||
             (hasSubmitted && problemsetResponses[problem.id] === undefined)
+          }
+          responseData={
+            incorrectProblems[problem.id] &&
+            incorrectProblems[problem.id].responseData
           }
           value={problemsetResponses[problem.id]}
           problem={problem}

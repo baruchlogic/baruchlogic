@@ -1,5 +1,5 @@
 const { query } = require('../index');
-const { Formula } = require('logically-locally');
+const { Formula, Proof } = require('logically-locally');
 
 const getAllProblemsets = async () => {
   try {
@@ -62,6 +62,8 @@ const saveBestScore = async (studentId, problemsetId, score) => {
 
 const saveResponses = async (studentId, problemsetId, responses) => {
   console.log('saveResponses');
+
+  // Upsert last response
   const q = await query(
     `INSERT INTO problemset_last_response
     (student_id, problemset_id, response)
@@ -77,32 +79,8 @@ const saveResponses = async (studentId, problemsetId, responses) => {
   console.log('q', q);
   const r = await query('SELECT * FROM problemset_last_response');
   console.log('r', r);
-  const bestScore = await query(
-    `
-    SELECT score FROM problemset_score
-    WHERE problemset_id = $1 AND student_id = $2
-  `,
-    [problemsetId, studentId]
-  );
-  console.log('BEST SCORE', bestScore);
-  const currentScore = await scoreResponses(responses, problemsetId);
-  console.log('CURRENT SCORE', currentScore);
-  if (!bestScore || currentScore > bestScore) {
-    await query(
-      `
-      INSERT INTO problemset_best_response
-      (user_id, problemset_id, response)
-      VALUES
-      ($1, $2, $3)
-      ON CONFLICT ON CONSTRAINT unique_problemset_id_user_id
-      DO
-      UPDATE SET response = $3
-      WHERE problemset_best_response.problemset_id = $2
-      AND problemset_best_response.user_id = $1
-    `,
-      [studentId, problemsetId, responses]
-    );
-  }
+  const { score } = await scoreResponses(responses, problemsetId);
+  saveBestScore(studentId, problemsetId, score);
 };
 
 /**
@@ -122,8 +100,9 @@ const compareMatrices = (m1, m2) => {
   return true;
 };
 
-const scoreSelectedResponse = (problem, response) =>
-  problem.answer === response;
+const scoreSelectedResponse = (problem, response) => ({
+  score: problem.answer === response
+});
 
 const scoreTruthTable = (problem, response) => {
   response = response.map(row =>
@@ -131,42 +110,63 @@ const scoreTruthTable = (problem, response) => {
   );
   const formula = new Formula();
   const truthTable = formula.generateTruthTable(problem.prompt);
-  return compareMatrices(response, truthTable);
+  return { score: compareMatrices(response, truthTable) };
+};
+
+const scoreNaturalDeduction = (problem, response) => {
+  const { justifications, propositions } = response;
+  const proof = new Proof();
+  propositions.forEach((proposition, index) => {
+    const { citedLines, rule } = justifications[index];
+    proof.addLineToProof({ citedLines, proposition, rule });
+  });
+  return proof.evaluateProof();
 };
 
 const scoreProblemResponse = (problem, response) => {
+  console.log('scoreProblemResponse', problem, response);
   let score = null;
+  let responseData = null;
   switch (problem.type) {
     case 'true_false':
     case 'multiple_choice':
-      score = scoreSelectedResponse(problem, response);
+      score = scoreSelectedResponse(problem, response).score;
+      console.log('true_false', score);
       break;
-    case 'truth_table':
-      score = scoreTruthTable(problem, response);
+    case 'natural_deduction':
+      const result = scoreNaturalDeduction(problem, response);
+      score = result.score;
+      responseData = result.responseData;
       break;
+    case 'truth_table': {
+      score = scoreTruthTable(problem, response).score;
+      break;
+    }
     default:
       break;
   }
-  return Number(score);
+  return { score: Number(score), responseData };
 };
 
 const scoreResponses = async (responses, problemsetId) => {
   console.log('scoreResponses', responses);
   const ids = Object.keys(responses);
-  let score = 0;
-  const incorrectProblemIDs = [];
+  let problemsetScore = 0;
+  const incorrectProblems = [];
   for (const id of ids) {
     console.log(id);
     const q = await query('SELECT * FROM problem WHERE id = $1', [id]);
     const problem = q.rows[0];
     const response = responses[id];
-    const isCorrectResponse = scoreProblemResponse(problem, response);
-    if (!isCorrectResponse) {
-      incorrectProblemIDs.push(id);
+    const { score, responseData } = scoreProblemResponse(problem, response);
+    if (!score) {
+      incorrectProblems.push({ id, responseData });
     }
-    score += isCorrectResponse;
+    problemsetScore += score;
+    console.log('score', score);
   }
-  console.log(Math.floor(score));
+  console.log('problemsetScore', problemsetScore);
+  console.log('incorrectProblems', incorrectProblems);
   const q = await query(
     'SELECT COUNT(*) FROM problem_v_problemset WHERE problemset_id = $1',
     [problemsetId]
@@ -174,8 +174,8 @@ const scoreResponses = async (responses, problemsetId) => {
   const count = Number(q.rows[0].count);
   console.log('COUNT!', count);
   return {
-    score: Math.floor((score / count) * 100),
-    incorrectProblemIDs
+    score: Math.floor((problemsetScore / count) * 100),
+    incorrectProblems
   };
 };
 

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { array, func, object } from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import { func, object } from 'prop-types';
 import styled from 'styled-components';
 import { Formula } from 'logically-locally';
 import { Icon } from '@blueprintjs/core';
@@ -20,7 +20,7 @@ const StyledIcon = styled(Icon)`
   cursor: pointer;
 `;
 
-const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
+const NaturalDeduction = ({ problem, setProblemResponse }) => {
   const { premises, conclusion } = problem.deduction_prompt;
 
   const [propositions, setPropositions] = useState(
@@ -39,6 +39,14 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
     rule: Object.values(DEDUCTION_RULES)[0],
     lines: ''
   });
+
+  useEffect(() => {
+    setResponse();
+  }, []);
+
+  useEffect(() => {
+    setResponse();
+  }, [propositions]);
 
   const handleNewLinePropositionChange = ({ target: { value } }) => {
     setNewProposition({ ...newProposition, proposition: value });
@@ -87,8 +95,18 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
     const { lines, proposition, rule } = newProposition;
     setPropositions([...propositions, new Formula(proposition)]);
 
-    const nextLines = lines.split(', ');
+    const nextLines = lines.split(', ').map(Number);
     setJustifications([...justifications, { rule, lines: nextLines }]);
+  };
+
+  const setResponse = () => {
+    const propositionsStrings = propositions.map(
+      proposition => proposition.formulaString
+    );
+    setProblemResponse(problem.id, {
+      propositions: propositionsStrings,
+      justifications
+    });
   };
 
   return (
@@ -192,8 +210,7 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
 
 NaturalDeduction.propTypes = {
   problem: object,
-  setProblemResponse: func,
-  value: array
+  setProblemResponse: func
 };
 
 export default NaturalDeduction;
