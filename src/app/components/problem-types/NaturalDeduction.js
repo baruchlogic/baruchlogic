@@ -100,13 +100,12 @@ const NaturalDeduction = ({ problem, setProblemResponse }) => {
   };
 
   const setResponse = () => {
-    const propositionsStrings = propositions.map(
-      proposition => proposition.formulaString
-    );
-    setProblemResponse(problem.id, {
-      propositions: propositionsStrings,
-      justifications
-    });
+    const response = propositions.map((proposition, index) => ({
+      citedLines: justifications[index].lines,
+      proposition: proposition.formulaString,
+      rule: justifications[index].rule
+    }));
+    setProblemResponse(problem.id, { linesOfProof: response });
   };
 
   return (

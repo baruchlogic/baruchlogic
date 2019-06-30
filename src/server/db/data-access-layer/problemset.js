@@ -114,12 +114,15 @@ const scoreTruthTable = (problem, response) => {
 };
 
 const scoreNaturalDeduction = (problem, response) => {
-  const { justifications, propositions } = response;
+  const { linesOfProof } = response;
+  console.log('scoreNaturalDeduction', linesOfProof);
+  const { deduction_prompt: { conclusion } } = problem;
   const proof = new Proof();
-  propositions.forEach((proposition, index) => {
-    const { citedLines, rule } = justifications[index];
-    proof.addLineToProof({ citedLines, proposition, rule });
-  });
+  proof.setConclusion(conclusion);
+  for (const line of linesOfProof) {
+    proof.addLineToProof({ ...line });
+  }
+  console.log('PROOF!', proof);
   return proof.evaluateProof();
 };
 
