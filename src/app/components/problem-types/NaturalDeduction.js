@@ -170,7 +170,9 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
             value={newProposition.justification}
           >
             {Object.values(DEDUCTION_RULES).map(rule => (
-              <option key={rule} value={rule}>{rule}</option>
+              <option key={rule} value={rule}>
+                {rule}
+              </option>
             ))}
           </select>
         </div>
