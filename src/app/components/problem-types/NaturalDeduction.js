@@ -154,13 +154,9 @@ const NaturalDeduction = ({ problem, responseData, setProblemResponse }) => {
         <div>
           Justifications:
           {lines.map((line, index) => (
-            <div
-              key={`${line.rule}-${index}`}
-              style={{ display: 'flex' }}
-            >
+            <div key={`${line.rule}-${index}`} style={{ display: 'flex' }}>
               {line.rule}
-              {line.citedLines.length > 0 &&
-                `(${line.citedLines.join(', ')})`}
+              {line.citedLines.length > 0 && `(${line.citedLines.join(', ')})`}
               <span
                 style={{
                   alignItems: 'center',
