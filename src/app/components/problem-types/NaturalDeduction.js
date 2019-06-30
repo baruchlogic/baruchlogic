@@ -20,24 +20,32 @@ const StyledIcon = styled(Icon)`
   cursor: pointer;
 `;
 
-const NaturalDeduction = ({ problem, setProblemResponse }) => {
+const NaturalDeduction = ({ problem, responseData, setProblemResponse }) => {
   const { premises, conclusion } = problem.deduction_prompt;
 
-  const [propositions, setPropositions] = useState(
-    premises.map(premise => new Formula(premise))
-  );
+  // const [propositions, setPropositions] = useState(
+  //   premises.map(premise => new Formula(premise))
+  // );
+  //
+  // const [justifications, setJustifications] = useState(
+  //   premises.map(premise => ({
+  //     rule: 'Premise',
+  //     lines: []
+  //   }))
+  // );
 
-  const [justifications, setJustifications] = useState(
-    premises.map(premise => ({
-      rule: 'Premise',
-      lines: []
-    }))
-  );
+  const initialLines = premises.map((premise, index) => ({
+    proposition: new Formula(premise),
+    rule: 'Premise',
+    citedLines: []
+  }));
+
+  const [lines, setLines] = useState(initialLines);
 
   const [newProposition, setNewProposition] = useState({
     proposition: '',
     rule: Object.values(DEDUCTION_RULES)[0],
-    lines: ''
+    citedLines: ''
   });
 
   useEffect(() => {
@@ -46,7 +54,7 @@ const NaturalDeduction = ({ problem, setProblemResponse }) => {
 
   useEffect(() => {
     setResponse();
-  }, [propositions]);
+  }, [lines]);
 
   const handleNewLinePropositionChange = ({ target: { value } }) => {
     setNewProposition({ ...newProposition, proposition: value });
@@ -57,55 +65,63 @@ const NaturalDeduction = ({ problem, setProblemResponse }) => {
   };
 
   const handleNewLineCitedLinesChange = ({ target: { value } }) => {
-    if (value.length < newProposition.lines.length) {
+    if (value.length < newProposition.citedLines.length) {
       return;
     }
     const lastValue = value[value.length - 1];
     if (!isNaN(Number(lastValue))) {
-      setNewProposition({ ...newProposition, lines: value });
+      setNewProposition({ ...newProposition, citedLines: value });
     }
     if (lastValue === ',') {
-      setNewProposition({ ...newProposition, lines: value + ' ' });
+      setNewProposition({ ...newProposition, citedLines: value + ' ' });
     }
   };
 
   const deleteLine = index => {
-    const newPropositions = propositions.slice();
-    newPropositions.splice(index, 1);
-    setPropositions(newPropositions);
-
-    const newJustifications = justifications.slice();
-    newJustifications.splice(index, 1);
-    setJustifications(newJustifications);
+    const newLines = lines.slice();
+    newLines.splice(index, 1);
+    setLines(newLines);
+    // const newPropositions = propositions.slice();
+    // newPropositions.splice(index, 1);
+    // setPropositions(newPropositions);
+    // const newJustifications = justifications.slice();
+    // newJustifications.splice(index, 1);
+    // setJustifications(newJustifications);
   };
 
   const handleNewLineCitedLinesKeyDown = ({ key }) => {
-    let nextLines = newProposition.lines;
+    let nextLines = newProposition.citedLines;
     if (key === 'Backspace') {
-      if (newProposition.lines[newProposition.lines.length - 1] === ' ') {
+      if (
+        newProposition.citedLines[newProposition.citedLines.length - 1] === ' '
+      ) {
         nextLines = nextLines.slice(0, nextLines.length - 3);
       } else {
         nextLines = nextLines.slice(0, nextLines.length - 1);
       }
     }
-    setNewProposition({ ...newProposition, lines: nextLines });
+    setNewProposition({ ...newProposition, citedLines: nextLines });
   };
 
   const addNewLine = () => {
-    const { lines, proposition, rule } = newProposition;
-    setPropositions([...propositions, new Formula(proposition)]);
+    const { citedLines, proposition, rule } = newProposition;
+    const nextLines = citedLines.split(', ').map(Number);
+    setLines([
+      ...lines,
+      { citedLines: nextLines, proposition: new Formula(proposition), rule }
+    ]);
+    // setPropositions([...propositions, new Formula(proposition)]);
 
-    const nextLines = lines.split(', ').map(Number);
-    setJustifications([...justifications, { rule, lines: nextLines }]);
+    // setJustifications([...justifications, { rule, lines: nextLines }]);
   };
 
   const setResponse = () => {
-    const response = propositions.map((proposition, index) => ({
-      citedLines: justifications[index].lines,
-      proposition: proposition.formulaString,
-      rule: justifications[index].rule
-    }));
-    setProblemResponse(problem.id, { linesOfProof: response });
+    // const response = propositions.map((proposition, index) => ({
+    //   citedLines: justifications[index].lines,
+    //   proposition: proposition.formulaString,
+    //   rule: justifications[index].rule
+    // }));
+    setProblemResponse(problem.id, { linesOfProof: lines });
   };
 
   return (
@@ -128,23 +144,23 @@ const NaturalDeduction = ({ problem, setProblemResponse }) => {
       <ProofContainer>
         <div>
           Propositions:
-          {propositions.map((proposition, index) => (
-            <div key={proposition.formulaString}>
+          {lines.map((line, index) => (
+            <div key={line.proposition.formulaString}>
               <span style={{ marginRight: '8px' }}>({index + 1})</span>
-              {proposition.formulaString}
+              {line.proposition.formulaString}
             </div>
           ))}
         </div>
         <div>
           Justifications:
-          {justifications.map((justification, index) => (
+          {lines.map((line, index) => (
             <div
-              key={`${justification.rule}-${index}`}
+              key={`${line.rule}-${index}`}
               style={{ display: 'flex' }}
             >
-              {justification.rule}
-              {justification.lines.length > 0 &&
-                `(${justification.lines.join(', ')})`}
+              {line.rule}
+              {line.citedLines.length > 0 &&
+                `(${line.citedLines.join(', ')})`}
               <span
                 style={{
                   alignItems: 'center',
@@ -153,7 +169,7 @@ const NaturalDeduction = ({ problem, setProblemResponse }) => {
                   width: '24px'
                 }}
               >
-                {justification.rule !== DEDUCTION_RULES.PREMISE && (
+                {line.rule !== DEDUCTION_RULES.PREMISE && (
                   <Icon
                     icon={IconNames.CROSS}
                     size={24}
@@ -184,7 +200,7 @@ const NaturalDeduction = ({ problem, setProblemResponse }) => {
           <select
             onChange={handleNewLineRuleChange}
             onBlur={handleNewLineRuleChange}
-            value={newProposition.justification}
+            value={newProposition.rule}
           >
             {Object.values(DEDUCTION_RULES).map(rule => (
               <option key={rule} value={rule}>
@@ -197,7 +213,7 @@ const NaturalDeduction = ({ problem, setProblemResponse }) => {
           Cited Lines:
           <input
             onChange={handleNewLineCitedLinesChange}
-            value={newProposition.lines}
+            value={newProposition.citedLines}
             onKeyDown={handleNewLineCitedLinesKeyDown}
           />
         </div>
@@ -209,6 +225,7 @@ const NaturalDeduction = ({ problem, setProblemResponse }) => {
 
 NaturalDeduction.propTypes = {
   problem: object,
+  responseData: object,
   setProblemResponse: func
 };
 

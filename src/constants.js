@@ -6,7 +6,8 @@ const DEDUCTION_RULES = {
   CONJUNCTION: 'Conjunction',
   MODUS_PONENS: 'Modus Ponens',
   MODUS_TOLLENS: 'Modus Tollens',
-  PREMISE: 'Premise'
+  PREMISE: 'Premise',
+  SIMPLIFICATION: 'Simplification'
 };
 
 module.exports = {

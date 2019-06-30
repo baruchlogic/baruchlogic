@@ -26,6 +26,7 @@ const PossiblyIncorrectStyledCard = styled(StyledCard)`
 const Problem = ({
   isIncorrectResponse,
   problem,
+  responseData,
   setProblemResponse,
   value
 }) => {
@@ -60,6 +61,7 @@ const Problem = ({
         <ProblemType
           problem={problem}
           setProblemResponse={setProblemResponse}
+          responseData={responseData}
           value={value}
         />
       </StyledDiv>
@@ -70,6 +72,7 @@ const Problem = ({
 Problem.propTypes = {
   isIncorrectResponse: bool.isRequired,
   problem: object.isRequired,
+  responseData: object,
   setProblemResponse: func.isRequired,
   value: any
 };

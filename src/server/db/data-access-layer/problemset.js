@@ -1,5 +1,5 @@
 const { query } = require('../index');
-const { Formula, Proof } = require('logically-locally');
+const { Formula, LineOfProof, Proof } = require('logically-locally');
 
 const getAllProblemsets = async () => {
   try {
@@ -116,11 +116,13 @@ const scoreTruthTable = (problem, response) => {
 const scoreNaturalDeduction = (problem, response) => {
   const { linesOfProof } = response;
   console.log('scoreNaturalDeduction', linesOfProof);
-  const { deduction_prompt: { conclusion } } = problem;
+  const {
+    deduction_prompt: { conclusion }
+  } = problem;
   const proof = new Proof();
   proof.setConclusion(conclusion);
   for (const line of linesOfProof) {
-    proof.addLineToProof({ ...line });
+    proof.addLineToProof(new LineOfProof({ ...line }));
   }
   console.log('PROOF!', proof);
   return proof.evaluateProof();
