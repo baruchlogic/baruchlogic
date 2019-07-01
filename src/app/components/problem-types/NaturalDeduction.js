@@ -4,8 +4,7 @@ import styled from 'styled-components';
 import { Formula } from 'logically-locally';
 import { Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { DEDUCTION_RULES } from 'constants';
-console.log(DEDUCTION_RULES);
+import { DEDUCTION_RULES } from 'logically-locally';
 
 const ProofContainer = styled.div`
   display: flex;
