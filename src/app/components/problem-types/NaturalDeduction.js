@@ -104,7 +104,7 @@ const NaturalDeduction = ({ problem, responseData, setProblemResponse }) => {
 
   const addNewLine = () => {
     const { citedLines, proposition, rule } = newProposition;
-    const nextLines = citedLines.split(', ').map(Number);
+    const nextLines = (citedLines && citedLines.split(', ').map(Number)) || [];
     setLines([
       ...lines,
       { citedLines: nextLines, proposition: new Formula(proposition), rule }
