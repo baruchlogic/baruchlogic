@@ -144,9 +144,9 @@ const NaturalDeduction = ({ problem, responseData, setProblemResponse }) => {
         <div>
           Propositions:
           {lines.map((line, index) => (
-            <div key={line.proposition.formulaString}>
+            <div key={line.proposition.prettifiedFormula}>
               <span style={{ marginRight: '8px' }}>({index + 1})</span>
-              {line.proposition.formulaString}
+              {line.proposition.prettifiedFormula}
             </div>
           ))}
         </div>
