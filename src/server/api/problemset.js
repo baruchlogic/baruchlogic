@@ -8,7 +8,10 @@ const {
   scoreResponses
 } = require('../db/data-access-layer/problemset');
 
-const { getUserSection } = require('../db/data-access-layer/section');
+const {
+  getDueDate,
+  // getUserSection
+} = require('../db/data-access-layer/section');
 
 const configProblemsetRoutes = app => {
   app.get('/api/problemsets', async (req, res) => {
@@ -20,7 +23,16 @@ const configProblemsetRoutes = app => {
     console.log('HERE');
     const problemset = await getProblemSetById(Number(req.params.id));
     console.log(problemset);
-    res.status(200).send(problemset);
+
+    const { section_id: sectionId } = req.user;
+
+    console.log('USER SECTION', sectionId);
+    const dueDate = await getDueDate(problemset.id, sectionId);
+    console.log('DUE DATE &&&&&', dueDate);
+
+    const problemsetResponse = { ...problemset, due_date: dueDate };
+
+    res.status(200).send(problemsetResponse);
   });
 
   app.get('/api/problemsets/:id/problems', async (req, res) => {
@@ -43,9 +55,10 @@ const configProblemsetRoutes = app => {
     console.log('INCORRECT PROBLEMS', incorrectProblems);
     console.log('USER', req.user);
 
-    const userSection = await getUserSection(studentId);
-    console.log('USER SECTION', userSection);
+    // const userSection = await getUserSection(studentId);
+    // console.log('USER SECTION', userSection);
     // const dueDate = await getDueDate(problemsetId, sectionId);
+    // console.log('DUE DATE &&&&&', dueDate);
 
     await saveResponses(studentId, problemsetId, req.body);
     await saveBestScore(studentId, problemsetId, score);
