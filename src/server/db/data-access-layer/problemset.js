@@ -122,7 +122,10 @@ const scoreNaturalDeduction = (problem, response) => {
   const proof = new Proof();
   proof.setConclusion(conclusion);
   for (const line of linesOfProof) {
-    proof.addLineToProof(new LineOfProof({ ...line }));
+    const newLineFormula = new Formula(line.proposition.cleansedFormulaString);
+    proof.addLineToProof(
+      new LineOfProof({ ...line, proposition: newLineFormula })
+    );
   }
   console.log('PROOF!', proof);
   return proof.evaluateProof();
