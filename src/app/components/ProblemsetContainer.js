@@ -125,7 +125,7 @@ const ProblemsetContainer = ({ problemsetId }) => {
 
   return (
     <StyledContainer>
-      <h1>{`Problemset #${problemsetNumber}`}</h1>
+      {problemsetNumber && <h1>{`Problemset #${problemsetNumber}`}</h1>}
       {styledDueDate && <h2>{`Due date: ${styledDueDate}`}</h2>}
       {isPastDueDate && <h2>NOTE: Due date has passed</h2>}
       {problems.map(problem => (
@@ -146,6 +146,12 @@ const ProblemsetContainer = ({ problemsetId }) => {
       ))}
       <StyledCard elevation={Elevation.THREE}>
         <div>
+          {isPastDueDate && (
+            <div>
+              NOTE: The due date for this assignment has passed. Your score will
+              not be recorded.
+            </div>
+          )}
           <StyledButton intent="success" large onClick={onSubmit}>
             SUBMIT
           </StyledButton>
