@@ -9,7 +9,7 @@ const {
 } = require('../db/data-access-layer/problemset');
 
 const {
-  getDueDate,
+  getDueDate
   // getUserSection
 } = require('../db/data-access-layer/section');
 

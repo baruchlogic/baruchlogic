@@ -111,7 +111,8 @@ const ProblemsetContainer = ({ problemsetId }) => {
   const problemsetNumber =
     problemset && problemset.unit + problemset.index_in_unit - 1;
 
-  const dueDateMoment = problemset && problemset.due_date ? moment(problemset.due_date) : null;
+  const dueDateMoment =
+    problemset && problemset.due_date ? moment(problemset.due_date) : null;
 
   console.log('dueDateMoment', dueDateMoment);
 

@@ -88,7 +88,7 @@ const getInstructorSections = async instructorId => {
 };
 
 const getDueDate = async (problemsetId, sectionId) => {
-  console.log('getDueDate', problemsetId,sectionId);
+  console.log('getDueDate', problemsetId, sectionId);
   try {
     const response = await query(
       `SELECT due_date from due_date
