@@ -17,3 +17,21 @@ export const useInstructorSections = () => {
 
   return instructorSections;
 };
+
+export const useIsUserAuth = () => {
+  const [isAuth, setIsAuth] = useState(false);
+
+  const fetchIsAuth = async () => {
+    authFetch('http://localhost:5000/api/auth', 'GET').then(res => {
+      if (res.status === 200) {
+        setIsAuth(true);
+      }
+    });
+  };
+
+  useEffect(() => {
+    fetchIsAuth();
+  }, []);
+
+  return isAuth;
+};

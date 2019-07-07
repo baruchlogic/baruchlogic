@@ -145,7 +145,7 @@ const ProblemsetContainer = ({ problemsetId }) => {
       <StyledCard elevation={Elevation.THREE}>
         <div>SCORES</div>
         <div>Current Score: {currentScore}</div>
-        <div>Your Best Score: {bestScore}</div>
+        <div>Your Best Score: {bestScore || ''}</div>
       </StyledCard>
     </StyledContainer>
   );

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { object } from 'prop-types';
 import { Button, Card, Elevation, InputGroup } from '@blueprintjs/core';
 import { authFetch } from '../helpers/auth';
+import { useIsUserAuth } from '../hooks/admin';
 import { Icon } from '@blueprintjs/core';
 
 const FormContainer = styled.div`
@@ -29,19 +30,7 @@ const StyledButton = styled(Button)`
 
 const Login = ({ history }) => {
   const [key, setKey] = useState('');
-  const [isAuth, setIsAuth] = useState(false);
-
-  const fetchIsAuth = async () => {
-    authFetch('http://localhost:5000/api/auth', 'GET').then(res => {
-      if (res.status === 200) {
-        setIsAuth(true);
-      }
-    });
-  };
-
-  useEffect(() => {
-    fetchIsAuth();
-  }, []);
+  const isAuth = useIsUserAuth();
 
   const onInputChange = ({ target: { value: key } }) => {
     setKey(key);
