@@ -85,6 +85,31 @@ const saveResponses = async (studentId, problemsetId, responses) => {
   );
 };
 
+const saveBestResponses = async (studentId, problemsetId, responses) => {
+  console.log('saveBestResponse', responses);
+
+  const { score } = await scoreResponses(responses, problemsetId);
+
+  const currentScore = await getScore(problemsetId, studentId);
+
+  if (!currentScore || score > currentScore) {
+    console.log('SAVE NEW BEST RESPONSE');
+    // Upsert best response if score is higher
+    await query(
+      `INSERT INTO problemset_best_response
+      (user_id, problemset_id, response)
+      VALUES
+      ($1, $2, $3)
+      ON CONFLICT ON CONSTRAINT unique_problemset_id_user_id
+      DO
+      UPDATE SET response = $3
+      WHERE problemset_best_response.problemset_id = $2
+      AND problemset_best_response.user_id = $1`,
+      [studentId, problemsetId, responses]
+    );
+  }
+};
+
 /**
  * Returns true iff two matrices have identical elements.
  * @param  {array[]} m1
@@ -208,6 +233,7 @@ module.exports = {
   getProblemSetById,
   getScore,
   saveBestScore,
+  saveBestResponses,
   saveResponses,
   scoreResponses
 };

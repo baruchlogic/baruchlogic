@@ -5,6 +5,7 @@ const {
   getProblemSetById,
   getScore,
   saveBestScore,
+  saveBestResponses,
   saveResponses,
   scoreResponses
 } = require('../db/data-access-layer/problemset');
@@ -66,6 +67,7 @@ const configProblemsetRoutes = app => {
     if (!isPastDueDate) {
       // Only save the best score if it's not after the due date
       console.log('save the best score@@@@!!!!');
+      await saveBestResponses(studentId, problemsetId, req.body);
       await saveBestScore(studentId, problemsetId, score);
     }
     res.setHeader('Content-Type', 'application/json');
