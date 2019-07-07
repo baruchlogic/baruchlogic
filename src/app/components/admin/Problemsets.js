@@ -4,7 +4,7 @@ import StyledCard from 'app-styled/StyledCard';
 import moment from 'moment';
 import { MOMENT_FORMAT } from 'constants';
 import DateTimePicker from 'react-datetime-picker';
-// import { authFetch } from 'helpers/auth';
+import { authFetch } from 'helpers/auth';
 import { useInstructorSections } from 'hooks';
 
 const Problemsets = () => {
@@ -43,20 +43,19 @@ const Problemsets = () => {
 
   const handleSectionChange = ({ target: { value } }) => {
     const section = instructorSections.find(
-      section => section.section_number === value
+      section => section.section_number === Number(value)
     );
     setCurrentSection(section);
   };
 
-  // const onSubmit = () => {
-  //   const response = await authFetch('http://localhost:5000/api/auth');
-  //   if (response.status !== 200) {
-  //     setIsAdmin(false);
-  //     return;
-  //   }
-  //   const admin = await response.json();
-  //   await authFetch('http://localhost:5000/api/sections/:sectionId/due-dates');
-  // }
+  const onSubmit = async () => {
+    const datesMap = dates.reduce((acc, date, index) => ({
+      ...acc, [problemsets[index].id]: date
+    }), {})
+    await authFetch(`http://localhost:5000/api/sections/${currentSection.id}/problemsets/due-dates`, 'POST', {
+      body: JSON.stringify({ dates: datesMap })
+    });
+  };
 
   return (
     <StyledCard elevation={Elevation.THREE}>
@@ -95,7 +94,7 @@ const Problemsets = () => {
                 onChange={val => handleDateChange(val, index)}
                 value={dates[index]}
               />
-              <Button intent={Intent.WARNING}>SUBMIT CHANGE</Button>
+            <Button intent={Intent.WARNING} onClick={onSubmit}>SUBMIT CHANGE</Button>
             </div>
           </div>
         ))}

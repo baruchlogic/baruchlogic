@@ -54,7 +54,9 @@ const configSectionRoutes = app => {
       const { sectionId } = req.params;
       console.log('/api/sections/:sectionId/problemsets/due-dates', sectionId);
       const dates = req.body;
-      console.log('dates', dates);
+      console.log('dates !@#&!@#&@(#&@!(#&!@))', dates);
+      res.setHeader('Content-Type', 'application/json');
+      res.send(dates);
     }
   );
 };
