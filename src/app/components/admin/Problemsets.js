@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Elevation } from '@blueprintjs/core';
+import { Button, Elevation, Intent } from '@blueprintjs/core';
 import StyledCard from 'app-styled/StyledCard';
 import moment from 'moment';
 import { MOMENT_FORMAT } from 'constants';
+import DateTimePicker from 'react-datetime-picker';
 
 const Problemsets = () => {
   const [problemsets, setProblemsets] = useState([]);
@@ -13,11 +14,20 @@ const Problemsets = () => {
     const problemsets = response;
     console.log('PROBLEMSETS', problemsets);
     setProblemsets(problemsets);
+    setDates(new Array(problemsets.length));
   };
-
   useEffect(() => {
     fetchProblemSets();
   }, []);
+
+  const [dates, setDates] = useState([]);
+
+  const handleDateChange = (value, index) => {
+    const newDates = dates.slice();
+    newDates.splice(index, 1, value);
+    newDates.splice(index, 1, value);
+    setDates(newDates);
+  };
 
   return (
     <StyledCard elevation={Elevation.THREE}>
@@ -41,6 +51,18 @@ const Problemsets = () => {
                   ? moment(problemset.due_date).format(MOMENT_FORMAT)
                   : 'N/A'}
               </span>
+            </div>
+          ))}
+        </div>
+        <div>
+          <div>Change due date:</div>
+          {problemsets.map((problemset, index) => (
+            <div>
+              <DateTimePicker
+                onChange={val => handleDateChange(val, index)}
+                value={dates[index]}
+              />
+              <Button intent={Intent.WARNING}>SUBMIT CHANGE</Button>
             </div>
           ))}
         </div>
