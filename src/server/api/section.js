@@ -2,6 +2,7 @@ const {
   getInstructorSections,
   getSectionGrades,
   getSectionProblemsetIds,
+  getSectionProblemsets,
   getStudentsInSection,
   removeUserFromSection
 } = require('../db/data-access-layer/section');
@@ -42,10 +43,20 @@ const configSectionRoutes = app => {
   app.get('/api/sections/:sectionId/problemsets', async (req, res) => {
     const { sectionId } = req.params;
     console.log('/api/sections/:sectionId/problemsets', sectionId);
-    const problemsets = await getSectionProblemsetIds(Number(sectionId));
+    const problemsets = await getSectionProblemsets(Number(sectionId));
     console.log('GOT THE PROBLEMSETS', problemsets);
     res.send(problemsets);
   });
+
+  app.post(
+    '/api/sections/:sectionId/problemsets/due-dates',
+    async (req, res) => {
+      const { sectionId } = req.params;
+      console.log('/api/sections/:sectionId/problemsets/due-dates', sectionId);
+      const dates = req.body;
+      console.log('dates', dates);
+    }
+  );
 };
 
 module.exports = configSectionRoutes;

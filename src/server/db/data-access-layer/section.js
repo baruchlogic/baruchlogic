@@ -295,6 +295,18 @@ const getSectionProblemsetIds = async sectionId => {
   return q.rows;
 };
 
+const getSectionProblemsets = async sectionId => {
+  const q = await query(
+    `SELECT * FROM section_problemset
+    FULL OUTER JOIN problemset
+    ON problemset.id = section_problemset.problemset_id
+    WHERE section_problemset.section_id = $1`,
+    [sectionId]
+  );
+  console.log('sectionProblemsetIds', q);
+  return q.rows;
+};
+
 const removeUserFromSection = async (userId, sectionId) => {
   const q = await query(
     `DELETE FROM student_roster WHERE student_id = $1 AND section_id = $2`,
@@ -314,6 +326,7 @@ module.exports = {
   getInstructorSections,
   getSectionGrades,
   getSectionProblemsetIds,
+  getSectionProblemsets,
   getStudentsInSection,
   getUserSection,
   getUserGrades,

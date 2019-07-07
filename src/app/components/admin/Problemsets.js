@@ -4,21 +4,33 @@ import StyledCard from 'app-styled/StyledCard';
 import moment from 'moment';
 import { MOMENT_FORMAT } from 'constants';
 import DateTimePicker from 'react-datetime-picker';
+// import { authFetch } from 'helpers/auth';
+import { useInstructorSections } from 'hooks';
 
 const Problemsets = () => {
+  const instructorSections = useInstructorSections();
+  const [currentSection, setCurrentSection] = useState({});
   const [problemsets, setProblemsets] = useState([]);
   const fetchProblemSets = async () => {
-    const response = await fetch('http://localhost:5000/api/problemsets').then(
-      res => res.json()
-    );
+    const response = await fetch(
+      `http://localhost:5000/api/sections/${currentSection.id}/problemsets`
+    ).then(res => res.json());
     const problemsets = response;
     console.log('PROBLEMSETS', problemsets);
     setProblemsets(problemsets);
-    setDates(new Array(problemsets.length));
+    setDates(
+      new Array(problemsets.length).fill(0).map(x => new Date(Date.now()))
+    );
   };
   useEffect(() => {
     fetchProblemSets();
-  }, []);
+  }, [currentSection]);
+
+  useEffect(() => {
+    if (instructorSections.length && !currentSection.id) {
+      setCurrentSection(instructorSections[0]);
+    }
+  }, [instructorSections]);
 
   const [dates, setDates] = useState([]);
 
@@ -29,22 +41,48 @@ const Problemsets = () => {
     setDates(newDates);
   };
 
+  const handleSectionChange = ({ target: { value } }) => {
+    const section = instructorSections.find(
+      section => section.section_number === value
+    );
+    setCurrentSection(section);
+  };
+
+  // const onSubmit = () => {
+  //   const response = await authFetch('http://localhost:5000/api/auth');
+  //   if (response.status !== 200) {
+  //     setIsAdmin(false);
+  //     return;
+  //   }
+  //   const admin = await response.json();
+  //   await authFetch('http://localhost:5000/api/sections/:sectionId/due-dates');
+  // }
+
   return (
     <StyledCard elevation={Elevation.THREE}>
       <h1>Problemsets</h1>
-      <div style={{ display: 'flex' }}>
-        <div>
+      <section>
+        <h2>Pick a section:</h2>
+        <select onChange={handleSectionChange} onBlur={handleSectionChange}>
+          {instructorSections.map(section => (
+            <option value={section.section_number}>
+              {section.section_number}
+            </option>
+          ))}
+        </select>
+      </section>
+      <div>
+        <div style={{ display: 'flex' }}>
           <div>Problemsets</div>
-          {problemsets.map(problemset => (
+          <div>Due Dates</div>
+          <div>Change due date:</div>
+        </div>
+        {problemsets.map((problemset, index) => (
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div key={problemset.id}>
               <span>Unit {problemset.unit}</span>
               <span>Number {problemset.index_in_unit}</span>
             </div>
-          ))}
-        </div>
-        <div>
-          <div>Due Dates</div>
-          {problemsets.map(problemset => (
             <div key={problemset.id}>
               <span>
                 {problemset.due_date
@@ -52,11 +90,6 @@ const Problemsets = () => {
                   : 'N/A'}
               </span>
             </div>
-          ))}
-        </div>
-        <div>
-          <div>Change due date:</div>
-          {problemsets.map((problemset, index) => (
             <div>
               <DateTimePicker
                 onChange={val => handleDateChange(val, index)}
@@ -64,8 +97,8 @@ const Problemsets = () => {
               />
               <Button intent={Intent.WARNING}>SUBMIT CHANGE</Button>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </StyledCard>
   );
