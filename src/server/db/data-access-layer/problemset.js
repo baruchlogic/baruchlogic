@@ -60,6 +60,13 @@ const saveBestScore = async (studentId, problemsetId, score) => {
   );
 };
 
+/**
+ * Saves the last submitted response
+ * @param  {string}  studentId
+ * @param  {problemsetId}  problemsetId
+ * @param  {object}  responses
+ * @return {void}
+ */
 const saveResponses = async (studentId, problemsetId, responses) => {
   console.log('saveResponses');
 
