@@ -87,6 +87,21 @@ const getInstructorSections = async instructorId => {
   }
 };
 
+const getDueDate = async (problemsetId, sectionId) => {
+  console.log('getDueDate', problemsetId,sectionId);
+  try {
+    const response = await query(
+      `SELECT due_date from due_date
+      WHERE problemset_id = $1 AND section_id = $2`,
+      [problemsetId, sectionId]
+    );
+    console.log('response', response);
+    return response.rows[0].due_date;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 const getUserSection = async userId => {
   try {
     console.log('getUserSection', userId);
@@ -295,6 +310,7 @@ module.exports = {
   addStudentsToSectionById,
   checkIfSectionExists,
   createNewSectionWithInstructor,
+  getDueDate,
   getInstructorSections,
   getSectionGrades,
   getSectionProblemsetIds,
