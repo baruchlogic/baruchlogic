@@ -71,7 +71,7 @@ const saveResponses = async (studentId, problemsetId, responses) => {
   console.log('saveResponses');
 
   // Upsert last response
-  const q = await query(
+  await query(
     `INSERT INTO problemset_last_response
     (student_id, problemset_id, response)
     VALUES
@@ -83,11 +83,6 @@ const saveResponses = async (studentId, problemsetId, responses) => {
     AND problemset_last_response.student_id = $1`,
     [studentId, problemsetId, responses]
   );
-  console.log('q', q);
-  const r = await query('SELECT * FROM problemset_last_response');
-  console.log('r', r);
-  const { score } = await scoreResponses(responses, problemsetId);
-  saveBestScore(studentId, problemsetId, score);
 };
 
 /**

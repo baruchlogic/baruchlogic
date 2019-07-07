@@ -1,3 +1,4 @@
+const moment = require('moment');
 const {
   getAllProblemsets,
   getProblemsByProblemsetId,
@@ -46,7 +47,7 @@ const configProblemsetRoutes = app => {
     // const json = await req.json();
     // console.log('JSON', json);
     const { id: problemsetId } = req.params;
-    const { id: studentId } = req.user;
+    const { id: studentId, section_id: sectionId } = req.user;
     const { incorrectProblems, score } = await scoreResponses(
       req.body,
       problemsetId
@@ -55,13 +56,18 @@ const configProblemsetRoutes = app => {
     console.log('INCORRECT PROBLEMS', incorrectProblems);
     console.log('USER', req.user);
 
-    // const userSection = await getUserSection(studentId);
-    // console.log('USER SECTION', userSection);
-    // const dueDate = await getDueDate(problemsetId, sectionId);
-    // console.log('DUE DATE &&&&&', dueDate);
+    const dueDate = await getDueDate(problemsetId, sectionId);
+    console.log('DUE DATE &&&&&', dueDate);
 
     await saveResponses(studentId, problemsetId, req.body);
-    await saveBestScore(studentId, problemsetId, score);
+
+    const isPastDueDate = dueDate && moment(dueDate).isBefore(moment());
+
+    if (!isPastDueDate) {
+      // Only save the best score if it's not after the due date
+      console.log('save the best score@@@@!!!!');
+      await saveBestScore(studentId, problemsetId, score);
+    }
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify({ incorrectProblems, score }));
   });
