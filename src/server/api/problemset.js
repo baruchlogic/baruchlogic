@@ -8,6 +8,8 @@ const {
   scoreResponses
 } = require('../db/data-access-layer/problemset');
 
+const { getUserSection } = require('../db/data-access-layer/section');
+
 const configProblemsetRoutes = app => {
   app.get('/api/problemsets', async (req, res) => {
     const problemsets = await getAllProblemsets();
@@ -39,6 +41,12 @@ const configProblemsetRoutes = app => {
     );
     console.log('SCORE', score);
     console.log('INCORRECT PROBLEMS', incorrectProblems);
+    console.log('USER', req.user);
+
+    const userSection = await getUserSection(studentId);
+    console.log('USER SECTION', userSection);
+    // const dueDate = await getDueDate(problemsetId, sectionId);
+
     await saveResponses(studentId, problemsetId, req.body);
     await saveBestScore(studentId, problemsetId, score);
     res.setHeader('Content-Type', 'application/json');

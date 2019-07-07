@@ -87,6 +87,21 @@ const getInstructorSections = async instructorId => {
   }
 };
 
+const getUserSection = async userId => {
+  try {
+    console.log('getUserSection', userId);
+    const q = await query(
+      `SELECT section_id FROM student_roster
+      WHERE student_id = $1`,
+      [userId]
+    );
+    console.log('Q!!!!', q);
+    return q.rows[0].section_id;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 /**
  * Get the section ID for a section, given the section number.
  * @param  {string}  sectionNumber
@@ -284,6 +299,7 @@ module.exports = {
   getSectionGrades,
   getSectionProblemsetIds,
   getStudentsInSection,
+  getUserSection,
   getUserGrades,
   removeUserFromSection
 };
