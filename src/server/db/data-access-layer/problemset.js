@@ -3,7 +3,12 @@ const { Formula, LineOfProof, Proof } = require('logically-locally');
 
 const getAllProblemsets = async () => {
   try {
-    const response = await query('SELECT * FROM problemset', []);
+    const response = await query(
+      `SELECT * FROM problemset
+      FULL OUTER JOIN due_date
+      ON problemset.id = due_date.problemset_id`,
+      []
+    );
     return response.rows;
   } catch (e) {
     console.log(e);

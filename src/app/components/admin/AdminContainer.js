@@ -6,6 +6,7 @@ import AdminHeader from './AdminHeader';
 import Home from './Home';
 import RosterContainer from './RosterContainer';
 import Grades from './Grades';
+import Settings from './Settings';
 
 const AdminContainer = () => {
   const [isAdmin, setIsAdmin] = useState(null);
@@ -34,6 +35,7 @@ const AdminContainer = () => {
       <Route exact path="/admin/create" component={CreateSection} />
       <Route exact path="/admin/roster" component={RosterContainer} />
       <Route exact path="/admin/grades" component={Grades} />
+      <Route exact path="/admin/settings" component={Settings} />
     </>
   ) : (
     <div>LOADING...</div>
