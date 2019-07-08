@@ -1,10 +1,11 @@
 const {
   getInstructorSections,
   getSectionGrades,
-  getSectionProblemsetIds,
+  // getSectionProblemsetIds,
   getSectionProblemsets,
   getStudentsInSection,
-  removeUserFromSection
+  removeUserFromSection,
+  upsertProblemsetDueDate
 } = require('../db/data-access-layer/section');
 
 const configSectionRoutes = app => {
@@ -57,6 +58,22 @@ const configSectionRoutes = app => {
       console.log('dates !@#&!@#&@(#&@!(#&!@))', dates);
       res.setHeader('Content-Type', 'application/json');
       res.send(dates);
+    }
+  );
+
+  app.post(
+    '/api/sections/:sectionId/problemsets/due-dates/:problemsetId',
+    async (req, res) => {
+      const { problemsetId, sectionId } = req.params;
+      console.log(
+        '/api/sections/:sectionId/problemsets/due-dates/:problemsetId',
+        sectionId
+      );
+      const { date } = req.body;
+      console.log('date !@#&!@#&@(#&@!(#&!@))', date);
+      await upsertProblemsetDueDate(problemsetId, sectionId, date);
+      res.setHeader('Content-Type', 'application/json');
+      res.send(date);
     }
   );
 };

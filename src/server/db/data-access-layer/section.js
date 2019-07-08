@@ -316,6 +316,24 @@ const removeUserFromSection = async (userId, sectionId) => {
   return;
 };
 
+const upsertProblemsetDueDate = async (problemsetId, sectionId, dueDate) => {
+  console.log('UPSERT', problemsetId, sectionId, dueDate);
+  const q = await query(
+    `
+    INSERT INTO due_date (problemset_id, section_id, due_date)
+    VALUES ($1, $2, $3)
+    ON CONFLICT ON CONSTRAINT unique_section_id_problemset_id
+    DO
+    UPDATE SET due_date = $3
+    WHERE due_date.problemset_id = $1
+    AND due_date.section_id = $2
+  `,
+    [problemsetId, sectionId, dueDate]
+  );
+  console.log('HOLY SHIT', q);
+  return q.rows;
+};
+
 module.exports = {
   addStudents,
   addStudentsToSection,
@@ -330,5 +348,6 @@ module.exports = {
   getStudentsInSection,
   getUserSection,
   getUserGrades,
-  removeUserFromSection
+  removeUserFromSection,
+  upsertProblemsetDueDate
 };

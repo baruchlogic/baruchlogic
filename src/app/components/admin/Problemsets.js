@@ -48,13 +48,17 @@ const Problemsets = () => {
     setCurrentSection(section);
   };
 
-  const onSubmit = async () => {
-    const datesMap = dates.reduce((acc, date, index) => ({
-      ...acc, [problemsets[index].id]: date
-    }), {})
-    await authFetch(`http://localhost:5000/api/sections/${currentSection.id}/problemsets/due-dates`, 'POST', {
-      body: JSON.stringify({ dates: datesMap })
-    });
+  const onSubmit = async index => {
+    const problemset = problemsets[index];
+    await authFetch(
+      `http://localhost:5000/api/sections/${
+        currentSection.id
+      }/problemsets/due-dates/${problemset.id}`,
+      'POST',
+      {
+        body: JSON.stringify({ date: dates[problemset.id] })
+      }
+    );
   };
 
   return (
@@ -64,7 +68,7 @@ const Problemsets = () => {
         <h2>Pick a section:</h2>
         <select onChange={handleSectionChange} onBlur={handleSectionChange}>
           {instructorSections.map(section => (
-            <option value={section.section_number}>
+            <option value={section.section_number} key={section.id}>
               {section.section_number}
             </option>
           ))}
@@ -77,7 +81,7 @@ const Problemsets = () => {
           <div>Change due date:</div>
         </div>
         {problemsets.map((problemset, index) => (
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }} key={problemset.id}>
             <div key={problemset.id}>
               <span>Unit {problemset.unit}</span>
               <span>Number {problemset.index_in_unit}</span>
@@ -94,7 +98,14 @@ const Problemsets = () => {
                 onChange={val => handleDateChange(val, index)}
                 value={dates[index]}
               />
-            <Button intent={Intent.WARNING} onClick={onSubmit}>SUBMIT CHANGE</Button>
+              <Button
+                intent={Intent.WARNING}
+                onClick={() => {
+                  onSubmit(index);
+                }}
+              >
+                SUBMIT CHANGE
+              </Button>
             </div>
           </div>
         ))}
