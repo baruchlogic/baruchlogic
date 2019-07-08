@@ -89,38 +89,40 @@ const Problemsets = () => {
           <div>Due Dates</div>
           <div>Change due date:</div>
         </div>
-        {problemsets.sort((a, b) => a.order - b.order).map((problemset, index) => (
-          <div
-            style={{ display: 'flex', justifyContent: 'space-between' }}
-            key={problemset.id}
-          >
-            <div key={problemset.id}>
-              <span>Unit {problemset.unit}</span>
-              <span>Number {problemset.index_in_unit}</span>
+        {problemsets
+          .sort((a, b) => a.order - b.order)
+          .map((problemset, index) => (
+            <div
+              style={{ display: 'flex', justifyContent: 'space-between' }}
+              key={problemset.id}
+            >
+              <div key={problemset.id}>
+                <span>Unit {problemset.unit}</span>
+                <span>Number {problemset.index_in_unit}</span>
+              </div>
+              <div key={problemset.id}>
+                <span>
+                  {problemset.due_date
+                    ? moment(problemset.due_date).format(MOMENT_FORMAT)
+                    : 'N/A'}
+                </span>
+              </div>
+              <div>
+                <DateTimePicker
+                  onChange={val => handleDateChange(val, problemset.id)}
+                  value={dates[problemset.id]}
+                />
+                <Button
+                  intent={Intent.WARNING}
+                  onClick={() => {
+                    onSubmit(index);
+                  }}
+                >
+                  SUBMIT CHANGE
+                </Button>
+              </div>
             </div>
-            <div key={problemset.id}>
-              <span>
-                {problemset.due_date
-                  ? moment(problemset.due_date).format(MOMENT_FORMAT)
-                  : 'N/A'}
-              </span>
-            </div>
-            <div>
-              <DateTimePicker
-                onChange={val => handleDateChange(val, problemset.id)}
-                value={dates[problemset.id]}
-              />
-              <Button
-                intent={Intent.WARNING}
-                onClick={() => {
-                  onSubmit(index);
-                }}
-              >
-                SUBMIT CHANGE
-              </Button>
-            </div>
-          </div>
-        ))}
+          ))}
       </div>
     </StyledCard>
   );

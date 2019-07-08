@@ -30,7 +30,7 @@ const StyledButton = styled(Button)`
 
 const Login = ({ history }) => {
   const [key, setKey] = useState('');
-  const isAuth = useIsUserAuth();
+  const [isAuth] = useIsUserAuth();
 
   const onInputChange = ({ target: { value: key } }) => {
     setKey(key);

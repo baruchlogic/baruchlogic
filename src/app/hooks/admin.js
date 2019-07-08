@@ -20,18 +20,23 @@ export const useInstructorSections = () => {
 
 export const useIsUserAuth = () => {
   const [isAuth, setIsAuth] = useState(false);
+  const [user, setUser] = useState(null);
 
   const fetchIsAuth = async () => {
-    authFetch('http://localhost:5000/api/auth', 'GET').then(res => {
-      if (res.status === 200) {
+    await authFetch('http://localhost:5000/api/auth', 'GET')
+      .then(res => res.json())
+      .then(res => {
+        console.log('RESPONSE', res);
         setIsAuth(true);
-      }
-    });
+        setUser(res.user);
+      });
   };
 
   useEffect(() => {
     fetchIsAuth();
   }, []);
 
-  return isAuth;
+  console.log('useIsUserAuth', isAuth, user);
+
+  return [isAuth, user];
 };
