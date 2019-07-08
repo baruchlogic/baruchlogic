@@ -36,9 +36,9 @@ const ProblemsetsContainer = ({
     } else {
       console.log('IS NOT AUTH');
       const response = await fetch(
-        'http://localhost:5000/api/problemsets',
-        res => res.json()
-      );
+        'http://localhost:5000/api/problemsets'
+      ).then(res => res.json());
+      console.log('response', response);
       setFetchIsLoading(false);
       const problemsets = response;
       const groupedProblemsets = groupProblemSetsByUnit(problemsets);
