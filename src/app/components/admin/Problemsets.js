@@ -81,7 +81,10 @@ const Problemsets = () => {
           <div>Change due date:</div>
         </div>
         {problemsets.map((problemset, index) => (
-          <div style={{ display: 'flex', justifyContent: 'space-between' }} key={problemset.id}>
+          <div
+            style={{ display: 'flex', justifyContent: 'space-between' }}
+            key={problemset.id}
+          >
             <div key={problemset.id}>
               <span>Unit {problemset.unit}</span>
               <span>Number {problemset.index_in_unit}</span>

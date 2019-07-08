@@ -300,6 +300,8 @@ const getSectionProblemsets = async sectionId => {
     `SELECT * FROM section_problemset
     FULL OUTER JOIN problemset
     ON problemset.id = section_problemset.problemset_id
+    FULL OUTER JOIN due_date
+    ON due_date.section_id = section_problemset.section_id
     WHERE section_problemset.section_id = $1`,
     [sectionId]
   );
