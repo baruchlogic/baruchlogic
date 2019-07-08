@@ -5,7 +5,7 @@ export const useInstructorSections = () => {
   const [instructorSections, setInstructorSections] = useState([]);
 
   const getInstructorCourseNumbers = async () => {
-    let sections = await authFetch(`http://localhost:5000/api/sections`);
+    let sections = await authFetch(`${API_BASE_URL}/api/sections`);
     sections = await sections.json();
     console.log('SECTIONS', sections);
     setInstructorSections(sections);
@@ -23,7 +23,7 @@ export const useIsUserAuth = () => {
   const [user, setUser] = useState(null);
 
   const fetchIsAuth = async () => {
-    await authFetch('http://localhost:5000/api/auth', 'GET')
+    await authFetch(`${API_BASE_URL}/api/auth`, 'GET')
       .then(res => res.json())
       .then(res => {
         console.log('RESPONSE', res);

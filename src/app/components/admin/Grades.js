@@ -26,7 +26,7 @@ const Grades = () => {
 
   const setCurrentSectionGrades = async () => {
     const grades = await fetch(
-      `http://localhost:5000/api/sections/${currentSectionId}/grades`
+      `${API_BASE_URL}/api/sections/${currentSectionId}/grades`
     ).then(res => res.json());
     console.log('Grades!!', grades);
     setCurrentGrades(grades);
@@ -34,7 +34,7 @@ const Grades = () => {
 
   const setCurrentProblemsetsHelper = async () => {
     const problemsets = await fetch(
-      `http://localhost:5000/api/sections/${currentSectionId}/problemsets`
+      `${API_BASE_URL}/api/sections/${currentSectionId}/problemsets`
     ).then(res => res.json());
     console.log('setCurrentProblemsetsHelper', problemsets);
     setCurrentProblemsets(problemsets);

@@ -52,7 +52,7 @@ const StyledDivider = styled(Navbar.Divider)`
 const Header = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const getIsAdmin = async () => {
-    const response = await authFetch('http://localhost:5000/api/auth');
+    const response = await authFetch(`${API_BASE_URL}/api/auth`);
     if (response.status !== 200) {
       setIsAdmin(false);
       return;

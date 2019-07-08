@@ -26,7 +26,7 @@ const ProblemsetsContainer = ({
     if (isUserAuth && user) {
       console.log('IS AUTH', isUserAuth, user);
       const response = await authFetch(
-        `http://localhost:5000/api/sections/${user.section_id}/problemsets`
+        `${API_BASE_URL}/api/sections/${user.section_id}/problemsets`
       ).then(res => res.json());
       setFetchIsLoading(false);
       console.log('problemsetss  !  !! ! ', response);
@@ -36,7 +36,7 @@ const ProblemsetsContainer = ({
     } else {
       console.log('IS NOT AUTH');
       const response = await fetch(
-        'http://localhost:5000/api/problemsets'
+        `${API_BASE_URL}/api/problemsets`
       ).then(res => res.json());
       console.log('response', response);
       setFetchIsLoading(false);

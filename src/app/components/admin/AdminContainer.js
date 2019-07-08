@@ -11,7 +11,7 @@ import Settings from './Settings';
 const AdminContainer = () => {
   const [isAdmin, setIsAdmin] = useState(null);
   const getIsAdmin = async () => {
-    const response = await authFetch('http://localhost:5000/api/auth');
+    const response = await authFetch(`${API_BASE_URL}/api/auth`);
     if (response.status !== 200) {
       setIsAdmin(false);
       return;
