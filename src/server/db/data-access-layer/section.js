@@ -297,12 +297,19 @@ const getSectionProblemsetIds = async sectionId => {
 
 const getSectionProblemsets = async sectionId => {
   const q = await query(
-    `SELECT due_date.section_id, due_date.problemset_id,
-    section_problemset.order, due_date
+    `SELECT due_date.section_id,
+    due_date.problemset_id,
+    section_problemset.order,
+    problemset.unit,
+    problemset.index_in_unit,
+    due_date,
+    problemset.name
     FROM section_problemset
-    RIGHT JOIN due_date
-    ON due_date.section_id = section_problemset.section_id
+    RIGHT JOIN due_date ON
+    due_date.section_id = section_problemset.section_id
     AND due_date.problemset_id = section_problemset.problemset_id
+    JOIN problemset
+    ON section_problemset.problemset_id = problemset.id
     WHERE due_date.section_id = $1`,
     [sectionId]
   );
