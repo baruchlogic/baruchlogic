@@ -16,8 +16,10 @@ const AdminContainer = () => {
       setIsAdmin(false);
       return;
     }
-    const { admin } = await response.json();
-    setIsAdmin(admin.admin);
+    const {
+      user: { admin }
+    } = await response.json();
+    setIsAdmin(admin);
   };
   useEffect(() => {
     getIsAdmin();
