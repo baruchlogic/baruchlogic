@@ -19,10 +19,13 @@ const Problemsets = () => {
     console.log('PROBLEMSETS', problemsets);
     setProblemsets(problemsets);
     setDates(
-      problemsets.reduce((acc, problemset) => ({
-        ...acc,
-        [problemset.id]: new Date(problemset.due_date)
-      }), {})
+      problemsets.reduce(
+        (acc, problemset) => ({
+          ...acc,
+          [problemset.id]: new Date(problemset.due_date)
+        }),
+        {}
+      )
     );
   };
   useEffect(() => {
@@ -64,6 +67,7 @@ const Problemsets = () => {
         body: JSON.stringify({ date: dates[problemset.id].toUTCString() })
       }
     );
+    fetchProblemSets();
   };
 
   return (
