@@ -19,7 +19,10 @@ const Problemsets = () => {
     console.log('PROBLEMSETS', problemsets);
     setProblemsets(problemsets);
     setDates(
-      new Array(problemsets.length).fill(0).map(x => new Date(Date.now()))
+      problemsets.reduce((acc, problemset) => ({
+        ...acc,
+        [problemset.id]: new Date(problemset.due_date)
+      }), {})
     );
   };
   useEffect(() => {
@@ -32,14 +35,16 @@ const Problemsets = () => {
     }
   }, [instructorSections]);
 
-  const [dates, setDates] = useState([]);
+  const [dates, setDates] = useState({});
 
-  const handleDateChange = (value, index) => {
-    const newDates = dates.slice();
-    newDates.splice(index, 1, value);
-    newDates.splice(index, 1, value);
-    setDates(newDates);
+  const handleDateChange = (value, problemsetId) => {
+    console.log(value, typeof value);
+    setDates({ ...dates, [problemsetId]: value });
   };
+
+  useEffect(() => {
+    console.log('dates', dates);
+  });
 
   const handleSectionChange = ({ target: { value } }) => {
     const section = instructorSections.find(
@@ -56,7 +61,7 @@ const Problemsets = () => {
       }/problemsets/due-dates/${problemset.id}`,
       'POST',
       {
-        body: JSON.stringify({ date: dates[problemset.id] })
+        body: JSON.stringify({ date: dates[problemset.id].toUTCString() })
       }
     );
   };
@@ -98,8 +103,8 @@ const Problemsets = () => {
             </div>
             <div>
               <DateTimePicker
-                onChange={val => handleDateChange(val, index)}
-                value={dates[index]}
+                onChange={val => handleDateChange(val, problemset.id)}
+                value={dates[problemset.id]}
               />
               <Button
                 intent={Intent.WARNING}

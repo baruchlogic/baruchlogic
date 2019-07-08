@@ -298,7 +298,7 @@ const getSectionProblemsetIds = async sectionId => {
 const getSectionProblemsets = async sectionId => {
   const q = await query(
     `SELECT due_date.section_id,
-    due_date.problemset_id,
+    due_date.problemset_id as id,
     section_problemset.order,
     problemset.unit,
     problemset.index_in_unit,
@@ -327,14 +327,14 @@ const removeUserFromSection = async (userId, sectionId) => {
 };
 
 const upsertProblemsetDueDate = async (problemsetId, sectionId, dueDate) => {
-  console.log('UPSERT', problemsetId, sectionId, dueDate);
+  console.log('UPSERT', problemsetId, sectionId, dueDate, typeof dueDate);
   const q = await query(
     `
     INSERT INTO due_date (problemset_id, section_id, due_date)
     VALUES ($1, $2, $3)
     ON CONFLICT ON CONSTRAINT unique_section_id_problemset_id
     DO
-    UPDATE SET due_date.due_date = $3
+    UPDATE SET due_date = $3::timestamptz
     WHERE due_date.problemset_id = $1
     AND due_date.section_id = $2
   `,
