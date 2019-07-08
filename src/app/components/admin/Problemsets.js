@@ -89,7 +89,7 @@ const Problemsets = () => {
           <div>Due Dates</div>
           <div>Change due date:</div>
         </div>
-        {problemsets.map((problemset, index) => (
+        {problemsets.sort((a, b) => a.order - b.order).map((problemset, index) => (
           <div
             style={{ display: 'flex', justifyContent: 'space-between' }}
             key={problemset.id}
