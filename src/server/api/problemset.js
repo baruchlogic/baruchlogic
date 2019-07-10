@@ -1,6 +1,7 @@
 const moment = require('moment');
 const {
   getAllProblemsets,
+  getBestResponses,
   getProblemsByProblemsetId,
   getProblemSetById,
   getScore,
@@ -79,6 +80,15 @@ const configProblemsetRoutes = app => {
     const { id: studentId } = req.user;
     const score = await getScore(problemsetId, studentId);
     res.status(200).send(String(score));
+  });
+
+  app.get('/api/problemsets/:problemsetId/responses', async (req, res) => {
+    const { id: studentId } = req.user;
+    const { problemsetId } = req.params;
+    const bestResponses = await getBestResponses(problemsetId, studentId);
+    console.log('GOT THE RESPONSES', bestResponses);
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ responses: bestResponses }));
   });
 };
 

@@ -26,6 +26,22 @@ const getProblemSetById = async id => {
   }
 };
 
+const getBestResponses = async (problemsetId, studentId) => {
+  try {
+    console.log('GET BEST RESPONSE', problemsetId, studentId);
+    const response = await query(
+      `SELECT response FROM problemset_best_response
+      WHERE problemset_id = $1
+      AND user_id = $2`,
+      [problemsetId, studentId]
+    );
+    console.log('RESPONSENRESONSERPSORES', response);
+    return response.rows[0] && response.rows[0].response;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 const getProblemsByProblemsetId = async id => {
   console.log('getProblemsByProblemsetId', id);
   try {
@@ -233,6 +249,7 @@ const getScore = async (problemsetId, studentId) => {
 };
 
 module.exports = {
+  getBestResponses,
   getAllProblemsets,
   getProblemsByProblemsetId,
   getProblemSetById,

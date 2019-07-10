@@ -108,6 +108,14 @@ const ProblemsetContainer = ({ problemsetId }) => {
     setHasSubmitted(true);
   };
 
+  const onRestoreBestResponses = async () => {
+    const result = await authFetch(
+      `${API_BASE_URL}/api/problemsets/${problemsetId}/responses`
+    ).then(res => res.json());
+    console.log('RESULT RESULT:', result);
+    setProblemsetResponses(result.responses);
+  };
+
   const problemsetNumber =
     problemset && problemset.unit + problemset.index_in_unit - 1;
 
@@ -159,6 +167,15 @@ const ProblemsetContainer = ({ problemsetId }) => {
         <div>
           <StyledResetButton intent="success" large onClick={onReset}>
             RESET RESPONSES
+          </StyledResetButton>
+        </div>
+        <div>
+          <StyledResetButton
+            intent="success"
+            large
+            onClick={onRestoreBestResponses}
+          >
+            RESTORE BEST RESPONSES
           </StyledResetButton>
         </div>
       </StyledCard>
