@@ -41,7 +41,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebPackPlugin({
-      template: 'src/index.html'
+      template: 'src/app/index.html'
     }),
     new webpack.DefinePlugin({
       API_BASE_URL: JSON.stringify(process.env.API_BASE_URL)
