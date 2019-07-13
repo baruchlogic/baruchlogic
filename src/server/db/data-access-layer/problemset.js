@@ -1,5 +1,5 @@
 const { query } = require('../index');
-const { Formula, LineOfProof, Proof } = require('logically-locally');
+const { Formula, LineOfProof, Proof } = require('logically');
 
 const getAllProblemsets = async () => {
   try {

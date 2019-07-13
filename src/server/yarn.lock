@@ -4199,6 +4199,11 @@ lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.3:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.14.tgz#9ce487ae66c96254fe20b599f21b6816028078ba"
   integrity sha512-mmKYbW3GLuJeX+iGP+Y7Gp1AiGHGbXHCOh/jZmrawMmsE7MS4znI3RL2FsjbqOyMayHInjOeykW7PEajUk1/xw==
 
+logically@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/logically/-/logically-0.1.0.tgz#e15c0e346866412e55a8f6a4c1dbc67b7d41fb66"
+  integrity sha512-sOo75uVjJ1zurLjTRDzdL52aDX74QVTKxE5slo5egP6oWO6caE9Bevp6XhjxXWIiOXTWjcVWZtFf326QWEC15g==
+
 loglevel@^1.6.3:
   version "1.6.3"
   resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.6.3.tgz#77f2eb64be55a404c9fd04ad16d57c1d6d6b1280"
