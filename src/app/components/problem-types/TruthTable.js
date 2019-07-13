@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { any, func, object } from 'prop-types';
 import styled from 'styled-components';
-import { Formula } from 'logically-locally';
+import { Formula } from 'logically';
 
 const StyledInput = styled.input`
   font-size: 1rem;

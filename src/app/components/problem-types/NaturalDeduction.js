@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { func, object } from 'prop-types';
 import styled from 'styled-components';
-import { Formula } from 'logically-locally';
+import { Formula } from 'logically';
 import { Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { DEDUCTION_RULES } from 'logically-locally';
+import { DEDUCTION_RULES } from 'logically';
 
 const ProofContainer = styled.div`
   display: flex;
