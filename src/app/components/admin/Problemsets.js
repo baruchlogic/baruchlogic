@@ -13,7 +13,7 @@ const Problemsets = () => {
   const [problemsets, setProblemsets] = useState([]);
   const fetchProblemSets = async () => {
     const response = await fetch(
-      `http://localhost:5000/api/sections/${currentSection.id}/problemsets`
+      `${API_BASE_URL}/api/sections/${currentSection.id}/problemsets`
     ).then(res => res.json());
     const problemsets = response;
     console.log('PROBLEMSETS', problemsets);
@@ -59,7 +59,7 @@ const Problemsets = () => {
   const onSubmit = async index => {
     const problemset = problemsets[index];
     await authFetch(
-      `http://localhost:5000/api/sections/${
+      `${API_BASE_URL}/api/sections/${
         currentSection.id
       }/problemsets/due-dates/${problemset.id}`,
       'POST',

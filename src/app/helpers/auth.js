@@ -1,6 +1,6 @@
 const authFetchHeaders = {
   'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': 'http://localhost:5000',
+  'Access-Control-Allow-Origin': `${API_BASE_URL}:5000`,
   Vary: 'Origin'
 };
 
