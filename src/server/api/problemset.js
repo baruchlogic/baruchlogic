@@ -88,7 +88,7 @@ const configProblemsetRoutes = app => {
     const bestResponses = await getBestResponses(problemsetId, studentId);
     console.log('GOT THE RESPONSES', bestResponses);
     res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({ responses: bestResponses }));
+    res.send({ responses: bestResponses });
   });
 };
 

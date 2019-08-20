@@ -36,7 +36,11 @@ const getBestResponses = async (problemsetId, studentId) => {
       [problemsetId, studentId]
     );
     console.log('RESPONSENRESONSERPSORES', response);
-    return response.rows[0] && response.rows[0].response;
+    return (
+      response.rows[0] &&
+      response.rows[0].response &&
+      JSON.parse(response.rows[0].response)
+    );
   } catch (e) {
     console.log(e);
   }
@@ -45,19 +49,37 @@ const getBestResponses = async (problemsetId, studentId) => {
 const getProblemsByProblemsetId = async id => {
   console.log('getProblemsByProblemsetId', id);
   try {
+    // PostgreSQL 8:
     const response = await query(
-      `SELECT row_to_json(problem)
-      FROM (select id, type, prompt, choices, deduction_prompt,
+      `SELECT id, type, prompt, choices, deduction_prompt,
       problem_v_problemset.problem_index
       FROM problem
       INNER JOIN problem_v_problemset
       ON problem.id = problem_v_problemset.problem_id
-      WHERE problem_v_problemset.problemset_id = $1) problem
+      WHERE problem_v_problemset.problemset_id = $1
       ORDER BY problem_index ASC;`,
       [id]
     );
+    // PostgreSQL 9:
+    // const response = await query(
+    //   `SELECT row_to_json(problem)
+    //   FROM (select id, type, prompt, choices, deduction_prompt,
+    //   problem_v_problemset.problem_index
+    //   FROM problem
+    //   INNER JOIN problem_v_problemset
+    //   ON problem.id = problem_v_problemset.problem_id
+    //   WHERE problem_v_problemset.problemset_id = $1) problem
+    //   ORDER BY problem_index ASC;`,
+    //   [id]
+    // );
     console.log('response', response);
-    return response.rows.map(row => row.row_to_json);
+    return response.rows.map(row => {
+      row.choices = row.choices ? JSON.parse(row.choices) : row.choices;
+      row.deduction_prompt = row.deduction_prompt
+        ? JSON.parse(row.deduction_prompt)
+        : row.deduction_prompt;
+      return row;
+    });
   } catch (e) {
     console.log(e);
   }
