@@ -90,15 +90,20 @@ const Problemsets = () => {
           <div>Change due date:</div>
         </div>
         {problemsets
-          .sort((a, b) => a.order - b.order)
+          .sort((a, b) =>
+            a.default_order < b.default_order
+              ? -1
+              : a.default_order > b.default_order
+              ? 1
+              : 0
+          )
           .map((problemset, index) => (
             <div
               style={{ display: 'flex', justifyContent: 'space-between' }}
               key={problemset.id}
             >
               <div key={problemset.id}>
-                <span>Unit {problemset.unit}</span>
-                <span>Number {problemset.index_in_unit}</span>
+                <span>Problemset #{problemset.default_order}</span>
               </div>
               <div key={problemset.id}>
                 <span>
