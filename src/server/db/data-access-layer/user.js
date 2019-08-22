@@ -44,8 +44,20 @@ const createNewUser = async (admin = false) => {
  * @return {object|undefined} - the desired user, if found
  */
 const getUserById = async id => {
+  console.log('getUserById');
   try {
-    const user = await query('SELECT * FROM logic_user WHERE id = $1', [id]);
+    const user = await query(
+      `SELECT * FROM logic_user
+      WHERE id = $1`,
+      [id]
+    );
+    if (!user.rows[0].admin) {
+      const sectionId = await query(
+        `SELECT section_id FROM student_roster WHERE student_id = $1`,
+        [user.rows[0].id]
+      );
+      user.rows[0].section_id = sectionId.rows[0].section_id;
+    }
     return user && user.rows && user.rows[0];
   } catch (e) {}
 };
@@ -58,7 +70,15 @@ const getUserById = async id => {
 const getUserByKey = async key => {
   try {
     console.log('getUserByKey', key);
-    const user = await query('SELECT * FROM logic_user WHERE key = $1', [key]);
+    const user = await query(`SELECT * FROM logic_user WHERE key = $1`, [key]);
+    if (!user.rows[0].admin) {
+      const sectionId = await query(
+        `SELECT section_id FROM student_roster WHERE student_id = $1`,
+        [user.rows[0].id]
+      );
+      user.rows[0].section_id = sectionId.rows[0].section_id;
+    }
+    console.log('RETURNING USER', user);
     return user && user.rows && user.rows[0];
   } catch (e) {}
 };

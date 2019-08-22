@@ -330,6 +330,7 @@ const getSectionProblemsets = async sectionId => {
     problemset.unit,
     problemset.index_in_unit,
     due_date,
+    problemset.default_order,
     problemset.name
     FROM section_problemset
     RIGHT JOIN due_date ON

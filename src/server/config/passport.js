@@ -19,7 +19,7 @@ const configPassport = app => {
             console.log('user not found');
             return done(null, false, { message: 'Invalid key.' });
           }
-          console.log('user found');
+          console.log('user found', user);
           req.login(user, function(err) {
             if (err) {
               return done(err);

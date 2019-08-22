@@ -12,8 +12,8 @@ const {
 } = require('../db/data-access-layer/problemset');
 
 const {
-  getDueDate
-  // getUserSection
+  getDueDate,
+  getUserSection
 } = require('../db/data-access-layer/section');
 
 const configProblemsetRoutes = app => {
@@ -49,7 +49,8 @@ const configProblemsetRoutes = app => {
     // const json = await req.json();
     // console.log('JSON', json);
     const { id: problemsetId } = req.params;
-    const { id: studentId, section_id: sectionId } = req.user;
+    const { id: studentId } = req.user;
+    const sectionId = await getUserSection(studentId);
     const { incorrectProblems, score } = await scoreResponses(
       req.body,
       problemsetId
