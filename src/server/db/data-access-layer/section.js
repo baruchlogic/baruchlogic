@@ -358,7 +358,7 @@ const upsertProblemsetDueDate = async (problemsetId, sectionId, dueDate) => {
   console.log('UPSERT', problemsetId, sectionId, dueDate, typeof dueDate);
   const q = await query(
     `UPDATE due_date SET due_date = $3::timestamptz
-    WHERE problemset_id = $1 AND section_id = #2`,
+    WHERE problemset_id = $1 AND section_id = $2`,
     [problemsetId, sectionId, dueDate]
   );
   return q;
