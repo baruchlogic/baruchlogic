@@ -82,23 +82,29 @@ const getProblemsByProblemsetId = async id => {
 
 const saveBestScore = async (studentId, problemsetId, score) => {
   console.log('saveBestScore');
-  // const q = await query(
-  //   `SELECT * FROM problemset_score
-  //   WHERE student_id = $1, problemset_id = $2`,
-  //   [studentId, problemsetId]
-  // );
-  // if (q.rows.length) {
-  //   await query(
-  //     ``
-  //   )
-  // }
-  await query(
-    `UPDATE problemset_score SET score = $3
-    WHERE problemset_score.problemset_id = $2
-    AND problemset_score.student_id = $1
-    AND problemset_score.score < $3`,
-    [studentId, problemsetId, score]
+  const q = await query(
+    `SELECT * FROM problemset_score
+    WHERE student_id = $1
+    AND problemset_id = $2`,
+    [studentId, problemsetId]
   );
+  if (q.rows.length) {
+    await query(
+      `UPDATE problemset_score
+      SET score = $3
+      WHERE problemset_score.problemset_id = $2
+      AND problemset_score.student_id = $1
+      AND problemset_score.score < $3`,
+      [studentId, problemsetId, score]
+    );
+  } else {
+    await query(
+      `INSERT INTO problemset_score
+      (student_id, problemset_id, score)
+      VALUES ($1, $2, $3)`,
+      [studentId, problemsetId, score]
+    );
+  }
   // await query(
   //   `INSERT INTO problemset_score
   //   (student_id, problemset_id, score)
@@ -169,7 +175,10 @@ const saveBestResponses = async (studentId, problemsetId, responses) => {
 
   const currentScore = await getScore(problemsetId, studentId);
 
+  console.log('current score', currentScore);
+
   if (currentScore === undefined || currentScore === null) {
+    console.log('current score undefined - insert');
     await query(
       `INSERT INTO problemset_best_response
       (user_id, problemset_id, response)
@@ -178,6 +187,7 @@ const saveBestResponses = async (studentId, problemsetId, responses) => {
       [studentId, problemsetId, responses]
     );
   } else if (score > currentScore) {
+    console.log('update best response');
     await query(
       `UPDATE problemset_best_response
       SET response = $3
