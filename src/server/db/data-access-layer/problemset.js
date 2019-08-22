@@ -169,7 +169,7 @@ const saveBestResponses = async (studentId, problemsetId, responses) => {
 
   const currentScore = await getScore(problemsetId, studentId);
 
-  if (!currentScore) {
+  if (currentScore === undefined || currentScore === null) {
     await query(
       `INSERT INTO problemset_best_response
       (user_id, problemset_id, response)
