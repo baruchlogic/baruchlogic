@@ -77,7 +77,7 @@ const ProblemsetsContainer = ({
       <Link to={`/problemsets/${problemset.id}`}>
         <div>
           <span className="numbering">
-            Problemset #{problemset.index_in_unit}
+            Problemset #{problemset.default_order}
           </span>
         </div>
       </Link>

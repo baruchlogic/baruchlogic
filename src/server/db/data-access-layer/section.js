@@ -1,5 +1,7 @@
 const { query } = require('../index');
 const { getUserByKey } = require('./user');
+const { getAllProblemsets } = require('./problemset');
+
 /**
  * Add students to db
  * @param {string[]} studentKeys
@@ -203,6 +205,31 @@ const createNewSection = async ({ sectionNumber, term, year }) => {
       [sectionNumber, term, year]
     );
     const newSectionId = q.rows[0].id;
+    // Assign due dates to the problemsets
+    const problemsets = await getAllProblemsets();
+    console.log('ADD PROBLEMSETS', newSectionId);
+    for (const problemset of problemsets) {
+      console.log(
+        'ADD PROBLEMSET',
+        newSectionId,
+        problemset.id,
+        problemset.default_order
+      );
+      await query(
+        `INSERT INTO section_problemset
+        VALUES ($1, $2, $3)`,
+        [newSectionId, problemset.id, problemset.default_order]
+      );
+    }
+    console.log('ADD DUE DATES');
+    for (const problemset of problemsets) {
+      console.log('DUE DATE:', newSectionId, problemset.id);
+      await query(
+        `INSERT INTO due_date (section_id, problemset_id, due_date)
+        VALUES ($1, $2, NOW())`,
+        [newSectionId, problemset.id]
+      );
+    }
     return newSectionId;
   } catch (e) {
     console.log(e);
