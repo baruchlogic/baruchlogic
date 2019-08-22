@@ -133,7 +133,7 @@ const saveResponses = async (studentId, problemsetId, responses) => {
   );
   if (q.rows.length) {
     await query(
-      `UPDATE SET response = $3
+      `UPDATE problemset_last_response SET response = $3
       WHERE problemset_last_response.problemset_id = $2
       AND problemset_last_response.student_id = $1`,
       [studentId, problemsetId, responses]
