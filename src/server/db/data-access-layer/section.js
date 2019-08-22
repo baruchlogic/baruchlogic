@@ -356,30 +356,51 @@ const removeUserFromSection = async (userId, sectionId) => {
 
 const upsertProblemsetDueDate = async (problemsetId, sectionId, dueDate) => {
   console.log('UPSERT', problemsetId, sectionId, dueDate, typeof dueDate);
-  const r = await query(
-    `SELECT * FROM due_date (problemset_id, section_id, due_date)
-    WHERE due_date.problemset_id = $1
-    AND due_date.section_id = $2`,
-    [problemsetId, sectionId]
+  const q = await query(
+    `UPDATE due_date SET due_date = $3::timestamptz
+    WHERE problemset_id = $1 AND section_id = #2`,
+    [problemsetId, sectionId, dueDate]
   );
-  if (r.rows.length) {
-    const q = await query(
-      `UPDATE due_date SET due_date = $3::timestamptz
-      WHERE due_date.problemset_id = $1
-      AND due_date.section_id = $2`,
-      [problemsetId, sectionId, dueDate]
-    );
-    console.log('UPDATE due_date', q);
-    return q.rows;
-  } else {
-    const q = await query(
-      `INSERT INTO due_date (problemset_id, section_id, due_date)
-      VALUES ($1, $2, $3)`,
-      [problemsetId, sectionId, dueDate]
-    );
-    console.log('INSERT due_date', q);
-    return q.rows;
-  }
+  return q;
+  // const r = await query(
+  //   `SELECT * FROM due_date (problemset_id, section_id, due_date)
+  //   WHERE due_date.problemset_id = $1
+  //   AND due_date.section_id = $2`,
+  //   [problemsetId, sectionId]
+  // );
+  // if (r.rows.length) {
+  //   const q = await query(
+  //     `UPDATE due_date SET due_date = $3::timestamptz
+  //     WHERE due_date.problemset_id = $1
+  //     AND due_date.section_id = $2`,
+  //     [problemsetId, sectionId, dueDate]
+  //   );
+  //   console.log('UPDATE due_date', q);
+  //   return q.rows;
+  // } else {
+  //   const q = await query(
+  //     `INSERT INTO due_date (problemset_id, section_id, due_date)
+  //     VALUES ($1, $2, $3)`,
+  //     [problemsetId, sectionId, dueDate]
+  //   );
+  //   console.log('INSERT due_date', q);
+  //   return q.rows;
+  // }
+  // OLD VERSION:
+  // const q = await query(
+  //   `
+  //   INSERT INTO due_date (problemset_id, section_id, due_date)
+  //   VALUES ($1, $2, $3)
+  //   ON CONFLICT ON CONSTRAINT unique_section_id_problemset_id
+  //   DO
+  //   UPDATE SET due_date = $3::timestamptz
+  //   WHERE due_date.problemset_id = $1
+  //   AND due_date.section_id = $2
+  // `,
+  //   [problemsetId, sectionId, dueDate]
+  // );
+  // console.log('HOLY SHIT', q);
+  // return q.rows;
 };
 
 module.exports = {
