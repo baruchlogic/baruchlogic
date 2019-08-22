@@ -356,20 +356,30 @@ const removeUserFromSection = async (userId, sectionId) => {
 
 const upsertProblemsetDueDate = async (problemsetId, sectionId, dueDate) => {
   console.log('UPSERT', problemsetId, sectionId, dueDate, typeof dueDate);
-  const q = await query(
-    `
-    INSERT INTO due_date (problemset_id, section_id, due_date)
-    VALUES ($1, $2, $3)
-    ON CONFLICT ON CONSTRAINT unique_section_id_problemset_id
-    DO
-    UPDATE SET due_date = $3::timestamptz
+  const r = await query(
+    `SELECT * FROM due_date (problemset_id, section_id, due_date)
     WHERE due_date.problemset_id = $1
-    AND due_date.section_id = $2
-  `,
-    [problemsetId, sectionId, dueDate]
+    AND due_date.section_id = $2`,
+    [problemsetId, sectionId]
   );
-  console.log('HOLY SHIT', q);
-  return q.rows;
+  if (r.rows.length) {
+    const q = await query(
+      `UPDATE due_date SET due_date = $3::timestamptz
+      WHERE due_date.problemset_id = $1
+      AND due_date.section_id = $2`,
+      [problemsetId, sectionId, dueDate]
+    );
+    console.log('UPDATE due_date', q);
+    return q.rows;
+  } else {
+    const q = await query(
+      `INSERT INTO due_date (problemset_id, section_id, due_date)
+      VALUES ($1, $2, $3)`,
+      [problemsetId, sectionId, dueDate]
+    );
+    console.log('INSERT due_date', q);
+    return q.rows;
+  }
 };
 
 module.exports = {
