@@ -15,12 +15,15 @@ const StyledContainer = styled.div`
 
 const ProblemsetsContainer = ({
   match: {
-    params: { id: problemsetId }
+    params: { default_order: defaultOrder }
   }
 }) => {
+  const [allProblemsets, setAllProblemsets] = useState();
   const [isUserAuth, user] = useIsUserAuth();
   const [groupedProblemsets, setGroupedProblemsets] = useState([]);
   const [fetchIsLoading, setFetchIsLoading] = useState(true);
+
+  console.log(defaultOrder, allProblemsets);
 
   const fetchProblemSets = async () => {
     if (isUserAuth && user) {
@@ -31,6 +34,7 @@ const ProblemsetsContainer = ({
       setFetchIsLoading(false);
       console.log('problemsetss  !  !! ! ', response);
       const problemsets = response;
+      setAllProblemsets(problemsets);
       const groupedProblemsets = groupProblemSetsByUnit(problemsets);
       setGroupedProblemsets(groupedProblemsets);
     } else {
@@ -41,6 +45,7 @@ const ProblemsetsContainer = ({
       console.log('response', response);
       setFetchIsLoading(false);
       const problemsets = response;
+      setAllProblemsets(problemsets);
       const groupedProblemsets = groupProblemSetsByUnit(problemsets);
       setGroupedProblemsets(groupedProblemsets);
     }
@@ -72,9 +77,15 @@ const ProblemsetsContainer = ({
     console.log('user', user);
   });
 
+  const getCurrentProblemsetFromDefaultOrder = defaultOrder =>
+  console.log(defaultOrder, allProblemsets) ||
+    allProblemsets.find(
+      problemset => problemset.default_order === Number(defaultOrder)
+    );
+
   const mapProblemSetToJSX = problemset => (
     <li key={problemset.id}>
-      <Link to={`/problemsets/${problemset.id}`}>
+      <Link to={`/problemsets/${problemset.default_order}`}>
         <div>
           <span className="numbering">
             Problemset #{problemset.default_order}
@@ -98,7 +109,11 @@ const ProblemsetsContainer = ({
             ))}
           </ul>
         </StyledSidebar>
-        {problemsetId && <ProblemsetContainer problemsetId={problemsetId} />}
+        {defaultOrder && allProblemsets && (
+          <ProblemsetContainer
+            problemsetId={getCurrentProblemsetFromDefaultOrder(defaultOrder).id}
+          />
+        )}
       </StyledContainer>
     </>
   );

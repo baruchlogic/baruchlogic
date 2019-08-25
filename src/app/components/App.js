@@ -22,7 +22,11 @@ const App = () => (
       <Route exact path="/text" component={Textbook} />
       <Route exact path="/videos/:short_title?" component={VideosContainer} />
       <Route exact path="/exercises/:id?" component={ExercisesContainer} />
-      <Route exact path="/problemsets/:id?" component={ProblemsetsContainer} />
+      <Route
+        exact
+        path="/problemsets/:default_order?"
+        component={ProblemsetsContainer}
+      />
       <Route exact path="/login" component={Login} />
     </Switch>
   </div>
