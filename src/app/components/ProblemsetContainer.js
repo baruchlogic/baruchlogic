@@ -19,7 +19,7 @@ const StyledResetButton = styled(StyledButton)`
   background-color: #2e0f4c !important;
 `;
 
-const ProblemsetContainer = ({ problemsetId }) => {
+const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
   const [problemset, setProblemset] = useState(null);
   const [problems, setProblems] = useState([]);
   const [problemsetResponses, setProblemsetResponses] = useState({});
@@ -136,6 +136,9 @@ const ProblemsetContainer = ({ problemsetId }) => {
       {problemsetNumber && <h1>{`Problemset #${problemsetNumber}`}</h1>}
       {styledDueDate && <h2>{`Due date: ${styledDueDate}`}</h2>}
       {isPastDueDate && <h2>NOTE: Due date has passed</h2>}
+      {!isUserAuth && (
+        <h2>Please log in to interact with the problemsets.</h2>
+      )}
       {problems.map(problem => (
         <Problem
           key={problem.id}
@@ -150,6 +153,7 @@ const ProblemsetContainer = ({ problemsetId }) => {
           value={problemsetResponses[problem.id]}
           problem={problem}
           setProblemResponse={setProblemResponse}
+          isUserAuth={isUserAuth}
         />
       ))}
       <StyledCard elevation={Elevation.THREE}>
@@ -160,12 +164,12 @@ const ProblemsetContainer = ({ problemsetId }) => {
               not be recorded.
             </div>
           )}
-          <StyledButton intent="success" large onClick={onSubmit}>
+          <StyledButton intent="success" large onClick={onSubmit} disabled={!isUserAuth}>
             SUBMIT
           </StyledButton>
         </div>
         <div>
-          <StyledResetButton intent="success" large onClick={onReset}>
+          <StyledResetButton intent="success" large onClick={onReset} disabled={!isUserAuth}>
             RESET RESPONSES
           </StyledResetButton>
         </div>
@@ -174,6 +178,7 @@ const ProblemsetContainer = ({ problemsetId }) => {
             intent="success"
             large
             onClick={onRestoreBestResponses}
+            disabled={!isUserAuth}
           >
             RESTORE BEST RESPONSES
           </StyledResetButton>

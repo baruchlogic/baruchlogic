@@ -1,7 +1,7 @@
 import React from 'react';
 import { func, object, string } from 'prop-types';
 
-const TrueFalse = ({ problem, setProblemResponse, value }) => (
+const TrueFalse = ({ isUserAuth, problem, setProblemResponse, value }) => (
   <div>
     <label>
       <input
@@ -11,6 +11,7 @@ const TrueFalse = ({ problem, setProblemResponse, value }) => (
           setProblemResponse(problem.id, 'a');
         }}
         value={true}
+        disabled={!isUserAuth}
       />
       True
     </label>
@@ -22,6 +23,7 @@ const TrueFalse = ({ problem, setProblemResponse, value }) => (
           setProblemResponse(problem.id, 'b');
         }}
         value={false}
+        disabled={!isUserAuth}
       />
       False
     </label>

@@ -25,6 +25,7 @@ const PossiblyIncorrectStyledCard = styled(StyledCard)`
 
 const Problem = ({
   isIncorrectResponse,
+  isUserAuth,
   problem,
   responseData,
   setProblemResponse,
@@ -68,6 +69,7 @@ const Problem = ({
           setProblemResponse={setProblemResponse}
           responseData={responseData}
           value={value}
+          isUserAuth={isUserAuth}
         />
       </StyledDiv>
     </PossiblyIncorrectStyledCard>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { func, object, string } from 'prop-types';
 
-const MultipleChoice = ({ problem, setProblemResponse, value }) => {
+const MultipleChoice = ({ isUserAuth, problem, setProblemResponse, value }) => {
   const { choices } = problem;
   return (
     <div>
@@ -16,6 +16,7 @@ const MultipleChoice = ({ problem, setProblemResponse, value }) => {
                 setProblemResponse(problem.id, key);
               }}
               value={true}
+              disabled={!isUserAuth}
             />
             {choices[key]}
           </label>

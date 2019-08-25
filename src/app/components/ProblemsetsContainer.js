@@ -78,7 +78,6 @@ const ProblemsetsContainer = ({
   });
 
   const getCurrentProblemsetFromDefaultOrder = defaultOrder =>
-  console.log(defaultOrder, allProblemsets) ||
     allProblemsets.find(
       problemset => problemset.default_order === Number(defaultOrder)
     );
@@ -112,6 +111,7 @@ const ProblemsetsContainer = ({
         {defaultOrder && allProblemsets && (
           <ProblemsetContainer
             problemsetId={getCurrentProblemsetFromDefaultOrder(defaultOrder).id}
+            isUserAuth={isUserAuth}
           />
         )}
       </StyledContainer>

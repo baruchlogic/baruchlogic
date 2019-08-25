@@ -13,7 +13,7 @@ const StyledHeaderTD = styled.td`
   white-space: nowrap;
 `;
 
-const TruthTable = ({ problem, setProblemResponse, value }) => {
+const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
   // Used for `onChange` to prevent React warning;
   const emptyFn = () => {};
 
@@ -162,7 +162,7 @@ const TruthTable = ({ problem, setProblemResponse, value }) => {
                   onChange={emptyFn}
                   value={(value && value[j][k]) || ''}
                   tabIndex={`${k * 1000 + j + 1}`}
-                  disabled={k < atomicVariables.length}
+                  disabled={k < atomicVariables.length || !isUserAuth}
                 />
               </td>
             ))}
