@@ -6,6 +6,7 @@ const StyledCard = styled(Card)`
   margin: 1rem auto;
   text-align: center;
   max-width: 80%;
+  overflow: ${props => (props.scroll ? 'auto' : 'visible')};
 `;
 
 export default StyledCard;

@@ -5,7 +5,11 @@ import StyledCard from 'app-styled/StyledCard';
 import { useInstructorSections } from 'hooks/admin';
 
 const StyledTd = styled.td`
-  width: 50px;
+  min-width: 50px;
+`;
+
+const StyledTh = styled.th`
+  padding: 0 12px;
 `;
 
 const Grades = () => {
@@ -37,7 +41,10 @@ const Grades = () => {
       `${API_BASE_URL}/api/sections/${currentSectionId}/problemsets`
     ).then(res => res.json());
     console.log('setCurrentProblemsetsHelper', problemsets);
-    setCurrentProblemsets(problemsets);
+    setCurrentProblemsets(problemsets.sort(
+      (a, b) => a.default_order < b.default_order ? -1 :
+                a.default_order > b.default_order ? 1 : 0
+    ));
   };
 
   useEffect(() => {
@@ -118,13 +125,13 @@ const Grades = () => {
           ))}
         </select>
       </StyledCard>
-      <StyledCard elevation={Elevation.TWO}>
+      <StyledCard elevation={Elevation.TWO} scroll>
         <table>
           <thead>
             <tr>
-              <th />
+              <StyledTh />
               {currentProblemsets.map(problemset => (
-                <th key={problemset.id}>{problemset.order}</th>
+                <StyledTh key={problemset.id}>HW {problemset.order}</StyledTh>
               ))}
             </tr>
           </thead>
