@@ -47,6 +47,11 @@ const Problem = ({
     default:
       break;
   }
+  const renderNewLines = text =>
+    text
+      .split(/(?:<br \/>)|(?:\\n)/g)
+      .map((el, idx) => <div key={idx}>{el}</div>);
+
   return (
     <PossiblyIncorrectStyledCard
       key={problem.id}
@@ -57,7 +62,7 @@ const Problem = ({
       <StyledDiv>
         {problem.type === 'truth_table' &&
           'Complete the truth table for the following proposition:'}
-        <div>{problem.prompt}</div>
+        <div>{renderNewLines(problem.prompt)}</div>
         <ProblemType
           problem={problem}
           setProblemResponse={setProblemResponse}
