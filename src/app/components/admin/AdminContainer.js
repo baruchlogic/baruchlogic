@@ -4,6 +4,7 @@ import { authFetch } from 'helpers/auth';
 import CreateSection from './CreateSection';
 import AdminHeader from './AdminHeader';
 import Home from './Home';
+import HowTo from './HowTo';
 import RosterContainer from './RosterContainer';
 import Grades from './Grades';
 import Settings from './Settings';
@@ -34,6 +35,7 @@ const AdminContainer = () => {
     <>
       <AdminHeader />
       <Route exact path="/admin" component={Home} />
+      <Route exact path="/admin/how-to" component={HowTo} />
       <Route exact path="/admin/create" component={CreateSection} />
       <Route exact path="/admin/roster" component={RosterContainer} />
       <Route exact path="/admin/grades" component={Grades} />
