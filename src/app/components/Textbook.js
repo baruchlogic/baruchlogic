@@ -8,9 +8,8 @@ import { ADMIN_EMAIL, TEXTBOOK_URL } from 'constants';
 const Textbook = () => (
   <StyledCard elevation={Elevation.THREE}>
     <p>
-      The textbook for this course can be found at
-      <br />
-      <a href={TEXTBOOK_URL}>{`${TEXTBOOK_URL}`}</a>
+      The textbook for this course can be found&nbsp;
+      <a href={TEXTBOOK_URL}>here</a>.
       <br />
     </p>
     <p>
