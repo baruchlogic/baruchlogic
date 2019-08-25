@@ -69,7 +69,7 @@ const Header = () => {
       <StyledLink to="/about">about</StyledLink>
       <StyledLink to="/text">text</StyledLink>
       <StyledLink to="/videos">videos</StyledLink>
-      <StyledLink to="/exercises">exercises</StyledLink>
+      {/** <StyledLink to="/exercises">exercises</StyledLink> */}
       <StyledLink to="/problemsets">problemsets</StyledLink>
       {isAdmin && <StyledLink to="/admin">admin</StyledLink>}
       <StyledDivider />
