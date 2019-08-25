@@ -82,20 +82,43 @@ const getProblemsByProblemsetId = async id => {
 
 const saveBestScore = async (studentId, problemsetId, score) => {
   console.log('saveBestScore');
-  await query(
-    `INSERT INTO problemset_score
-    (student_id, problemset_id, score)
-    VALUES
-    ($1, $2, $3)
-    ON CONFLICT ON CONSTRAINT
-    problemset_score_unique
-    DO
-    UPDATE SET score = $3
-    WHERE problemset_score.problemset_id = $2
-    AND problemset_score.student_id = $1
-    AND problemset_score.score < $3`,
-    [studentId, problemsetId, score]
+  const q = await query(
+    `SELECT * FROM problemset_score
+    WHERE student_id = $1
+    AND problemset_id = $2`,
+    [studentId, problemsetId]
   );
+  if (q.rows.length) {
+    await query(
+      `UPDATE problemset_score
+      SET score = $3
+      WHERE problemset_score.problemset_id = $2
+      AND problemset_score.student_id = $1
+      AND problemset_score.score < $3`,
+      [studentId, problemsetId, score]
+    );
+  } else {
+    await query(
+      `INSERT INTO problemset_score
+      (student_id, problemset_id, score)
+      VALUES ($1, $2, $3)`,
+      [studentId, problemsetId, score]
+    );
+  }
+  // await query(
+  //   `INSERT INTO problemset_score
+  //   (student_id, problemset_id, score)
+  //   VALUES
+  //   ($1, $2, $3)
+  //   ON CONFLICT ON CONSTRAINT
+  //   problemset_score_unique
+  //   DO
+  //   UPDATE SET score = $3
+  //   WHERE problemset_score.problemset_id = $2
+  //   AND problemset_score.student_id = $1
+  //   AND problemset_score.score < $3`,
+  //   [studentId, problemsetId, score]
+  // );
 };
 
 /**
@@ -108,19 +131,41 @@ const saveBestScore = async (studentId, problemsetId, score) => {
 const saveResponses = async (studentId, problemsetId, responses) => {
   console.log('saveResponses');
 
-  // Upsert last response
-  await query(
-    `INSERT INTO problemset_last_response
-    (student_id, problemset_id, response)
-    VALUES
-    ($1, $2, $3)
-    ON CONFLICT ON CONSTRAINT problemset_id_student_id_unique
-    DO
-    UPDATE SET response = $3
-    WHERE problemset_last_response.problemset_id = $2
-    AND problemset_last_response.student_id = $1`,
-    [studentId, problemsetId, responses]
+  const q = await query(
+    `SELECT * FROM problemset_last_response
+    WHERE problemset_last_response.problemset_id = $1
+    AND problemset_last_response.student_id = $2`,
+    [problemsetId, studentId]
   );
+  if (q.rows.length) {
+    await query(
+      `UPDATE problemset_last_response SET response = $3
+      WHERE problemset_last_response.problemset_id = $2
+      AND problemset_last_response.student_id = $1`,
+      [studentId, problemsetId, responses]
+    );
+  } else {
+    await query(
+      `INSERT INTO problemset_last_response
+      (student_id, problemset_id, response)
+      VALUES
+      ($1, $2, $3)`,
+      [studentId, problemsetId, responses]
+    );
+  }
+  // Upsert last response
+  // await query(
+  //   `INSERT INTO problemset_last_response
+  //   (student_id, problemset_id, response)
+  //   VALUES
+  //   ($1, $2, $3)
+  //   ON CONFLICT ON CONSTRAINT problemset_id_student_id_unique
+  //   DO
+  //   UPDATE SET response = $3
+  //   WHERE problemset_last_response.problemset_id = $2
+  //   AND problemset_last_response.student_id = $1`,
+  //   [studentId, problemsetId, responses]
+  // );
 };
 
 const saveBestResponses = async (studentId, problemsetId, responses) => {
@@ -130,22 +175,44 @@ const saveBestResponses = async (studentId, problemsetId, responses) => {
 
   const currentScore = await getScore(problemsetId, studentId);
 
-  if (!currentScore || score > currentScore) {
-    console.log('SAVE NEW BEST RESPONSE');
-    // Upsert best response if score is higher
+  console.log('current score', currentScore);
+
+  if (currentScore === undefined || currentScore === null) {
+    console.log('current score undefined - insert');
     await query(
       `INSERT INTO problemset_best_response
       (user_id, problemset_id, response)
       VALUES
-      ($1, $2, $3)
-      ON CONFLICT ON CONSTRAINT unique_problemset_id_user_id
-      DO
-      UPDATE SET response = $3
-      WHERE problemset_best_response.problemset_id = $2
-      AND problemset_best_response.user_id = $1`,
+      ($1, $2, $3)`,
+      [studentId, problemsetId, responses]
+    );
+  } else if (score > currentScore) {
+    console.log('update best response');
+    await query(
+      `UPDATE problemset_best_response
+      SET response = $3
+      WHERE problemset_id = $2
+      AND user_id = $1`,
       [studentId, problemsetId, responses]
     );
   }
+
+  // if (!currentScore || score > currentScore) {
+  //   console.log('SAVE NEW BEST RESPONSE');
+  //   // Upsert best response if score is higher
+  //   await query(
+  //     `INSERT INTO problemset_best_response
+  //     (user_id, problemset_id, response)
+  //     VALUES
+  //     ($1, $2, $3)
+  //     ON CONFLICT ON CONSTRAINT unique_problemset_id_user_id
+  //     DO
+  //     UPDATE SET response = $3
+  //     WHERE problemset_best_response.problemset_id = $2
+  //     AND problemset_best_response.user_id = $1`,
+  //     [studentId, problemsetId, responses]
+  //   );
+  // }
 };
 
 /**
