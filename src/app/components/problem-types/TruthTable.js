@@ -20,14 +20,14 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
   // Create initial response matrix
   const formula = new Formula();
   const columns = formula.generateTruthTableHeaders(problem.prompt);
-  console.log('COLUMNS', columns);
+  // console.log('COLUMNS', columns);
   const initialValue = formula
     .generateTruthTable(problem.prompt, true)
     .map(row => row.map(el => (el === true ? 'T' : el === false ? 'F' : '')));
   const atomicVariables = formula.getAtomicVariables(problem.prompt);
   const nRows = Math.pow(2, atomicVariables.length);
   useEffect(() => {
-    console.log('SET', problem.id);
+    // console.log('SET', problem.id);
     setProblemResponse(problem.id, initialValue);
   }, []);
 
@@ -40,7 +40,7 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
 
   // Functions used for keyboard navigation
   const getNextIndex = (j, k) => {
-    console.log('j', j, 'k', k, 'nRows', nRows);
+    // console.log('j', j, 'k', k, 'nRows', nRows);
     if (j < nRows - 1) {
       return `${k * 1000 + j + 2}`;
     } else {
@@ -48,7 +48,7 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
     }
   };
   const getPrevIndex = (j, k) => {
-    console.log('j', j, 'k', k, 'nRows', nRows);
+    // console.log('j', j, 'k', k, 'nRows', nRows);
     if (j === 0) {
       return `${(k - 1) * 1000 + nRows}`;
     } else {
@@ -65,24 +65,24 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
   // Functions used to move focus around
   const focusNextElement = (j, k) => {
     const focusedElement = document.querySelector('input:focus');
-    console.log('FE', focusedElement);
+    // console.log('FE', focusedElement);
     const nextTabindex = getNextIndex(j, k);
-    console.log('nextTabindex', nextTabindex);
+    // console.log('nextTabindex', nextTabindex);
     const nextFocusedElement = document.querySelector(
       `input[tabindex="${nextTabindex}"]`
     );
-    console.log('nextFocusedElement', nextFocusedElement);
+    // console.log('nextFocusedElement', nextFocusedElement);
     if (nextFocusedElement) nextFocusedElement.focus();
   };
   const focusPrevElement = (j, k) => {
     const focusedElement = document.querySelector('input:focus');
-    console.log('FE', focusedElement);
+    // console.log('FE', focusedElement);
     const prevTabIndex = getPrevIndex(j, k);
-    console.log('prevTabIndex', prevTabIndex);
+    // console.log('prevTabIndex', prevTabIndex);
     const prevFocusedElement = document.querySelector(
       `input[tabindex="${prevTabIndex}"]`
     );
-    console.log('prevFocusedElement', prevFocusedElement);
+    // console.log('prevFocusedElement', prevFocusedElement);
     if (prevFocusedElement) prevFocusedElement.focus();
   };
   const focusLeftElement = (j, k) => {
@@ -102,7 +102,7 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
 
   const handleKeyDown = (e, j, k) => {
     const { key } = e;
-    console.log('key', key);
+    // console.log('key', key);
     switch (key) {
       case 't':
       case 'T':
@@ -114,7 +114,7 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
         break;
       }
       case 'Backspace':
-        console.log('backspace');
+        // console.log('backspace');
         if (value[j][k]) {
           const newValue = setCellValueCopy(value, j, k, '');
           setProblemResponse(problem.id, newValue);

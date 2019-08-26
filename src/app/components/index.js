@@ -9,7 +9,7 @@ import App from './App';
 import '@blueprintjs/core/lib/css/blueprint.css';
 // import '@blueprintjs/icons/lib/css/blueprint-icons.css';
 
-console.log('API_BASE_URL', API_BASE_URL);
+// console.log('API_BASE_URL', API_BASE_URL);
 
 const GlobalStyle = createGlobalStyle`
   body {

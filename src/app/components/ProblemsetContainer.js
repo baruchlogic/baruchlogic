@@ -39,7 +39,7 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
     const result = await fetch(
       `${API_BASE_URL}/api/problemsets/${problemsetId}/problems`
     ).then(res => res.json());
-    console.log('RESULT', result);
+    // console.log('RESULT', result);
     setProblems(result);
   };
 
@@ -67,11 +67,11 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
   }, [problemsetId]);
 
   useEffect(() => {
-    console.log('problemsetResponses', problemsetResponses);
+    // console.log('problemsetResponses', problemsetResponses);
   }, [problemsetResponses]);
 
   const setProblemResponse = (problemId, response) => {
-    console.log('setProblemResponse', problemsetResponses, problemId, response);
+    // console.log('setProblemResponse', problemsetResponses, problemId, response);
     setProblemsetResponses(problemsetResponses => ({
       ...problemsetResponses,
       [problemId]: response
@@ -86,7 +86,7 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
   };
 
   const onSubmit = async () => {
-    console.log(JSON.stringify(problemsetResponses));
+    // console.log(JSON.stringify(problemsetResponses));
     const response = await authFetch(
       `${API_BASE_URL}/api/problemsets/${problemsetId}`,
       'POST',
@@ -96,7 +96,7 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
       incorrectProblems: incorrectProblemsResponse,
       score
     } = await response.json();
-    console.log('incorrectProblemsResponse', incorrectProblemsResponse);
+    // console.log('incorrectProblemsResponse', incorrectProblemsResponse);
     setCurrentScore(score);
     setIncorrectProblems(
       incorrectProblemsResponse.reduce(
@@ -112,7 +112,7 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
     const result = await authFetch(
       `${API_BASE_URL}/api/problemsets/${problemsetId}/responses`
     ).then(res => res.json());
-    console.log('RESULT RESULT:', result);
+    // console.log('RESULT RESULT:', result);
     setProblemsetResponses(result.responses);
   };
 
@@ -122,12 +122,12 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
   const dueDateMoment =
     problemset && problemset.due_date ? moment(problemset.due_date) : null;
 
-  console.log('dueDateMoment', dueDateMoment);
+  // console.log('dueDateMoment', dueDateMoment);
 
   const styledDueDate =
     dueDateMoment && dueDateMoment.format('MMMM Do YYYY, h:mm');
 
-  console.log('styledDueDate', styledDueDate, moment());
+  // console.log('styledDueDate', styledDueDate, moment());
 
   const isPastDueDate = dueDateMoment && dueDateMoment.isBefore(moment());
 

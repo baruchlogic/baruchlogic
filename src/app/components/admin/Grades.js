@@ -24,7 +24,7 @@ const Grades = () => {
     JSON.parse(localStorage.getItem('studentNames')) || {};
 
   const onSectionChange = ({ target: { value } }) => {
-    console.log('value', value);
+    // console.log('value', value);
     setCurrentSectionId(Number(value));
   };
 
@@ -32,7 +32,7 @@ const Grades = () => {
     const grades = await fetch(
       `${API_BASE_URL}/api/sections/${currentSectionId}/grades`
     ).then(res => res.json());
-    console.log('Grades!!', grades);
+    // console.log('Grades!!', grades);
     setCurrentGrades(grades);
   };
 
@@ -40,7 +40,7 @@ const Grades = () => {
     const problemsets = await fetch(
       `${API_BASE_URL}/api/sections/${currentSectionId}/problemsets`
     ).then(res => res.json());
-    console.log('setCurrentProblemsetsHelper', problemsets);
+    // console.log('setCurrentProblemsetsHelper', problemsets);
     setCurrentProblemsets(problemsets.sort(
       (a, b) => a.default_order < b.default_order ? -1 :
                 a.default_order > b.default_order ? 1 : 0
@@ -66,22 +66,22 @@ const Grades = () => {
     const newStudentNames = {};
     Object.keys(currentGrades).forEach(studentId => {
       const name = localStorageNames[studentId];
-      console.log('studentId', studentId, 'name', name);
+      // console.log('studentId', studentId, 'name', name);
       newStudentNames[studentId] = name;
     });
     setStudentNames(newStudentNames);
   }, [currentGrades]);
 
   useEffect(() => {
-    console.log('instructorSections', instructorSections);
-    console.log('currentGrades', currentGrades);
-    console.log('currentProblemsets', currentProblemsets);
-    console.log('studentNames', studentNames);
-    console.log('currentSection', currentSection);
+    // console.log('instructorSections', instructorSections);
+    // console.log('currentGrades', currentGrades);
+    // console.log('currentProblemsets', currentProblemsets);
+    // console.log('studentNames', studentNames);
+    // console.log('currentSection', currentSection);
   });
 
   const onDownloadCSV = () => {
-    console.log('onDownloadCSV');
+    // console.log('onDownloadCSV');
     try {
       const row1 = ` ,${currentProblemsets
         .map(problemset => problemset.order)
@@ -97,7 +97,7 @@ const Grades = () => {
               .join(',')}`
         ).join(`
           `);
-      console.log(body);
+      // console.log(body);
 
       const hiddenElement = document.createElement('a');
       hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(body);

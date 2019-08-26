@@ -7,7 +7,7 @@ export const useInstructorSections = () => {
   const getInstructorCourseNumbers = async () => {
     let sections = await authFetch(`${API_BASE_URL}/api/sections`);
     sections = await sections.json();
-    console.log('SECTIONS', sections);
+    // console.log('SECTIONS', sections);
     setInstructorSections(sections);
   };
 
@@ -26,7 +26,7 @@ export const useIsUserAuth = () => {
     await authFetch(`${API_BASE_URL}/api/auth`, 'GET')
       .then(res => res.json())
       .then(res => {
-        console.log('RESPONSE', res);
+        // console.log('RESPONSE', res);
         setIsAuth(true);
         setUser(res.user);
       });
@@ -36,7 +36,7 @@ export const useIsUserAuth = () => {
     fetchIsAuth();
   }, []);
 
-  console.log('useIsUserAuth', isAuth, user);
+  // console.log('useIsUserAuth', isAuth, user);
 
   return [isAuth, user];
 };

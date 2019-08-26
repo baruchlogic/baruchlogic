@@ -22,7 +22,7 @@ const VideosContainer = ({
   const [fetchIsLoading, setFetchIsLoading] = useState(true);
 
   const fetchVideos = async () => {
-    console.log('API_BASE_URL', API_BASE_URL);
+    // console.log('API_BASE_URL', API_BASE_URL);
     const response = await fetch(`${API_BASE_URL}/api/videos`).then(res =>
       res.json()
     );

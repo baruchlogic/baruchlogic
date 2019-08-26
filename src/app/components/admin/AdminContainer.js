@@ -26,7 +26,7 @@ const AdminContainer = () => {
     getIsAdmin();
   });
   useEffect(() => {
-    console.log('isAdmin', isAdmin);
+    // console.log('isAdmin', isAdmin);
   });
 
   return isAdmin === false ? (

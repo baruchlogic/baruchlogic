@@ -16,7 +16,7 @@ const Problemsets = () => {
       `${API_BASE_URL}/api/sections/${currentSection.id}/problemsets`
     ).then(res => res.json());
     const problemsets = response;
-    console.log('PROBLEMSETS', problemsets);
+    // console.log('PROBLEMSETS', problemsets);
     setProblemsets(problemsets);
     setDates(
       problemsets.reduce(
@@ -41,12 +41,12 @@ const Problemsets = () => {
   const [dates, setDates] = useState({});
 
   const handleDateChange = (value, problemsetId) => {
-    console.log(value, typeof value);
+    // console.log(value, typeof value);
     setDates({ ...dates, [problemsetId]: value });
   };
 
   useEffect(() => {
-    console.log('dates', dates);
+    // console.log('dates', dates);
   });
 
   const handleSectionChange = ({ target: { value } }) => {

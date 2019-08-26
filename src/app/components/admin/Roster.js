@@ -30,7 +30,7 @@ const Roster = ({ sectionId, sectionNumber }) => {
 
   useEffect(() => {
     saveToLocalStorage('studentNames', studentNames);
-    console.log('studentNames', studentNames);
+    // console.log('studentNames', studentNames);
   }, [studentNames]);
 
   const onAddStudent = async () => {
@@ -38,7 +38,7 @@ const Roster = ({ sectionId, sectionNumber }) => {
       body: JSON.stringify({ sectionId })
     });
     newStudentKey = await newStudentKey.text();
-    console.log('NEW STUDENT KEY', newStudentKey);
+    // console.log('NEW STUDENT KEY', newStudentKey);
     getStudentsInSection(sectionId);
   };
 
@@ -49,7 +49,7 @@ const Roster = ({ sectionId, sectionNumber }) => {
         value
       }
     } = e;
-    console.log('onNameInputChange', key, value);
+    // console.log('onNameInputChange', key, value);
     setStudentNames({
       ...studentNames,
       [key]: value
@@ -57,18 +57,18 @@ const Roster = ({ sectionId, sectionNumber }) => {
   };
 
   const hydrateStudentNames = () => {
-    console.log('hydrateStudentNames');
+    // console.log('hydrateStudentNames');
     const localStudentNames = getValueFromLocalStorageByKey('studentNames');
-    console.log('localStudentNames', localStudentNames);
+    // console.log('localStudentNames', localStudentNames);
     setStudentNames(localStudentNames);
   };
 
   const onDownloadCSV = () => {
-    console.log('onDownloadCSV');
+    // console.log('onDownloadCSV');
     try {
       const parser = new Parser({ fields: Object.keys(studentNames) });
       const csv = parser.parse(studentNames);
-      console.log(csv);
+      // console.log(csv);
 
       const hiddenElement = document.createElement('a');
       hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
@@ -81,12 +81,12 @@ const Roster = ({ sectionId, sectionNumber }) => {
   };
 
   const onRemoveUser = async userId => {
-    console.log('onRemoveUser', userId);
+    // console.log('onRemoveUser', userId);
     const res = await authFetch(
       `${API_BASE_URL}/api/sections/${sectionId}/users/${userId}`,
       'DELETE'
     );
-    console.log('res', res);
+    // console.log('res', res);
     if (res.status === 200) {
       setStudents(students.filter(student => student.id !== userId));
     }

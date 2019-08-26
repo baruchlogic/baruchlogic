@@ -33,7 +33,7 @@ const CourseForm = () => {
   };
   useEffect(() => {
     const { sectionNumber, nStudents } = formValues;
-    console.log('Submit button', sectionNumber.length, nStudents);
+    // console.log('Submit button', sectionNumber.length, nStudents);
     if (sectionNumber.length === 5 && nStudents !== '') {
       setSubmitButtonIsEnabled(true);
     } else {
@@ -44,7 +44,7 @@ const CourseForm = () => {
   const [newSection, setNewSection] = useState(null);
 
   const onSubmit = async () => {
-    console.log('FORM VALUES', formValues);
+    // console.log('FORM VALUES', formValues);
     const response = await authFetch(`${API_BASE_URL}/api/section`, 'POST', {
       body: JSON.stringify(formValues)
     });
@@ -53,7 +53,7 @@ const CourseForm = () => {
       alert('Duplicate section!');
       return;
     }
-    console.log('RESPONSE', response);
+    // console.log('RESPONSE', response);
     const section = await response.json();
     setNewSection(section);
   };
