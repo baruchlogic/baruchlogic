@@ -20,8 +20,13 @@ const Grades = () => {
   const [currentProblemsets, setCurrentProblemsets] = useState([]);
   const [studentNames, setStudentNames] = useState({});
 
-  const localStorageNames =
-    JSON.parse(localStorage.getItem('studentNames')) || {};
+  let localStorageNames = {};
+  try {
+    const names = localStorage.getItem('studentNames');
+    if (names) {
+      localStorageNames = JSON.parse(names);
+    }
+  } catch (e) {}
 
   const onSectionChange = ({ target: { value } }) => {
     // console.log('value', value);
