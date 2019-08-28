@@ -51,7 +51,22 @@ const Problem = ({
   const renderNewLines = text =>
     text
       .split(/(?:<br \/>)|(?:\\n)/g)
-      .map((el, idx) => <div key={idx}>{el}</div>);
+      .map((el, idx) => <div key={idx}>{renderUnderlines(el)}</div>);
+
+  const renderUnderlines = text => {
+    const split = text.split(/(?:\<u\>)|(?:\<\/u\>)/g);
+    if (split.length === 3) {
+      return (
+        <div>
+          {split[0]}
+          <u>{split[1]}</u>
+          {split[2]}
+        </div>
+      );
+    } else {
+      return text;
+    }
+  };
 
   return (
     <PossiblyIncorrectStyledCard
