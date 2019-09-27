@@ -42,24 +42,24 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
   const getNextIndex = (j, k) => {
     // console.log('j', j, 'k', k, 'nRows', nRows);
     if (j < nRows - 1) {
-      return `${k * 1000 + j + 2}`;
+      return `${k * 1000 + j + 2}-${problem.id}`;
     } else {
-      return `${(k + 1) * 1000 + 0 + 1}`;
+      return `${(k + 1) * 1000 + 0 + 1}-${problem.id}`;
     }
   };
   const getPrevIndex = (j, k) => {
     // console.log('j', j, 'k', k, 'nRows', nRows);
     if (j === 0) {
-      return `${(k - 1) * 1000 + nRows}`;
+      return `${(k - 1) * 1000 + nRows}-${problem.id}`;
     } else {
-      return `${k * 1000 + j}`;
+      return `${k * 1000 + j}-${problem.id}`;
     }
   };
   const getRightIndex = (j, k) => {
-    return `${(k + 1) * 1000 + j + 1}`;
+    return `${(k + 1) * 1000 + j + 1}-${problem.id}`;
   };
   const getLeftIndex = (j, k) => {
-    return `${(k - 1) * 1000 + j + 1}`;
+    return `${(k - 1) * 1000 + j + 1}-${problem.id}`;
   };
 
   // Functions used to move focus around
@@ -161,7 +161,7 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
                   }}
                   onChange={emptyFn}
                   value={(value && value[j][k]) || ''}
-                  tabIndex={`${k * 1000 + j + 1}`}
+                  tabIndex={`${k * 1000 + j + 1}-${problem.id}`}
                   disabled={k < atomicVariables.length || !isUserAuth}
                 />
               </td>
