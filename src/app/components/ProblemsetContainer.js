@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { string } from 'prop-types';
+import { number } from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
 import Problem from './Problem';
@@ -62,13 +62,13 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
     fetchBestScore();
   }, [problemsetId]);
 
-  useEffect(() => {
-    onReset();
-  }, [problemsetId]);
+  // useEffect(() => {
+  //   onReset();
+  // }, [problemsetId]);
 
-  useEffect(() => {
-    // console.log('problemsetResponses', problemsetResponses);
-  }, [problemsetResponses]);
+  // useEffect(() => {
+  //   // console.log('problemsetResponses', problemsetResponses);
+  // }, [problemsetResponses]);
 
   const setProblemResponse = (problemId, response) => {
     // console.log('setProblemResponse', problemsetResponses, problemId, response);
@@ -139,7 +139,7 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
       {!isUserAuth && (
         <h2>Please log in to interact with the problemsets.</h2>
       )}
-      {problems.map(problem => (
+      {problems.map(problem => console.log('problem', problem) || (
         <Problem
           key={problem.id}
           isIncorrectResponse={
@@ -147,8 +147,7 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
             (hasSubmitted && problemsetResponses[problem.id] === undefined)
           }
           responseData={
-            incorrectProblems[problem.id] &&
-            incorrectProblems[problem.id].responseData
+            problem
           }
           value={problemsetResponses[problem.id]}
           problem={problem}
@@ -195,7 +194,7 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
 };
 
 ProblemsetContainer.propTypes = {
-  problemsetId: string
+  problemsetId: number
 };
 
 export default ProblemsetContainer;

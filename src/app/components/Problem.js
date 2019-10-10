@@ -48,6 +48,7 @@ const Problem = ({
     default:
       break;
   }
+  console.log('ProblemType', ProblemType);
   const renderNewLines = text =>
     text
       .split(/(?:<br \/>)|(?:\\n)/g)
@@ -78,7 +79,7 @@ const Problem = ({
       <StyledDiv>
         {problem.type === 'truth_table' &&
           'Complete the truth table for the following proposition:'}
-        <div>{renderNewLines(problem.prompt)}</div>
+        <div>{renderNewLines(problem.prompt || '')}</div>
         <ProblemType
           problem={problem}
           setProblemResponse={setProblemResponse}

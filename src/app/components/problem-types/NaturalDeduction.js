@@ -20,6 +20,7 @@ const StyledIcon = styled(Icon)`
 `;
 
 const NaturalDeduction = ({ problem, responseData, setProblemResponse }) => {
+  console.log('here', problem, responseData);
   const { premises, conclusion } = problem.deduction_prompt;
 
   // const [propositions, setPropositions] = useState(
