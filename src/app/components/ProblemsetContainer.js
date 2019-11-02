@@ -116,9 +116,6 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
     setProblemsetResponses(result.responses);
   };
 
-  const problemsetNumber =
-    problemset && problemset.unit + problemset.index_in_unit - 1;
-
   const dueDateMoment =
     problemset && problemset.due_date ? moment(problemset.due_date) : null;
 
@@ -133,7 +130,7 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
 
   return (
     <StyledContainer>
-      {problemsetNumber && <h1>{`Problemset #${problemsetNumber}`}</h1>}
+      {problemset && <h1>{`Problemset #${problemset.default_order}`}</h1>}
       {styledDueDate && <h2>{`Due date: ${styledDueDate}`}</h2>}
       {isPastDueDate && <h2>NOTE: Due date has passed</h2>}
       {!isUserAuth && (
