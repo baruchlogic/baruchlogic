@@ -198,7 +198,9 @@ const NaturalDeduction = ({ problem, responseData, setProblemResponse }) => {
             onBlur={handleNewLineRuleChange}
             value={newProposition.rule}
           >
-            {Object.values(DEDUCTION_RULES).map(rule => (
+            {Object.values(DEDUCTION_RULES).filter(
+              rule => rule !== DEDUCTION_RULES.PREMISE
+            ).map(rule => (
               <option key={rule} value={rule}>
                 {rule}
               </option>
