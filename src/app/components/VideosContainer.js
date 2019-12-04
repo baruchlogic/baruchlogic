@@ -26,7 +26,7 @@ const VideosContainer = ({
     const response = await fetch(`${API_BASE_URL}/api/videos`).then(res =>
       res.json()
     );
-    const videos = response.rows;
+    const videos = response;
     const groupedVideos = groupVideos(videos);
     setVideos(videos);
     setGroupdVideos(groupedVideos);

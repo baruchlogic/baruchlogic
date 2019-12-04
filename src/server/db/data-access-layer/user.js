@@ -28,7 +28,7 @@ const createNewKey = async () => {
 const createNewUser = async (admin = false) => {
   try {
     const newKey = await createNewKey();
-    await query(`INSERT INTO logic_user (key, admin) VALUES ($1, $2)`, [
+    await query(`INSERT INTO logic_user (course_key, admin) VALUES (?, ?)`, [
       newKey,
       admin
     ]);
@@ -48,17 +48,17 @@ const getUserById = async id => {
   try {
     const user = await query(
       `SELECT * FROM logic_user
-      WHERE id = $1`,
+      WHERE id = ?`,
       [id]
     );
-    if (!user.rows[0].admin) {
+    if (!user[0].admin) {
       const sectionId = await query(
-        `SELECT section_id FROM student_roster WHERE student_id = $1`,
-        [user.rows[0].id]
+        `SELECT section_id FROM student_roster WHERE student_id = ?`,
+        [user[0].id]
       );
-      user.rows[0].section_id = sectionId.rows[0].section_id;
+      user[0].section_id = sectionId[0].section_id;
     }
-    return user && user.rows && user.rows[0];
+    return { ...user[0] };
   } catch (e) {}
 };
 
@@ -70,16 +70,19 @@ const getUserById = async id => {
 const getUserByKey = async key => {
   try {
     console.log('getUserByKey', key);
-    const user = await query(`SELECT * FROM logic_user WHERE key = $1`, [key]);
-    if (!user.rows[0].admin) {
+    const user = await query(`SELECT * FROM logic_user WHERE course_key = ?`, [
+      key
+    ]);
+    console.log('QUERY', user);
+    if (!user[0].admin) {
       const sectionId = await query(
-        `SELECT section_id FROM student_roster WHERE student_id = $1`,
-        [user.rows[0].id]
+        `SELECT section_id FROM student_roster WHERE student_id = ?`,
+        [user[0].id]
       );
-      user.rows[0].section_id = sectionId.rows[0].section_id;
+      user[0].section_id = sectionId[0].section_id;
     }
     console.log('RETURNING USER', user);
-    return user && user.rows && user.rows[0];
+    return { ...user[0] };
   } catch (e) {}
 };
 
