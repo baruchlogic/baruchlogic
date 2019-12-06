@@ -293,7 +293,7 @@ const getUserGradesByUserKey = async key => {
     [id]
   );
   // console.log('QUERY', q);
-  const grades = q.rows.reduce(
+  const grades = q.reduce(
     (acc, row) => Object.assign(acc, { [row.problemset_id]: row.score }),
     {}
   );
@@ -311,8 +311,8 @@ const getSectionGrades = async sectionId => {
   const users = await getStudentsInSection(sectionId);
   console.log('got users');
   const grades = users.map(async user => {
-    const grades = await getUserGradesByUserKey(user.key);
-    result[user.key] = grades;
+    const grades = await getUserGradesByUserKey(user.course_key);
+    result[user.course_key] = grades;
   });
   await Promise.all(grades);
   return result;

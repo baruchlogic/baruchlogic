@@ -138,7 +138,7 @@ const saveResponses = async (studentId, problemsetId, responses) => {
     AND problemset_last_response.student_id = ?`,
     [problemsetId, studentId]
   );
-  if (q.rows.length) {
+  if (q.length) {
     await query(
       `UPDATE problemset_last_response SET response = ?
       WHERE problemset_last_response.problemset_id = ?
@@ -301,7 +301,7 @@ const scoreResponses = async (responses, problemsetId) => {
   for (const id of ids) {
     console.log(id);
     const q = await query('SELECT * FROM problem WHERE id = $1', [id]);
-    const problem = q.rows[0];
+    const problem = { ...q.rows[0] };
     const response = responses[id];
     const { score, responseData } = scoreProblemResponse(problem, response);
     if (!score) {
@@ -316,7 +316,7 @@ const scoreResponses = async (responses, problemsetId) => {
     'SELECT COUNT(*) FROM problem_v_problemset WHERE problemset_id = $1',
     [problemsetId]
   );
-  const count = Number(q.rows[0].count);
+  const count = Number(q[0].count);
   console.log('COUNT!', count);
   return {
     score: Math.floor((problemsetScore / count) * 100),
@@ -334,7 +334,7 @@ const getScore = async (problemsetId, studentId) => {
     [problemsetId, studentId]
   );
   console.log('QUERY', q);
-  return q.rows[0] && q.rows[0].score;
+  return q[0] && q[0].score;
 };
 
 module.exports = {
