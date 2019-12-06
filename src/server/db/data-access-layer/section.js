@@ -64,7 +64,7 @@ const checkIfSectionExists = async ({ sectionNumber, term, year }) => {
     AND year = ?`,
     [sectionNumber, term, year]
   );
-  return q.rows.length > 0;
+  return q.length > 0;
 };
 
 /**
@@ -79,11 +79,11 @@ const getInstructorSections = async instructorId => {
       `SELECT * FROM section
       INNER JOIN instructor_v_section
       ON instructor_v_section.section_id = section.id
-      WHERE instructor_id = ?`,
+      WHERE instructor_v_section.instructor_id = ?`,
       [instructorId]
     );
     console.log('Q!!!!', q);
-    return { ...q[0] };
+    return q.map(el => ({ ...el }));
   } catch (e) {
     console.log(e);
   }
@@ -148,9 +148,10 @@ const getUserIdFromKey = async key => {
   try {
     const q = await query(
       `SELECT id FROM logic_user
-      WHERE key = ?`,
+      WHERE course_key = ?`,
       [key]
     );
+    console.log("OK!!!!", q);
     const id = q[0].id;
     return id;
   } catch (e) {}
@@ -201,9 +202,15 @@ const createNewSection = async ({ sectionNumber, term, year }) => {
   try {
     const q = await query(
       `INSERT INTO section (section_number, term, year)
-      VALUES (?, ?, ?) RETURNING id`,
+      VALUES (?, ?, ?)`,
       [sectionNumber, term, year]
     );
+    console.log('Q!!!', q);
+    const r = await query(
+      `SELECT id FROM section WHERE section_number = ? AND term = ? and year = ?`,
+      [sectionNumber, term, year]
+    )
+    console.log('R!!!', R);
     const newSectionId = q[0].id;
     // Assign due dates to the problemsets
     const problemsets = await getAllProblemsets();
@@ -342,7 +349,7 @@ const getSectionProblemsets = async sectionId => {
     [sectionId]
   );
   console.log('sectionProblemsetIds', q);
-  return q.rows;
+  return q.map(el => ({ ...el }));
 };
 
 const removeUserFromSection = async (userId, sectionId) => {

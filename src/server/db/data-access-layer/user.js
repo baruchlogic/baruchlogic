@@ -8,7 +8,8 @@ const { query } = require('../index');
  */
 const checkIfKeyExists = async key => {
   const user = await getUserByKey(key);
-  return !!user;
+  console.log('HERE', user);
+  return Object.keys(user).length > 0;
 };
 
 /**

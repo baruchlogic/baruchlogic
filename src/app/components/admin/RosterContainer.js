@@ -10,6 +10,7 @@ import Roster from './Roster';
  */
 const RosterContainer = () => {
   const instructorSections = useInstructorSections();
+  console.log('instructorSections', instructorSections);
   const [currentSection, setCurrentSection] = useState({});
   const [inputCourseNumber, setInputCourseNumber] = useState();
   useEffect(() => {
