@@ -169,7 +169,7 @@ const getStudentsInSection = async sectionId => {
       [sectionId]
     );
     console.log('q', q);
-    return { ...q[0] };
+    return q ? q.map(el => ({ ...q[0] })) : [];
   } catch (e) {
     console.log(e);
   }
@@ -210,8 +210,8 @@ const createNewSection = async ({ sectionNumber, term, year }) => {
       `SELECT id FROM section WHERE section_number = ? AND term = ? and year = ?`,
       [sectionNumber, term, year]
     )
-    console.log('R!!!', R);
-    const newSectionId = q[0].id;
+    console.log('R!!!', r);
+    const newSectionId = r[0].id;
     // Assign due dates to the problemsets
     const problemsets = await getAllProblemsets();
     console.log('ADD PROBLEMSETS', newSectionId);
