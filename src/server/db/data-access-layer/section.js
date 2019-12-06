@@ -332,8 +332,8 @@ const getSectionProblemsetIds = async sectionId => {
 const getSectionProblemsets = async sectionId => {
   const q = await query(
     `SELECT due_date.section_id,
-    due_date.problemset_id as id,
-    section_problemset.order,
+    due_date.problemset_id AS id,
+    section_problemset.problemset_order,
     problemset.unit,
     problemset.index_in_unit,
     due_date,

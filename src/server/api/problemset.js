@@ -42,6 +42,7 @@ const configProblemsetRoutes = app => {
 
   app.get('/api/problemsets/:id/problems', async (req, res) => {
     const problems = await getProblemsByProblemsetId(Number(req.params.id));
+    console.log("PROBLEMS****", problems);
     res.status(200).send(problems);
   });
 
