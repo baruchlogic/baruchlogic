@@ -34,7 +34,7 @@ const Roster = ({ sectionId, sectionNumber }) => {
   }, [studentNames]);
 
   const onAddStudent = async () => {
-    let newStudentKey = await authFetch(`${API_BASE_URL}/api/users`, 'POST', {
+    const newStudentKey = await authFetch(`${API_BASE_URL}/api/users`, 'POST', {
       body: JSON.stringify({ sectionId })
     });
     newStudentKey = await newStudentKey.text();
@@ -101,7 +101,7 @@ const Roster = ({ sectionId, sectionNumber }) => {
       <ul style={{ maxWidth: '350px', margin: 'auto' }}>
         {students.map(student => (
           <li
-            key={student.key}
+            key={student.id}
             style={{
               display: 'flex',
               justifyContent: 'space-between',
@@ -116,11 +116,11 @@ const Roster = ({ sectionId, sectionNumber }) => {
             >
               X
             </button>
-            <div>{student.key}</div>
+            <div>{student.course_key}</div>
             <input
-              data-key={student.key}
+              data-key={student.course_key}
               onChange={onNameInputChange}
-              value={(studentNames && studentNames[student.key]) || ''}
+              value={(studentNames && studentNames[student.course_key]) || ''}
             />
           </li>
         ))}

@@ -161,7 +161,7 @@ const getStudentsInSection = async sectionId => {
   console.log('getStudentsInSection HERE', sectionId, typeof sectionId);
   try {
     const q = await query(
-      `SELECT id, key FROM logic_user
+      `SELECT id, course_key FROM logic_user
       INNER JOIN student_roster
       ON logic_user.id = student_roster.student_id
       WHERE logic_user.admin = false
@@ -169,7 +169,7 @@ const getStudentsInSection = async sectionId => {
       [sectionId]
     );
     console.log('q', q);
-    return q ? q.map(el => ({ ...q[0] })) : [];
+    return q ? q.map(el => ({ ...el })) : [];
   } catch (e) {
     console.log(e);
   }
