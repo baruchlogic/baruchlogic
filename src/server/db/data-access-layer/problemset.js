@@ -92,7 +92,7 @@ const saveBestScore = async (studentId, problemsetId, score) => {
   if (q.rows.length) {
     await query(
       `UPDATE problemset_score
-      SET score = $3
+      SET score = ?
       WHERE problemset_score.problemset_id = ?
       AND problemset_score.student_id = ?
       AND problemset_score.score < ?`,

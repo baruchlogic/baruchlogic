@@ -246,7 +246,7 @@ const addInstructorToSection = async (instructorId, sectionId) => {
   console.log('addInstructorToSection', instructorId, sectionId);
   await query(
     `INSERT INTO instructor_v_section (instructor_id, section_id)
-    VALUES ($1, $2)`,
+    VALUES (?, ?)`,
     [instructorId, sectionId]
   );
 };
@@ -357,7 +357,7 @@ const removeUserFromSection = async (userId, sectionId) => {
 const upsertProblemsetDueDate = async (problemsetId, sectionId, dueDate) => {
   console.log('UPSERT', problemsetId, sectionId, dueDate, typeof dueDate);
   const q = await query(
-    `UPDATE due_date SET due_date = ?::timestamptz
+    `UPDATE due_date SET due_date = ?::datetime
     WHERE problemset_id = ? AND section_id = ?`,
     [dueDate, problemsetId, sectionId]
   );
