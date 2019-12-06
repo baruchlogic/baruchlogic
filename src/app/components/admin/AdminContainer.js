@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { authFetch } from 'helpers/auth';
 import CreateSection from './CreateSection';
 import AdminHeader from './AdminHeader';
@@ -21,25 +21,25 @@ const AdminContainer = () => {
       const {
         user: { admin }
       } = await response.json();
-      setIsAdmin(admin);
+      setIsAdmin(Boolean(admin));
     };
     getIsAdmin();
-  });
-  useEffect(() => {
-    // console.log('isAdmin', isAdmin);
-  });
+  }, []);
+  console.log('isAdmin', isAdmin);
 
   return isAdmin === false ? (
     <Redirect to="/" />
   ) : isAdmin === true ? (
     <>
       <AdminHeader />
-      <Route exact path="/admin" component={Home} />
-      <Route exact path="/admin/how-to" component={HowTo} />
-      <Route exact path="/admin/create" component={CreateSection} />
-      <Route exact path="/admin/roster" component={RosterContainer} />
-      <Route exact path="/admin/grades" component={Grades} />
-      <Route exact path="/admin/settings" component={Settings} />
+      <Switch>
+        <Route exact path="/admin" component={Home} />
+        <Route exact path="/admin/how-to" component={HowTo} />
+        <Route exact path="/admin/create" component={CreateSection} />
+        <Route exact path="/admin/roster" component={RosterContainer} />
+        <Route exact path="/admin/grades" component={Grades} />
+        <Route exact path="/admin/settings" component={Settings} />
+      </Switch>
     </>
   ) : (
     <div>LOADING...</div>

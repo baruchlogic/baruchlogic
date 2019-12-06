@@ -29,6 +29,7 @@ const configAuthRoutes = app => {
     if (req.isAuthenticated()) {
       res.status(200).send({
         user: {
+          id: req.user.id,
           section_id: req.user.section_id,
           admin: req.user.admin
         }
