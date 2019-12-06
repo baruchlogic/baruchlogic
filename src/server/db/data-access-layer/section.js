@@ -10,7 +10,7 @@ const { getAllProblemsets } = require('./problemset');
 const addStudents = async studentKeys => {
   Promise.all(
     studentKeys.map(async studentKey => {
-      query('INSERT INTO logic_user (key, admin) VALUES ($1, false);', [
+      query('INSERT INTO logic_user (key, admin) VALUES (?, false);', [
         studentKey
       ]);
     })
@@ -59,9 +59,9 @@ const addStudentsToSectionById = async (sectionId, studentKeys) => {
 const checkIfSectionExists = async ({ sectionNumber, term, year }) => {
   const q = await query(
     `SELECT id FROM section
-    WHERE section_number = $1
-    AND term = $2
-    AND year = $3`,
+    WHERE section_number = ?
+    AND term = ?
+    AND year = ?`,
     [sectionNumber, term, year]
   );
   return q.rows.length > 0;
@@ -79,11 +79,11 @@ const getInstructorSections = async instructorId => {
       `SELECT * FROM section
       INNER JOIN instructor_v_section
       ON instructor_v_section.section_id = section.id
-      WHERE instructor_id = $1`,
+      WHERE instructor_id = ?`,
       [instructorId]
     );
     console.log('Q!!!!', q);
-    return q.rows;
+    return { ...q[0] };
   } catch (e) {
     console.log(e);
   }
@@ -94,11 +94,11 @@ const getDueDate = async (problemsetId, sectionId) => {
   try {
     const response = await query(
       `SELECT due_date from due_date
-      WHERE problemset_id = $1 AND section_id = $2`,
+      WHERE problemset_id = ? AND section_id = ?`,
       [problemsetId, sectionId]
     );
     console.log('response', response);
-    return response.rows[0].due_date;
+    return response[0].due_date;
   } catch (e) {
     console.log(e);
   }
@@ -109,7 +109,7 @@ const getUserSection = async userId => {
     console.log('getUserSection', userId);
     const q = await query(
       `SELECT section_id FROM student_roster
-      WHERE student_id = $1`,
+      WHERE student_id = ?`,
       [userId]
     );
     console.log('Q!!!!', q);
@@ -129,11 +129,11 @@ const getSectionIdFromSectionNumber = async ({ sectionNumber, term, year }) => {
   try {
     const q = await query(
       `SELECT id FROM section
-      WHERE section_number = $1 AND term = $2 AND year = $3`,
+      WHERE section_number = ? AND term = ? AND year = ?`,
       [sectionNumber, term, year]
     );
     console.log('q!!!!', q);
-    const sectionId = q.rows[0].id;
+    const sectionId = q[0].id;
     return sectionId;
   } catch (e) {}
 };
@@ -148,10 +148,10 @@ const getUserIdFromKey = async key => {
   try {
     const q = await query(
       `SELECT id FROM logic_user
-      WHERE key = $1`,
+      WHERE key = ?`,
       [key]
     );
-    const id = q.rows[0].id;
+    const id = q[0].id;
     return id;
   } catch (e) {}
 };
@@ -164,11 +164,11 @@ const getStudentsInSection = async sectionId => {
       INNER JOIN student_roster
       ON logic_user.id = student_roster.student_id
       WHERE logic_user.admin = false
-      AND student_roster.section_id = $1`,
+      AND student_roster.section_id = ?`,
       [sectionId]
     );
     console.log('q', q);
-    return q.rows;
+    return { ...q[0] };
   } catch (e) {
     console.log(e);
   }
@@ -184,7 +184,7 @@ const addStudentToSection = async (sectionId, studentId) => {
   console.log('addStudentToSection', sectionId, studentId);
   const q = await query(
     `INSERT INTO student_roster (section_id, student_id)
-    VALUES ($1, $2)`,
+    VALUES (?, ?)`,
     [sectionId, studentId]
   );
   console.log(q);
@@ -201,10 +201,10 @@ const createNewSection = async ({ sectionNumber, term, year }) => {
   try {
     const q = await query(
       `INSERT INTO section (section_number, term, year)
-      VALUES ($1, $2, $3) RETURNING id`,
+      VALUES (?, ?, ?) RETURNING id`,
       [sectionNumber, term, year]
     );
-    const newSectionId = q.rows[0].id;
+    const newSectionId = q[0].id;
     // Assign due dates to the problemsets
     const problemsets = await getAllProblemsets();
     console.log('ADD PROBLEMSETS', newSectionId);
@@ -217,7 +217,7 @@ const createNewSection = async ({ sectionNumber, term, year }) => {
       );
       await query(
         `INSERT INTO section_problemset
-        VALUES ($1, $2, $3)`,
+        VALUES (?, ?, ?)`,
         [newSectionId, problemset.id, problemset.default_order]
       );
     }
@@ -226,7 +226,7 @@ const createNewSection = async ({ sectionNumber, term, year }) => {
       console.log('DUE DATE:', newSectionId, problemset.id);
       await query(
         `INSERT INTO due_date (section_id, problemset_id, due_date)
-        VALUES ($1, $2, NOW())`,
+        VALUES (?, ?, NOW())`,
         [newSectionId, problemset.id]
       );
     }
@@ -267,7 +267,7 @@ const getUserGrades = async userId => {
   console.log('getUserGrades');
   const q = await query(
     `SELECT problemset_id, score FROM problemset_score
-    WHERE student_id = $1`,
+    WHERE student_id = ?`,
     [userId]
   );
   // console.log("QUERY", q);
@@ -282,7 +282,7 @@ const getUserGradesByUserKey = async key => {
   console.log('id', id);
   const q = await query(
     `SELECT problemset_id, score FROM problemset_score
-    WHERE student_id = $1`,
+    WHERE student_id = ?`,
     [id]
   );
   // console.log('QUERY', q);
@@ -314,7 +314,7 @@ const getSectionGrades = async sectionId => {
 const getSectionProblemsetIds = async sectionId => {
   const q = await query(
     `SELECT problemset_id AS id, section_problemset.order
-    FROM section_problemset WHERE section_id = $1
+    FROM section_problemset WHERE section_id = ?
     ORDER BY section_problemset.order`,
     [sectionId]
   );
@@ -338,7 +338,7 @@ const getSectionProblemsets = async sectionId => {
     AND due_date.problemset_id = section_problemset.problemset_id
     JOIN problemset
     ON section_problemset.problemset_id = problemset.id
-    WHERE due_date.section_id = $1`,
+    WHERE due_date.section_id = ?`,
     [sectionId]
   );
   console.log('sectionProblemsetIds', q);
@@ -347,7 +347,7 @@ const getSectionProblemsets = async sectionId => {
 
 const removeUserFromSection = async (userId, sectionId) => {
   const q = await query(
-    `DELETE FROM student_roster WHERE student_id = $1 AND section_id = $2`,
+    `DELETE FROM student_roster WHERE student_id = ? AND section_id = ?`,
     [userId, sectionId]
   );
   console.log('DELETE user', q);
@@ -357,9 +357,9 @@ const removeUserFromSection = async (userId, sectionId) => {
 const upsertProblemsetDueDate = async (problemsetId, sectionId, dueDate) => {
   console.log('UPSERT', problemsetId, sectionId, dueDate, typeof dueDate);
   const q = await query(
-    `UPDATE due_date SET due_date = $3::timestamptz
-    WHERE problemset_id = $1 AND section_id = $2`,
-    [problemsetId, sectionId, dueDate]
+    `UPDATE due_date SET due_date = ?::timestamptz
+    WHERE problemset_id = ? AND section_id = ?`,
+    [dueDate, problemsetId, sectionId]
   );
   return q;
   // const r = await query(

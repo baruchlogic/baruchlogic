@@ -18,7 +18,9 @@ const {
 
 const configProblemsetRoutes = app => {
   app.get('/api/problemsets', async (req, res) => {
+    console.log('configProblemsetRoutes')
     const problemsets = await getAllProblemsets();
+    console.log(problemsets);
     res.status(200).send(problemsets);
   });
 
@@ -27,7 +29,7 @@ const configProblemsetRoutes = app => {
     const problemset = await getProblemSetById(Number(req.params.id));
     console.log(problemset);
 
-    const { section_id: sectionId } = req.user;
+    const { section_id: sectionId } = (req.user || {});
 
     console.log('USER SECTION', sectionId);
     const dueDate = await getDueDate(problemset.id, sectionId);
