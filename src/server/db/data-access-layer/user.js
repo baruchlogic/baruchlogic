@@ -51,6 +51,7 @@ const getUserById = async id => {
       WHERE id = ?`,
       [id]
     );
+    console.log('USER', user);
     if (!user[0].admin) {
       const sectionId = await query(
         `SELECT section_id FROM student_roster WHERE student_id = ?`,
@@ -74,13 +75,13 @@ const getUserByKey = async key => {
       key
     ]);
     console.log('QUERY', user);
-    if (!user[0].admin) {
-      const sectionId = await query(
-        `SELECT section_id FROM student_roster WHERE student_id = ?`,
-        [user[0].id]
-      );
-      user[0].section_id = sectionId[0].section_id;
-    }
+    // if (!user[0].admin) {
+    //   const sectionId = await query(
+    //     `SELECT section_id FROM student_roster WHERE student_id = ?`,
+    //     [user[0].id]
+    //   );
+    //   user[0].section_id = sectionId[0].section_id;
+    // }
     console.log('RETURNING USER', user);
     return { ...user[0] };
   } catch (e) {}

@@ -113,7 +113,7 @@ const getUserSection = async userId => {
       [userId]
     );
     console.log('Q!!!!', q);
-    return q.rows[0].section_id;
+    return q[0].section_id;
   } catch (e) {
     console.log(e);
   }

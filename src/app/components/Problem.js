@@ -32,7 +32,7 @@ const Problem = ({
   value
 }) => {
   let ProblemType;
-  switch (problem.type) {
+  switch (problem.problem_type) {
     case 'multiple_choice':
       ProblemType = MultipleChoice;
       break;
@@ -77,7 +77,7 @@ const Problem = ({
     >
       <div className="problem__index">({problem.problem_index})</div>
       <StyledDiv>
-        {problem.type === 'truth_table' &&
+        {problem.problem_type === 'truth_table' &&
           'Complete the truth table for the following proposition:'}
         <div>{renderNewLines(problem.prompt || '')}</div>
         <ProblemType
