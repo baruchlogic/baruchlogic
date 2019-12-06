@@ -44,7 +44,7 @@ const createNewUser = async (admin = false) => {
  * @return {object|undefined} - the desired user, if found
  */
 const getUserById = async id => {
-  console.log('getUserById');
+  console.log('getUserById', id);
   try {
     const user = await query(
       `SELECT * FROM logic_user
