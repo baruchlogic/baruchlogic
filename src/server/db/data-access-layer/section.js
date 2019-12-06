@@ -361,13 +361,14 @@ const removeUserFromSection = async (userId, sectionId) => {
   return;
 };
 
-const upsertProblemsetDueDate = async (problemsetId, sectionId, dueDate) => {
+const updateProblemsetDueDate = async (problemsetId, sectionId, dueDate) => {
   console.log('UPSERT', problemsetId, sectionId, dueDate, typeof dueDate);
   const q = await query(
-    `UPDATE due_date SET due_date = ?::datetime
+    `UPDATE due_date SET due_date = ?
     WHERE problemset_id = ? AND section_id = ?`,
     [dueDate, problemsetId, sectionId]
   );
+  console.log('q!!!!', q);
   return q;
   // const r = await query(
   //   `SELECT * FROM due_date (problemset_id, section_id, due_date)
@@ -425,5 +426,5 @@ module.exports = {
   getUserSection,
   getUserGrades,
   removeUserFromSection,
-  upsertProblemsetDueDate
+  updateProblemsetDueDate
 };

@@ -5,7 +5,7 @@ const {
   getSectionProblemsets,
   getStudentsInSection,
   removeUserFromSection,
-  upsertProblemsetDueDate
+  updateProblemsetDueDate
 } = require('../db/data-access-layer/section');
 
 const configSectionRoutes = app => {
@@ -71,7 +71,7 @@ const configSectionRoutes = app => {
       );
       const { date } = req.body;
       console.log('date !@#&!@#&@(#&@!(#&!@))', date);
-      await upsertProblemsetDueDate(problemsetId, sectionId, date);
+      await updateProblemsetDueDate(problemsetId, sectionId, date);
       res.setHeader('Content-Type', 'application/json');
       res.send(date);
     }

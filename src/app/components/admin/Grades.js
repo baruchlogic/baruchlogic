@@ -136,7 +136,7 @@ const Grades = () => {
             <tr>
               <StyledTh />
               {currentProblemsets.map(problemset => (
-                <StyledTh key={problemset.id}>HW {problemset.order}</StyledTh>
+                <StyledTh key={problemset.id}>HW {problemset.default_order}</StyledTh>
               ))}
             </tr>
           </thead>

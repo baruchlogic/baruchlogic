@@ -58,6 +58,7 @@ const Problemsets = () => {
 
   const onSubmit = async index => {
     const problemset = problemsets[index];
+    console.log('onSubmit', index, problemset, dates[problemset.id].toUTCString(), dates[problemset.id]);
     await authFetch(
       `${API_BASE_URL}/api/sections/${
         currentSection.id
