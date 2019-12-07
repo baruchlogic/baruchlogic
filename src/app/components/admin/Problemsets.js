@@ -12,6 +12,7 @@ const Problemsets = () => {
   const [currentSection, setCurrentSection] = useState({});
   const [problemsets, setProblemsets] = useState([]);
   const [dates, setDates] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const fetchProblemSets = async () => {
     const response = await fetch(
@@ -50,21 +51,30 @@ const Problemsets = () => {
     setCurrentSection(section);
   };
 
-  const onSubmit = async index => {
-    const problemset = problemsets[index];
-    console.log('onSubmit', index, problemset, dates[problemset.id].toUTCString(), dates[problemset.id]);
-    await authFetch(
-      `${API_BASE_URL}/api/sections/${
-        currentSection.id
-      }/problemsets/due-dates/${problemset.id}`,
-      'POST',
-      {
-        body: JSON.stringify({
-          date: moment(dates[problemset.id]).format('YYYY-MM-DD hh:mm:ss')
-        })
-      }
+  const onSubmit = async () => {
+    setLoading(true);
+    await Promise.all(
+      problemsets.map(async problemset => {
+        if (
+          new Date(dates[problemset.id]).toISOString() !==
+          new Date(problemset.due_date).toISOString()
+        ) {
+          console.log('diff');
+          await authFetch(
+            `${API_BASE_URL}/api/sections/${currentSection.id}/problemsets/due-dates/${problemset.id}`,
+            'POST',
+            {
+              body: JSON.stringify({
+                date: moment(dates[problemset.id]).format('YYYY-MM-DD hh:mm:ss')
+              })
+            }
+          );
+        }
+      })
     );
+
     fetchProblemSets();
+    setLoading(false);
   };
 
   return (
@@ -114,17 +124,15 @@ const Problemsets = () => {
                   onChange={val => handleDateChange(val, problemset.id)}
                   value={dates[problemset.id]}
                 />
-                <Button
-                  intent={Intent.WARNING}
-                  onClick={() => {
-                    onSubmit(index);
-                  }}
-                >
-                  SUBMIT CHANGE
-                </Button>
               </div>
             </div>
           ))}
+          <Button
+            intent={Intent.WARNING}
+            onClick={onSubmit}
+          >
+            {loading ? 'LOADING' : 'SUBMIT CHANGES'}
+          </Button>
       </div>
     </StyledCard>
   );

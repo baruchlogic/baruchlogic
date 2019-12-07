@@ -278,7 +278,7 @@ const getUserGrades = async userId => {
     [userId]
   );
   // console.log("QUERY", q);
-  const grades = q.rows;
+  const grades = q;
   console.log('grades', grades);
   return grades;
 };
