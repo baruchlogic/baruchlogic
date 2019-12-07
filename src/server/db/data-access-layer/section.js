@@ -320,13 +320,13 @@ const getSectionGrades = async sectionId => {
 
 const getSectionProblemsetIds = async sectionId => {
   const q = await query(
-    `SELECT problemset_id AS id, section_problemset.order
+    `SELECT problemset_id AS id, section_problemset.problemset_order
     FROM section_problemset WHERE section_id = ?
-    ORDER BY section_problemset.order`,
+    ORDER BY section_problemset.problemset_order`,
     [sectionId]
   );
   console.log('sectionProblemsetIds', q);
-  return q.rows;
+  return q.map(el => ({ ...el }));
 };
 
 const getSectionProblemsets = async sectionId => {
@@ -349,7 +349,7 @@ const getSectionProblemsets = async sectionId => {
     [sectionId]
   );
   console.log('sectionProblemsetIds', q);
-  return q.map(el => ({ ...el }));
+  return (q || []).map(el => ({ ...el }));
 };
 
 const removeUserFromSection = async (userId, sectionId) => {
@@ -361,15 +361,38 @@ const removeUserFromSection = async (userId, sectionId) => {
   return;
 };
 
-const updateProblemsetDueDate = async (problemsetId, sectionId, dueDate) => {
-  console.log('UPSERT', problemsetId, sectionId, dueDate, typeof dueDate);
-  const q = await query(
+const updateProblemsetDueDate = async ({ problemsetId, sectionId, date }) => {
+  console.log('UPSERT', problemsetId, sectionId, date, typeof date);
+
+  await query(
     `UPDATE due_date SET due_date = ?
-    WHERE problemset_id = ? AND section_id = ?`,
-    [dueDate, problemsetId, sectionId]
+    WHERE problemset_id = ? AND section_id = ?;`,
+    [date, problemsetId, sectionId]
   );
-  console.log('q!!!!', q);
-  return q;
+
+  // const p = await query(
+  //   `SELECT * FROM due_date
+  //   WHERE problemset_id = ? AND section_id = ?`,
+  //   [problemsetId, sectionId]
+  // );
+  // console.log('p', p);
+  // if (p) {
+  //   console.log('here', [date, problemsetId, sectionId]);
+  //   const q = await query(
+  //     `UPDATE due_date SET due_date = ?
+  //     WHERE problemset_id = ? AND section_id = ?;`,
+  //     [date, problemsetId, sectionId]
+  //   );
+  //   console.log('q!!!!', q);
+  //   return q;
+  // } else {
+  //   console.log('down here');
+  //   const q = await query(
+  //     `INSERT INTO due_date (due_date, problemset_id, section_id) VALUES(?, ?, ?)`,
+  //     [date, problemsetId, sectionId]
+  //   );
+  // }
+
   // const r = await query(
   //   `SELECT * FROM due_date (problemset_id, section_id, due_date)
   //   WHERE due_date.problemset_id = $1

@@ -11,12 +11,13 @@ const Problemsets = () => {
   const instructorSections = useInstructorSections();
   const [currentSection, setCurrentSection] = useState({});
   const [problemsets, setProblemsets] = useState([]);
+  const [dates, setDates] = useState({});
+
   const fetchProblemSets = async () => {
     const response = await fetch(
       `${API_BASE_URL}/api/sections/${currentSection.id}/problemsets`
     ).then(res => res.json());
     const problemsets = response;
-    // console.log('PROBLEMSETS', problemsets);
     setProblemsets(problemsets);
     setDates(
       problemsets.reduce(
@@ -36,18 +37,11 @@ const Problemsets = () => {
     if (instructorSections.length && !currentSection.id) {
       setCurrentSection(instructorSections[0]);
     }
-  }, [instructorSections]);
-
-  const [dates, setDates] = useState({});
+  }, [instructorSections, currentSection.id]);
 
   const handleDateChange = (value, problemsetId) => {
-    // console.log(value, typeof value);
     setDates({ ...dates, [problemsetId]: value });
   };
-
-  useEffect(() => {
-    // console.log('dates', dates);
-  });
 
   const handleSectionChange = ({ target: { value } }) => {
     const section = instructorSections.find(
@@ -65,7 +59,9 @@ const Problemsets = () => {
       }/problemsets/due-dates/${problemset.id}`,
       'POST',
       {
-        body: JSON.stringify({ date: dates[problemset.id].toUTCString() })
+        body: JSON.stringify({
+          date: moment(dates[problemset.id]).format('YYYY-MM-DD hh:mm:ss')
+        })
       }
     );
     fetchProblemSets();
@@ -86,9 +82,9 @@ const Problemsets = () => {
       </section>
       <div>
         <div style={{ display: 'flex' }}>
-          <div>Problemsets</div>
-          <div>Due Dates</div>
-          <div>Change due date:</div>
+          <div key="1">Problemsets</div>
+          <div key="2">Due Dates</div>
+          <div key="3">Change due date:</div>
         </div>
         {problemsets
           .sort((a, b) =>
@@ -103,10 +99,10 @@ const Problemsets = () => {
               style={{ display: 'flex', justifyContent: 'space-between' }}
               key={problemset.id}
             >
-              <div key={problemset.id}>
+              <div key={problemset.id + 'order'}>
                 <span>Problemset #{problemset.default_order}</span>
               </div>
-              <div key={problemset.id}>
+              <div key={problemset.id + 'date'}>
                 <span>
                   {problemset.due_date
                     ? moment(problemset.due_date).format(MOMENT_FORMAT)

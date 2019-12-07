@@ -67,11 +67,12 @@ const configSectionRoutes = app => {
       const { problemsetId, sectionId } = req.params;
       console.log(
         '/api/sections/:sectionId/problemsets/due-dates/:problemsetId',
-        sectionId
+        sectionId,
+        problemsetId
       );
       const { date } = req.body;
       console.log('date !@#&!@#&@(#&@!(#&!@))', date);
-      await updateProblemsetDueDate(problemsetId, sectionId, date);
+      await updateProblemsetDueDate({ problemsetId, sectionId, date });
       res.setHeader('Content-Type', 'application/json');
       res.send(date);
     }
