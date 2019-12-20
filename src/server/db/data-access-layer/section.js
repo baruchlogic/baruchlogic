@@ -292,8 +292,8 @@ const getUserGradesByUserKey = async key => {
     WHERE student_id = ?`,
     [id]
   );
-  // console.log('QUERY', q);
-  const grades = q.reduce(
+  console.log('QUERY', q);
+  const grades = (q || []).reduce(
     (acc, row) => Object.assign(acc, { [row.problemset_id]: row.score }),
     {}
   );

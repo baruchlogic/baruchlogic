@@ -33,9 +33,9 @@ const getBestResponses = async (problemsetId, studentId) => {
     );
     console.log('RESPONSENRESONSERPSORES', response);
     return (
-      response.rows[0] &&
-      response.rows[0].response &&
-      JSON.parse(response.rows[0].response)
+      response[0] &&
+      response[0].response &&
+      JSON.parse(response[0].response)
     );
   } catch (e) {
     console.log(e);
@@ -89,7 +89,8 @@ const saveBestScore = async (studentId, problemsetId, score) => {
     AND problemset_id = ?`,
     [studentId, problemsetId]
   );
-  if (q.rows.length) {
+  console.log('Q!@#', q);
+  if (q && q.length) {
     await query(
       `UPDATE problemset_score
       SET score = ?
@@ -138,7 +139,8 @@ const saveResponses = async (studentId, problemsetId, responses) => {
     AND problemset_last_response.student_id = ?`,
     [problemsetId, studentId]
   );
-  if (q.length) {
+  console.log('Q!!!!', q);
+  if (q && q.length) {
     await query(
       `UPDATE problemset_last_response SET response = ?
       WHERE problemset_last_response.problemset_id = ?
@@ -272,7 +274,7 @@ const scoreProblemResponse = (problem, response) => {
   console.log('scoreProblemResponse', problem, response);
   let score = null;
   let responseData = null;
-  switch (problem.type) {
+  switch (problem.problem_type) {
     case 'true_false':
     case 'multiple_choice':
       score = scoreSelectedResponse(problem, response).score;
@@ -300,8 +302,11 @@ const scoreResponses = async (responses, problemsetId) => {
   const incorrectProblems = [];
   for (const id of ids) {
     console.log(id);
-    const q = await query('SELECT * FROM problem WHERE id = $1', [id]);
-    const problem = { ...q.rows[0] };
+    const q = await query('SELECT * FROM problem WHERE id = ?', [id]);
+    console.log(q);
+    const problem = { ...q[0] };
+    debugger;
+    console.log('problem', problem);
     const response = responses[id];
     const { score, responseData } = scoreProblemResponse(problem, response);
     if (!score) {
@@ -313,9 +318,10 @@ const scoreResponses = async (responses, problemsetId) => {
   console.log('problemsetScore', problemsetScore);
   console.log('incorrectProblems', incorrectProblems);
   const q = await query(
-    'SELECT COUNT(*) FROM problem_v_problemset WHERE problemset_id = $1',
+    'SELECT COUNT(*) as count FROM problem_v_problemset WHERE problemset_id = ?',
     [problemsetId]
   );
+  console.log('Q', q);
   const count = Number(q[0].count);
   console.log('COUNT!', count);
   return {
@@ -334,7 +340,7 @@ const getScore = async (problemsetId, studentId) => {
     [problemsetId, studentId]
   );
   console.log('QUERY', q);
-  return q[0] && q[0].score;
+  return q && q[0] && q[0].score;
 };
 
 module.exports = {

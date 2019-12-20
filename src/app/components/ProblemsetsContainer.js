@@ -27,7 +27,7 @@ const ProblemsetsContainer = ({
 
   const fetchProblemSets = async () => {
     if (isUserAuth && user) {
-      // console.log('IS AUTH', isUserAuth, user);
+      console.log('IS AUTH', isUserAuth, user);
       const response = await authFetch(
         `${API_BASE_URL}/api/sections/${user.section_id}/problemsets`
       ).then(res => res.json());
@@ -38,7 +38,7 @@ const ProblemsetsContainer = ({
       const groupedProblemsets = groupProblemSetsByUnit(problemsets);
       setGroupedProblemsets(groupedProblemsets);
     } else {
-      // console.log('IS NOT AUTH');
+      console.log('IS NOT AUTH');
       const response = await fetch(`${API_BASE_URL}/api/problemsets`).then(
         res => res.json()
       );
