@@ -29,7 +29,7 @@ const ProblemsetsContainer = ({
     if (isUserAuth && user) {
       // console.log('IS AUTH', isUserAuth, user);
       const response = await authFetch(
-        `${API_BASE_URL}/api/sections/${user.section_id}/probwlemsets`
+        `${API_BASE_URL}/api/sections/${user.section_id}/problemsets`
       ).then(res => res.json());
       setFetchIsLoading(false);
       // console.log('problemsetss  !  !! ! ', response);
