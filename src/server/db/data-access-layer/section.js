@@ -10,7 +10,7 @@ const { getAllProblemsets } = require('./problemset');
 const addStudents = async studentKeys => {
   Promise.all(
     studentKeys.map(async studentKey => {
-      query('INSERT INTO logic_user (key, admin) VALUES (?, false);', [
+      query('INSERT INTO logic_user (course_key, admin) VALUES (?, false);', [
         studentKey
       ]);
     })
