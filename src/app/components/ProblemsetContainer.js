@@ -35,6 +35,10 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
     setProblemset(result);
   };
 
+  useEffect(() => {
+    onReset();
+  }, [problemset]);
+
   const fetchProblems = async () => {
     const result = await fetch(
       `${API_BASE_URL}/api/problemsets/${problemsetId}/problems`
@@ -136,7 +140,7 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
       {!isUserAuth && (
         <h2>Please log in to interact with the problemsets.</h2>
       )}
-      {problems.map(problem => console.log('problem', problem) || (
+      {problems.map(problem => (
         <Problem
           key={problem.id}
           isIncorrectResponse={

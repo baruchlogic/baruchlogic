@@ -326,7 +326,7 @@ const getSectionProblemsetIds = async sectionId => {
     [sectionId]
   );
   console.log('sectionProblemsetIds', q);
-  return q.map(el => ({ ...el }));
+  return q.map(el => ({ ...el })); // TODO: Util function
 };
 
 const getSectionProblemsets = async sectionId => {

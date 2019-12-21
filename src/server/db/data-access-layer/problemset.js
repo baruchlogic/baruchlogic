@@ -248,8 +248,7 @@ const scoreTruthTable = (problem, response) => {
   response = response.map(row =>
     row.map(el => (el === 'T' ? true : el === 'F' ? false : null))
   );
-  const formula = new Formula();
-  const truthTable = formula.generateTruthTable(problem.prompt);
+  const truthTable = Formula.generateTruthTable(problem.prompt);
   return { score: compareMatrices(response, truthTable) };
 };
 
