@@ -54,6 +54,7 @@ const configProblemsetRoutes = app => {
     const { id: problemsetId } = req.params;
     const { id: studentId } = req.user;
     const sectionId = await getUserSection(studentId);
+    console.log('sectionId', sectionId);
     const { incorrectProblems, score } = await scoreResponses(
       req.body,
       problemsetId

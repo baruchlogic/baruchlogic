@@ -33,6 +33,7 @@ const getBestResponses = async (problemsetId, studentId) => {
     );
     console.log('RESPONSENRESONSERPSORES', response);
     return (
+      response &&
       response[0] &&
       response[0].response &&
       JSON.parse(response[0].response)
