@@ -75,7 +75,6 @@ const configProblemsetRoutes = app => {
       await saveBestResponses(studentId, problemsetId, req.body);
       await saveBestScore(studentId, problemsetId, score);
     }
-    res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify({ incorrectProblems, score }));
   });
 
