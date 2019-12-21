@@ -85,7 +85,7 @@ const saveBestScore = async (studentId, problemsetId, score) => {
   console.log('saveBestScore');
   const q = await query(
     `SELECT * FROM problemset_score
-    WHERE student_id = ?
+    WHERE logic_user_id = ?
     AND problemset_id = ?`,
     [studentId, problemsetId]
   );
@@ -95,14 +95,14 @@ const saveBestScore = async (studentId, problemsetId, score) => {
       `UPDATE problemset_score
       SET score = ?
       WHERE problemset_score.problemset_id = ?
-      AND problemset_score.student_id = ?
+      AND problemset_score.logic_user_id = ?
       AND problemset_score.score < ?`,
       [problemsetId, studentId, score]
     );
   } else {
     await query(
       `INSERT INTO problemset_score
-      (student_id, problemset_id, score)
+      (logic_user_id, problemset_id, score)
       VALUES (?, ?, ?)`,
       [studentId, problemsetId, score]
     );
@@ -136,7 +136,7 @@ const saveResponses = async (studentId, problemsetId, responses) => {
   const q = await query(
     `SELECT * FROM problemset_last_response
     WHERE problemset_last_response.problemset_id = ?
-    AND problemset_last_response.student_id = ?`,
+    AND problemset_last_response.user_id = ?`,
     [problemsetId, studentId]
   );
   console.log('Q!!!!', q);
@@ -144,13 +144,13 @@ const saveResponses = async (studentId, problemsetId, responses) => {
     await query(
       `UPDATE problemset_last_response SET response = ?
       WHERE problemset_last_response.problemset_id = ?
-      AND problemset_last_response.student_id = ?`,
+      AND problemset_last_response.user_id = ?`,
       [responses, problemsetId, studentId]
     );
   } else {
     await query(
       `INSERT INTO problemset_last_response
-      (student_id, problemset_id, response)
+      (user_id, problemset_id, response)
       VALUES
       (?, ?, ?)`,
       [studentId, problemsetId, responses]
@@ -336,7 +336,7 @@ const getScore = async (problemsetId, studentId) => {
     `SELECT score
     FROM problemset_score
     WHERE problemset_id = ?
-    AND student_id = ?`,
+    AND logic_user_id = ?`,
     [problemsetId, studentId]
   );
   console.log('QUERY', q);
