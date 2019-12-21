@@ -98,7 +98,7 @@ const getDueDate = async (problemsetId, sectionId) => {
       [problemsetId, sectionId]
     );
     console.log('response', response);
-    return response[0].due_date;
+    return response[0] ? response[0].due_date : null;
   } catch (e) {
     console.log(e);
   }

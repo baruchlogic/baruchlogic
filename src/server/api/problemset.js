@@ -80,19 +80,24 @@ const configProblemsetRoutes = app => {
   });
 
   app.get('/api/problemsets/:id/score', async (req, res) => {
-    const { id: problemsetId } = req.params;
-    const { id: studentId } = req.user;
-    const score = await getScore(problemsetId, studentId);
-    res.status(200).send(String(score));
+    let score;
+    if (req.user) {
+      const { id: problemsetId } = req.params;
+      const { id: studentId } = req.user;
+      score = await getScore(problemsetId, studentId);
+    }
+    res.status(200).send(String(score) || nulls);
   });
 
   app.get('/api/problemsets/:problemsetId/responses', async (req, res) => {
-    const { id: studentId } = req.user;
-    const { problemsetId } = req.params;
-    const bestResponses = await getBestResponses(problemsetId, studentId);
-    console.log('GOT THE RESPONSES', bestResponses);
-    res.setHeader('Content-Type', 'application/json');
-    res.send({ responses: bestResponses });
+    if (req.user) {
+      const { id: studentId } = req.user;
+      const { problemsetId } = req.params;
+      const bestResponses = await getBestResponses(problemsetId, studentId);
+      console.log('GOT THE RESPONSES', bestResponses);
+      res.setHeader('Content-Type', 'application/json');
+      res.send({ responses: bestResponses });
+    }
   });
 };
 
