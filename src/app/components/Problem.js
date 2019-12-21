@@ -48,7 +48,6 @@ const Problem = ({
     default:
       break;
   }
-  console.log('ProblemType', ProblemType);
   const renderNewLines = text =>
     text
       .split(/(?:<br \/>)|(?:\\n)/g)

@@ -275,14 +275,12 @@ const scoreNaturalDeduction = (problem, response) => {
 };
 
 const scoreProblemResponse = (problem, response) => {
-  console.log('scoreProblemResponse', problem, response);
   let score = null;
   let responseData = null;
   switch (problem.problem_type) {
     case 'true_false':
     case 'multiple_choice':
       score = scoreSelectedResponse(problem, response).score;
-      console.log('true_false', score);
       break;
     case 'natural_deduction':
       const result = scoreNaturalDeduction(problem, response);
