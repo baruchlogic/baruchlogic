@@ -116,8 +116,7 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
     const result = await authFetch(
       `${API_BASE_URL}/api/problemsets/${problemsetId}/responses`
     ).then(res => res.json());
-    // console.log('RESULT RESULT:', result);
-    setProblemsetResponses(result.responses);
+    setProblemsetResponses(result.responses || {});
   };
 
   const dueDateMoment =
