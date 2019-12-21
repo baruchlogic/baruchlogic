@@ -85,7 +85,7 @@ const configProblemsetRoutes = app => {
       const { id: studentId } = req.user;
       score = await getScore(problemsetId, studentId);
     }
-    res.status(200).send(String(score) || nulls);
+    res.status(200).send(String(score) || null);
   });
 
   app.get('/api/problemsets/:problemsetId/responses', async (req, res) => {

@@ -339,7 +339,7 @@ const getScore = async (problemsetId, studentId) => {
     AND logic_user_id = ?`,
     [problemsetId, studentId]
   );
-  console.log('QUERY', q);
+  console.log('getScore QUERY', q);
   return q && q[0] && q[0].score;
 };
 
