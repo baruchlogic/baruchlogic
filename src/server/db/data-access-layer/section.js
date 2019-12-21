@@ -274,7 +274,7 @@ const getUserGrades = async userId => {
   console.log('getUserGrades');
   const q = await query(
     `SELECT problemset_id, score FROM problemset_score
-    WHERE student_id = ?`,
+    WHERE logic_user_id = ?`,
     [userId]
   );
   // console.log("QUERY", q);
