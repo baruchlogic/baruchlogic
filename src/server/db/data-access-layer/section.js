@@ -284,12 +284,12 @@ const getUserGrades = async userId => {
 };
 
 const getUserGradesByUserKey = async key => {
-  console.log('getUserGradesByKey');
+  console.log('getUserGradesByUserKey', key);
   const { id } = await getUserByKey(key);
   console.log('id', id);
   const q = await query(
     `SELECT problemset_id, score FROM problemset_score
-    WHERE student_id = ?`,
+    WHERE logic_user_id = ?`,
     [id]
   );
   console.log('QUERY', q);
@@ -309,7 +309,6 @@ const getUserGradesByUserKey = async key => {
 const getSectionGrades = async sectionId => {
   const result = {};
   const users = await getStudentsInSection(sectionId);
-  console.log('got users');
   const grades = users.map(async user => {
     const grades = await getUserGradesByUserKey(user.course_key);
     result[user.course_key] = grades;
@@ -325,7 +324,6 @@ const getSectionProblemsetIds = async sectionId => {
     ORDER BY section_problemset.problemset_order`,
     [sectionId]
   );
-  console.log('sectionProblemsetIds', q);
   return q.map(el => ({ ...el })); // TODO: Util function
 };
 
