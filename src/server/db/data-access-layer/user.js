@@ -17,10 +17,16 @@ const checkIfKeyExists = async key => {
  * @return {string} The new user key
  */
 const createNewKey = async () => {
-  let newKey = randomstring.generate(8);
+  let newKey = randomstring.generate({
+    length: 8,
+    readable: true
+  });
   let keyExists = await checkIfKeyExists(newKey);
   while (keyExists) {
-    newKey = randomstring.generate(8);
+    newKey = randomstring.generate({
+      length: 8,
+      readable: true
+    });
     keyExists = await checkIfKeyExists(newKey);
   }
   return newKey;
