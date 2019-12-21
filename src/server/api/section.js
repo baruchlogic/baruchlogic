@@ -45,7 +45,7 @@ const configSectionRoutes = app => {
     const { sectionId } = req.params;
     console.log('/api/sections/:sectionId/problemsets', sectionId);
     const problemsets = await getSectionProblemsets(Number(sectionId));
-    console.log('GOT THE PROBLEMSETS', problemsets);
+    // console.log('GOT THE PROBLEMSETS', problemsets);
     res.send(problemsets);
   });
 

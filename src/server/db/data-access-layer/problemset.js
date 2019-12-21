@@ -69,7 +69,7 @@ const getProblemsByProblemsetId = async id => {
     //   ORDER BY problem_index ASC;`,
     //   [id]
     // );
-    console.log('response', response);
+    // console.log('response', response);
     return response.map(row => {
       row.choices = row.choices ? JSON.parse(row.choices) : row.choices;
       row.deduction_prompt = row.deduction_prompt
@@ -83,24 +83,26 @@ const getProblemsByProblemsetId = async id => {
 };
 
 const saveBestScore = async (studentId, problemsetId, score) => {
-  console.log('saveBestScore');
+  console.log('saveBestScore', studentId, problemsetId, score);
   const q = await query(
-    `SELECT * FROM problemset_score
+    `SELECT score FROM problemset_score
     WHERE logic_user_id = ?
     AND problemset_id = ?`,
     [studentId, problemsetId]
   );
   console.log('Q!@#', q);
   if (q && q.length) {
+    console.log(1);
     await query(
       `UPDATE problemset_score
       SET score = ?
       WHERE problemset_score.problemset_id = ?
       AND problemset_score.logic_user_id = ?
       AND problemset_score.score < ?`,
-      [problemsetId, studentId, score]
+      [score, problemsetId, studentId, score]
     );
   } else {
+    console.log(2);
     await query(
       `INSERT INTO problemset_score
       (logic_user_id, problemset_id, score)
@@ -132,7 +134,7 @@ const saveBestScore = async (studentId, problemsetId, score) => {
  * @return {void}
  */
 const saveResponses = async (studentId, problemsetId, responses) => {
-  console.log('saveResponses');
+  console.log('saveResponses', studentId, problemsetId, responses);
 
   const q = await query(
     `SELECT * FROM problemset_last_response
@@ -142,19 +144,21 @@ const saveResponses = async (studentId, problemsetId, responses) => {
   );
   console.log('Q!!!!', q);
   if (q && q.length) {
+    console.log('length');
     await query(
       `UPDATE problemset_last_response SET response = ?
       WHERE problemset_last_response.problemset_id = ?
       AND problemset_last_response.user_id = ?`,
-      [responses, problemsetId, studentId]
+      [JSON.stringify(responses), problemsetId, studentId]
     );
   } else {
+    console.log('no length');
     await query(
       `INSERT INTO problemset_last_response
       (user_id, problemset_id, response)
       VALUES
       (?, ?, ?)`,
-      [studentId, problemsetId, responses]
+      [studentId, problemsetId, JSON.stringify(responses)]
     );
   }
   // Upsert last response
@@ -173,7 +177,7 @@ const saveResponses = async (studentId, problemsetId, responses) => {
 };
 
 const saveBestResponses = async (studentId, problemsetId, responses) => {
-  console.log('saveBestResponse', responses);
+  console.log('saveBestResponse', responses, problemsetId);
 
   const { score } = await scoreResponses(responses, problemsetId);
 
@@ -188,7 +192,7 @@ const saveBestResponses = async (studentId, problemsetId, responses) => {
       (user_id, problemset_id, response)
       VALUES
       (?, ?, ?)`,
-      [studentId, problemsetId, responses]
+      [studentId, problemsetId, JSON.stringify(responses)]
     );
   } else if (score > currentScore) {
     console.log('update best response');
@@ -197,7 +201,7 @@ const saveBestResponses = async (studentId, problemsetId, responses) => {
       SET response = ?
       WHERE problemset_id = ?
       AND user_id = ?`,
-      [responses, problemsetId, studentId]
+      [JSON.stringify(responses), problemsetId, studentId]
     );
   }
 
@@ -306,10 +310,10 @@ const scoreResponses = async (responses, problemsetId) => {
     const q = await query('SELECT * FROM problem WHERE id = ?', [id]);
     console.log(q);
     const problem = { ...q[0] };
-    debugger;
     console.log('problem', problem);
     const response = responses[id];
     const { score, responseData } = scoreProblemResponse(problem, response);
+    console.log(score, response, scoreProblemResponse(problem, response));
     if (!score) {
       incorrectProblems.push({ id, responseData });
     }

@@ -42,7 +42,6 @@ const configProblemsetRoutes = app => {
 
   app.get('/api/problemsets/:id/problems', async (req, res) => {
     const problems = await getProblemsByProblemsetId(Number(req.params.id));
-    console.log("PROBLEMS****", problems);
     res.status(200).send(problems);
   });
 
@@ -54,7 +53,9 @@ const configProblemsetRoutes = app => {
     const { id: problemsetId } = req.params;
     const { id: studentId } = req.user;
     const sectionId = await getUserSection(studentId);
-    console.log('sectionId', sectionId);
+    console.log('studentId', studentId);
+    console.log('problemsetId', problemsetId);
+    console.log('req.body', req.body);
     const { incorrectProblems, score } = await scoreResponses(
       req.body,
       problemsetId
