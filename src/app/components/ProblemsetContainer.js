@@ -37,7 +37,7 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
 
   useEffect(() => {
     if (problemset && problemset.id) onReset();
-  }, []);
+  }, [problemsetId]);
 
   const fetchProblems = async () => {
     const result = await fetch(
@@ -66,9 +66,9 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
     fetchBestScore();
   }, [problemsetId]);
 
-  // useEffect(() => {
-  //   onReset();
-  // }, [problemsetId]);
+  useEffect(() => {
+    onReset();
+  }, [problemsetId]);
 
   // useEffect(() => {
   //   // console.log('problemsetResponses', problemsetResponses);

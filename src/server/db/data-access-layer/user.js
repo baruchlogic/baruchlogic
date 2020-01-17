@@ -7,8 +7,9 @@ const { query } = require('../index');
  * @return {boolean}
  */
 const checkIfKeyExists = async key => {
+  console.log('checkIfKeyExists');
   const user = await getUserByKey(key);
-  console.log('HERE', user);
+  console.log('checkIfKeyExists result', user);
   return Object.keys(user).length > 0;
 };
 
@@ -17,15 +18,18 @@ const checkIfKeyExists = async key => {
  * @return {string} The new user key
  */
 const createNewKey = async () => {
+  console.log('createNewKey');
   let newKey = randomstring.generate({
     length: 8,
-    readable: true
+    readable: true,
+    charset: 'alphabetic'
   });
   let keyExists = await checkIfKeyExists(newKey);
   while (keyExists) {
     newKey = randomstring.generate({
       length: 8,
-      readable: true
+      readable: true,
+      charset: 'alphabetic'
     });
     keyExists = await checkIfKeyExists(newKey);
   }
@@ -51,14 +55,9 @@ const createNewUser = async (admin = false) => {
  * @return {object|undefined} - the desired user, if found
  */
 const getUserById = async id => {
-  console.log('getUserById', id);
   try {
-    const user = await query(
-      `SELECT * FROM logic_user
-      WHERE id = ?`,
-      [id]
-    );
-    console.log('USER', user);
+    console.log('getUserById', id)
+    const user = await query(`SELECT * FROM logic_user WHERE id = ?`, [id]);
     if (!user[0].admin) {
       const sectionId = await query(
         `SELECT section_id FROM student_roster WHERE student_id = ?`,
@@ -76,21 +75,20 @@ const getUserById = async id => {
  * @return {object|undefined} - the desired user, if found
  */
 const getUserByKey = async key => {
+  console.log('getUserByKey', key);
   try {
-    console.log('getUserByKey', key);
     const user = await query(`SELECT * FROM logic_user WHERE course_key = ?`, [
       key
     ]);
-    console.log('QUERY', user);
-    // if (!user[0].admin) {
-    //   const sectionId = await query(
-    //     `SELECT section_id FROM student_roster WHERE student_id = ?`,
-    //     [user[0].id]
-    //   );
-    //   user[0].section_id = sectionId[0].section_id;
-    // }
-    console.log('RETURNING USER', user);
-    return { ...user[0] };
+    if (user[0] && !user[0].admin) {
+      const sectionId = await query(
+        `SELECT section_id FROM student_roster WHERE student_id = ?`,
+        [user[0].id]
+      );
+      user[0].section_id = sectionId[0].section_id;
+    }
+    console.log('getUserByKey returning', { ...user[0] });
+    return user[0] ? { ...user[0] } : {};
   } catch (e) {}
 };
 

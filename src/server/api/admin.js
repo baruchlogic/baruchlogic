@@ -8,7 +8,6 @@ const { createNewUser } = require('../db/data-access-layer/user');
 const configAdminRoutes = app => {
   app.post('/api/section', async (req, res) => {
     console.log('/api/section');
-    console.log('req', req);
     console.log('BODY', req.body);
     console.log('user', req.user);
     const { sectionNumber, nStudents, term, year } = req.body;
@@ -27,6 +26,7 @@ const configAdminRoutes = app => {
     const studentKeys = [];
     for (let i = 0; i < Number(nStudents); i++) {
       const newKey = await createNewUser();
+      console.log('NEW KEY', newKey);
       studentKeys.push(newKey);
     }
     await addStudentsToSection({ sectionNumber, term, year }, studentKeys);

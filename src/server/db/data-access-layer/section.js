@@ -64,6 +64,7 @@ const checkIfSectionExists = async ({ sectionNumber, term, year }) => {
     AND year = ?`,
     [sectionNumber, term, year]
   );
+  console.log('checkIfSectionExists result', q);
   return q.length > 0;
 };
 

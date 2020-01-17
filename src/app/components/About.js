@@ -51,13 +51,10 @@ const About = () => (
         <b>baruchlogic@gmail.com</b>
       </a>
     </p>
-
-    {/**
-      * TODO: Uncomment this when the repo has been pushed.
-      <p>If you wish to contribute to this project, visit us on
-        <a href="https://www.github.com/baruchlogic">GitHub!</a>
-      </p>
-      */}
+    <p>
+      If you wish to contribute to this project, visit us on{' '}
+      <a href="https://www.github.com/baruchlogic">GitHub!</a>
+    </p>
   </StyledCard>
 );
 

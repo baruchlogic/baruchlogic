@@ -12,7 +12,7 @@ console.log('CONFIG', config.parsed);
 const app = express();
 
 const SECRET = process.env.COOKIE_SECRET;
-app.use(bodyParser.json());
+app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(SECRET));
 app.use(

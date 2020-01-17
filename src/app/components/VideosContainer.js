@@ -21,25 +21,6 @@ const VideosContainer = ({
   const [currentVideo, setCurrentVideo] = useState(null);
   const [fetchIsLoading, setFetchIsLoading] = useState(true);
 
-  const fetchVideos = async () => {
-    // console.log('API_BASE_URL', API_BASE_URL);
-    const response = await fetch(`${API_BASE_URL}/api/videos`).then(res =>
-      res.json()
-    );
-    const videos = response;
-    const groupedVideos = groupVideos(videos);
-    setVideos(videos);
-    setGroupdVideos(groupedVideos);
-    setFetchIsLoading(false);
-  };
-
-  const getCurrentVideo = () => {
-    const currentVideo = videos.find(
-      video => video.short_title === currentShortTitle
-    );
-    setCurrentVideo(currentVideo);
-  };
-
   const groupVideos = videos => {
     const result = [];
     for (const video of videos) {
@@ -69,12 +50,31 @@ const VideosContainer = ({
   );
 
   useEffect(() => {
+    const fetchVideos = async () => {
+      // console.log('API_BASE_URL', API_BASE_URL);
+      const response = await fetch(`${API_BASE_URL}/api/videos`).then(res =>
+        res.json()
+      );
+      const videos = response;
+      const groupedVideos = groupVideos(videos);
+      setVideos(videos);
+      setGroupdVideos(groupedVideos);
+      setFetchIsLoading(false);
+    };
+
     fetchVideos();
   }, []);
 
   useEffect(() => {
+    const getCurrentVideo = () => {
+      const currentVideo = videos.find(
+        video => video.short_title === currentShortTitle
+      );
+      setCurrentVideo(currentVideo);
+    };
+
     getCurrentVideo();
-  });
+  }, [currentShortTitle, videos]);
 
   return fetchIsLoading ? null : (
     <>
