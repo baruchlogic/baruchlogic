@@ -36,7 +36,7 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
   };
 
   useEffect(() => {
-    if (problemset && problemset.id) onReset();
+    onReset();
   }, [problemsetId]);
 
   const fetchProblems = async () => {
