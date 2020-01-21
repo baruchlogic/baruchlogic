@@ -35,10 +35,6 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
     setProblemset(result);
   };
 
-  useEffect(() => {
-    onReset();
-  }, [problemsetId]);
-
   const fetchProblems = async () => {
     const result = await fetch(
       `${API_BASE_URL}/api/problemsets/${problemsetId}/problems`
@@ -52,6 +48,13 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
       `${API_BASE_URL}/api/problemsets/${problemsetId}/score`
     ).then(res => res.text());
     setBestScore(result);
+  };
+
+  const onReset = () => {
+    setProblemsetResponses({});
+    setCurrentScore(null);
+    setIncorrectProblems({});
+    setHasSubmitted(false);
   };
 
   useEffect(() => {
@@ -80,13 +83,6 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
       ...problemsetResponses,
       [problemId]: response
     }));
-  };
-
-  const onReset = () => {
-    setProblemsetResponses({});
-    setCurrentScore(null);
-    setIncorrectProblems({});
-    setHasSubmitted(false);
   };
 
   const onSubmit = async () => {
