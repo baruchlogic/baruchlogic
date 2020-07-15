@@ -6,6 +6,7 @@ const {
 const { createNewUser } = require('../db/data-access-layer/user');
 
 const configAdminRoutes = app => {
+  // Creates a new section and returns the section number and student keys
   app.post('/api/section', async (req, res) => {
     console.log('/api/section');
     console.log('BODY', req.body);

@@ -9,6 +9,7 @@ const {
 } = require('../db/data-access-layer/section');
 
 const configSectionRoutes = app => {
+  // Get all sections for an instructor.
   app.get('/api/sections', async (req, res) => {
     console.log('/api/sections');
     const { id: instructorId } = req.user;
@@ -18,6 +19,7 @@ const configSectionRoutes = app => {
     res.send(sections);
   });
 
+  // Get all students in a section.
   app.get('/api/sections/:sectionId/users', async (req, res) => {
     console.log('/api/sections/:sectionId/users');
     const { sectionId } = req.params;
@@ -26,6 +28,7 @@ const configSectionRoutes = app => {
     res.send(students);
   });
 
+  // Remove a user from a section.
   app.delete('/api/sections/:sectionId/users/:userId', async (req, res) => {
     console.log('/api/sections/:sectionId/users/:userId');
     const { sectionId, userId } = req.params;
@@ -33,6 +36,7 @@ const configSectionRoutes = app => {
     res.status(200).send(userId);
   });
 
+  // Get students' grades for a section.
   app.get('/api/sections/:sectionId/grades', async (req, res) => {
     const { sectionId } = req.params;
     console.log('/api/sections/:sectionId/grades', sectionId);
@@ -41,6 +45,7 @@ const configSectionRoutes = app => {
     res.send(grades);
   });
 
+  // Get the problemsets for a section.
   app.get('/api/sections/:sectionId/problemsets', async (req, res) => {
     const { sectionId } = req.params;
     console.log('/api/sections/:sectionId/problemsets', sectionId);
@@ -49,7 +54,8 @@ const configSectionRoutes = app => {
     res.send(problemsets);
   });
 
-  app.post(
+  // Gets the due-dates for a section.
+  app.get(
     '/api/sections/:sectionId/problemsets/due-dates',
     async (req, res) => {
       const { sectionId } = req.params;
@@ -61,6 +67,7 @@ const configSectionRoutes = app => {
     }
   );
 
+  // Sets the due dates for a problemset.
   app.post(
     '/api/sections/:sectionId/problemsets/due-dates/:problemsetId',
     async (req, res) => {
