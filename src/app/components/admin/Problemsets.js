@@ -14,6 +14,7 @@ const Problemsets = () => {
   const [allProblemsets, setAllProblemsets] = useState([]);
   const [missingProblemsets, setMissingProblemsets] = useState([]);
   const [removeProblemsetId, setRemoveProblemsetId] = useState();
+  const [addProblemsetId, setAddProblemsetId] = useState();
   const [dates, setDates] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -80,6 +81,18 @@ const Problemsets = () => {
 
   const onRemoveSelectChange = e => {
     setRemoveProblemsetId(e.target.value);
+  };
+
+  const addProblemset = async () => {
+    await authFetch(
+      `${API_BASE_URL}/api/sections/${currentSection.id}/problemsets/${addProblemsetId}`,
+      'POST'
+    );
+    fetchProblemSets();
+  };
+
+  const onAddSelectChange = e => {
+    setAddProblemsetId(e.target.value);
   };
 
   const onSubmit = async () => {
@@ -186,7 +199,7 @@ const Problemsets = () => {
       <h2>Add a Problemset:</h2>
       <div style={{ display: "flex ", justifyContent: "center"}}>
         <div>Problemset:</div>
-        <select onChange={onRemoveSelectChange} value={removeProblemsetId}>
+        <select onChange={onAddSelectChange} value={addProblemsetId}>
           {missingProblemsets.map(
             problemset => (
               <option value={problemset.id}>
@@ -195,7 +208,7 @@ const Problemsets = () => {
             )
           )}
         </select>
-        <button onClick={removeProblemset}>REMOVE</button>
+        <button onClick={addProblemset}>REMOVE</button>
       </div>
     </StyledCard>
     </>

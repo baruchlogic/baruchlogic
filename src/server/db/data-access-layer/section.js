@@ -419,7 +419,23 @@ const deleteProblemsetFromSection = async (psId, sectionId) => {
   return;
 };
 
+const addProblemsetToSection = async (psId, sectionId) => {
+  console.log("addProblemsetToSection", sectionId, psId)
+  const q = await query(
+    "select default_order from problemset where id = ?",
+    [psId]
+  );
+  console.log("Q!!!!", q);
+  const problemsetOrder = q[0].default_order;
+  await query(
+    "insert into section_problemset (section_id, problemset_id, problemset_order) VALUES (?, ?, ?);",
+    [sectionId, psId, problemsetOrder]
+  );
+  return;
+};
+
 module.exports = {
+  addProblemsetToSection,
   addStudents,
   addStudentsToSection,
   addStudentsToSectionById,

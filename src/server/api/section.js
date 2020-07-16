@@ -1,4 +1,5 @@
 const {
+  addProblemsetToSection,
   getInstructorSections,
   getSectionGrades,
   // getSectionProblemsetIds,
@@ -73,10 +74,20 @@ const configSectionRoutes = app => {
     '/api/sections/:sectionId/problemsets/:problemsetId',
     async (req, res) => {
       const { problemsetId, sectionId } = req.params;
-      const result = deleteProblemsetFromSection(problemsetId, sectionId)
+      await deleteProblemsetFromSection(problemsetId, sectionId)
       res.sendStatus(200)
     }
-  )
+  );
+
+  // Add a problemset to a section
+  app.post(
+    '/api/sections/:sectionId/problemsets/:problemsetId',
+    async (req, res) => {
+      const { problemsetId, sectionId } = req.params;
+      await addProblemsetToSection(problemsetId, sectionId)
+      res.sendStatus(200)
+    }
+  );
 };
 
 module.exports = configSectionRoutes;
