@@ -12,6 +12,8 @@ const Problemsets = () => {
   const [currentSection, setCurrentSection] = useState({});
   const [problemsets, setProblemsets] = useState([]);
   const [allProblemsets, setAllProblemsets] = useState([]);
+  const [missingProblemsets, setMissingProblemsets] = useState([]);
+  const [removeProblemsetId, setRemoveProblemsetId] = useState();
   const [dates, setDates] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -32,21 +34,30 @@ const Problemsets = () => {
     );
   };
   const fetchAllProblemSets = async () => {
-    const problemsets = await fetch(`${API_BASE_URL}/api/problemsets`).then(res => res.json());
+    const problemsets = await fetch(`${API_BASE_URL}/api/problemsets`).then(
+      res => res.json()
+    );
     setAllProblemsets(problemsets);
-  }
+  };
   useEffect(() => {
     fetchProblemSets();
   }, [currentSection]);
   useEffect(() => {
     fetchAllProblemSets();
   }, []);
-
   useEffect(() => {
     if (instructorSections.length && !currentSection.id) {
       setCurrentSection(instructorSections[0]);
     }
   }, [instructorSections, currentSection.id]);
+  useEffect(() => {
+    setMissingProblemsets(allProblemsets.filter(
+      pset => !problemsets.find(p => p.id === pset.id)
+    ))
+    if (problemsets.length) {
+      setRemoveProblemsetId(problemsets[0].id)
+    }
+  }, [problemsets, allProblemsets])
 
   const handleDateChange = (value, problemsetId) => {
     setDates({ ...dates, [problemsetId]: value });
@@ -57,6 +68,18 @@ const Problemsets = () => {
       section => section.section_number === Number(value)
     );
     setCurrentSection(section);
+  };
+
+  const removeProblemset = async () => {
+    await authFetch(
+      `${API_BASE_URL}/api/sections/${currentSection.id}/problemsets/${removeProblemsetId}`,
+      'DELETE'
+    );
+    fetchProblemSets();
+  };
+
+  const onRemoveSelectChange = e => {
+    setRemoveProblemsetId(e.target.value);
   };
 
   const onSubmit = async () => {
@@ -148,15 +171,31 @@ const Problemsets = () => {
       <h2>Remove a Problemset:</h2>
       <div style={{ display: "flex ", justifyContent: "center"}}>
         <div>Problemset:</div>
-        <select>
-          {allProblemsets.map(
+        <select onChange={onRemoveSelectChange} value={removeProblemsetId}>
+          {problemsets.map(
             problemset => (
-              <option value={problemset.default_order}>
+              <option value={problemset.id}>
                 problemset #{problemset.default_order}
               </option>
             )
           )}
         </select>
+        <button onClick={removeProblemset}>REMOVE</button>
+      </div>
+      <br />
+      <h2>Add a Problemset:</h2>
+      <div style={{ display: "flex ", justifyContent: "center"}}>
+        <div>Problemset:</div>
+        <select onChange={onRemoveSelectChange} value={removeProblemsetId}>
+          {missingProblemsets.map(
+            problemset => (
+              <option value={problemset.id}>
+                problemset #{problemset.default_order}
+              </option>
+            )
+          )}
+        </select>
+        <button onClick={removeProblemset}>REMOVE</button>
       </div>
     </StyledCard>
     </>

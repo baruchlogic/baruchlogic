@@ -5,7 +5,8 @@ const {
   getSectionProblemsets,
   getStudentsInSection,
   removeUserFromSection,
-  updateProblemsetDueDate
+  updateProblemsetDueDate,
+  deleteProblemsetFromSection
 } = require('../db/data-access-layer/section');
 
 const configSectionRoutes = app => {
@@ -66,6 +67,16 @@ const configSectionRoutes = app => {
       res.send(date);
     }
   );
+
+  // Delete a problemset from a section
+  app.delete(
+    '/api/sections/:sectionId/problemsets/:problemsetId',
+    async (req, res) => {
+      const { problemsetId, sectionId } = req.params;
+      const result = deleteProblemsetFromSection(problemsetId, sectionId)
+      res.sendStatus(200)
+    }
+  )
 };
 
 module.exports = configSectionRoutes;

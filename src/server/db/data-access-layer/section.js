@@ -410,12 +410,22 @@ const updateProblemsetDueDate = async ({ problemsetId, sectionId, date }) => {
   // return q.rows;
 };
 
+const deleteProblemsetFromSection = async (psId, sectionId) => {
+  console.log("deleteProblemsetFromSection", sectionId, psId)
+  await query(
+    "delete from section_problemset where section_id = ? and problemset_id = ?;",
+    [sectionId, psId]
+  );
+  return;
+};
+
 module.exports = {
   addStudents,
   addStudentsToSection,
   addStudentsToSectionById,
   checkIfSectionExists,
   createNewSectionWithInstructor,
+  deleteProblemsetFromSection,
   getDueDate,
   getInstructorSections,
   getSectionGrades,
