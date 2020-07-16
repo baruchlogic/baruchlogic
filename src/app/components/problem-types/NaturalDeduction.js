@@ -19,7 +19,7 @@ const StyledIcon = styled(Icon)`
   cursor: pointer;
 `;
 
-const NaturalDeduction = ({ problem, setProblemResponse, value = {} }) => {
+const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
   console.log('here', problem, value);
   const { premises, conclusion } = problem.deduction_prompt;
 
@@ -86,7 +86,11 @@ const NaturalDeduction = ({ problem, setProblemResponse, value = {} }) => {
   const addNewLine = () => {
     const { citedLines, proposition, rule } = newProposition;
     const nextLines = (citedLines && citedLines.split(', ').map(Number)) || [];
-    const newLine = { citedLines: nextLines, proposition: new Formula(proposition), rule };
+    const newLine = {
+      citedLines: nextLines,
+      proposition: new Formula(proposition),
+      rule
+    };
     setProblemResponse(problem.id, {
       linesOfProof: value.linesOfProof.concat(newLine)
     });
@@ -112,7 +116,7 @@ const NaturalDeduction = ({ problem, setProblemResponse, value = {} }) => {
       <ProofContainer>
         <div>
           Propositions:
-          {(value.linesOfProof || []).map((line, index) => (
+          {value.linesOfProof.map((line, index) => (
             <div key={line.proposition.prettifiedFormula}>
               <span style={{ marginRight: '8px' }}>({index + 1})</span>
               {line.proposition.prettifiedFormula}
@@ -121,7 +125,7 @@ const NaturalDeduction = ({ problem, setProblemResponse, value = {} }) => {
         </div>
         <div>
           Justifications:
-          {(value.linesOfProof || []).map((line, index) => (
+          {value.linesOfProof.map((line, index) => (
             <div key={`${line.rule}-${index}`} style={{ display: 'flex' }}>
               {line.rule}
               {line.citedLines.length > 0 && `(${line.citedLines.join(', ')})`}
@@ -166,13 +170,13 @@ const NaturalDeduction = ({ problem, setProblemResponse, value = {} }) => {
             onBlur={handleNewLineRuleChange}
             value={newProposition.rule}
           >
-            {Object.values(DEDUCTION_RULES).filter(
-              rule => rule !== DEDUCTION_RULES.PREMISE
-            ).map(rule => (
-              <option key={rule} value={rule}>
-                {rule}
-              </option>
-            ))}
+            {Object.values(DEDUCTION_RULES)
+              .filter(rule => rule !== DEDUCTION_RULES.PREMISE)
+              .map(rule => (
+                <option key={rule} value={rule}>
+                  {rule}
+                </option>
+              ))}
           </select>
         </div>
         <div>
@@ -190,9 +194,14 @@ const NaturalDeduction = ({ problem, setProblemResponse, value = {} }) => {
 };
 
 NaturalDeduction.propTypes = {
-  problem: object,
-  responseData: object,
-  setProblemResponse: func
+  problem: object.isRequired,
+  setProblemResponse: func,
+  value: object.isRequired
+};
+
+NaturalDeduction.defaultProps = {
+  problem: {},
+  value: { linesOfProof: [] }
 };
 
 export default NaturalDeduction;

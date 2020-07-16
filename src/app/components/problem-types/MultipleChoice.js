@@ -1,5 +1,5 @@
 import React from 'react';
-import { func, object, string } from 'prop-types';
+import { bool, func, object, string } from 'prop-types';
 
 const MultipleChoice = ({ isUserAuth, problem, setProblemResponse, value }) => {
   const { choices } = problem;
@@ -26,9 +26,15 @@ const MultipleChoice = ({ isUserAuth, problem, setProblemResponse, value }) => {
 };
 
 MultipleChoice.propTypes = {
+  isUserAuth: bool.isRequired,
   problem: object.isRequired,
-  setProblemResponse: func.isRequired,
+  setProblemResponse: func,
   value: string
+};
+
+MultipleChoice.defaultProps = {
+  isUserAuth: false,
+  problem: {}
 };
 
 export default MultipleChoice;

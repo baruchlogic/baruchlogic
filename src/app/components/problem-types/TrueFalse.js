@@ -1,5 +1,5 @@
 import React from 'react';
-import { func, object, string } from 'prop-types';
+import { bool, func, object, string } from 'prop-types';
 
 const TrueFalse = ({ isUserAuth, problem, setProblemResponse, value }) => (
   <div>
@@ -31,9 +31,15 @@ const TrueFalse = ({ isUserAuth, problem, setProblemResponse, value }) => (
 );
 
 TrueFalse.propTypes = {
+  isUserAuth: bool.isRequired,
   problem: object.isRequired,
-  setProblemResponse: func.isRequired,
+  setProblemResponse: func,
   value: string
+};
+
+TrueFalse.defaultProps = {
+  isUserAuth: false,
+  problem: {}
 };
 
 export default TrueFalse;

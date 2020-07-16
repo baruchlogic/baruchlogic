@@ -22,9 +22,9 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
   const atomicVariables = Formula.getAtomicVariables(problem.prompt);
   const nRows = Math.pow(2, atomicVariables.length);
   useEffect(() => {
-    const initialValue = Formula
-      .generateTruthTable(problem.prompt, true)
-      .map(row => row.map(el => (el === true ? 'T' : el === false ? 'F' : '')));
+    const initialValue = Formula.generateTruthTable(problem.prompt, true).map(
+      row => row.map(el => (el === true ? 'T' : el === false ? 'F' : ''))
+    );
     if (Object.values(value || {}).length === 0) {
       setProblemResponse(problem.id, initialValue);
     }
