@@ -20,17 +20,11 @@ const RosterContainer = () => {
     }
   }, [instructorSections]);
   useEffect(() => {
-    // console.log('inputCourseNumber', inputCourseNumber);
     const section = instructorSections.find(
       section => section.section_number == inputCourseNumber
     );
     setCurrentSection(section);
   }, [inputCourseNumber]);
-  useEffect(() => {
-    // console.log('currentSection', currentSection);
-    // console.log('instructorSections', instructorSections);
-  });
-  // console.log('currentSection', currentSection);
   return (
     <div>
       <StyledCard elevation={Elevation.THREE}>
