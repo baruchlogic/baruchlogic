@@ -20,7 +20,6 @@ const StyledIcon = styled(Icon)`
 `;
 
 const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
-  console.log('here', problem, value);
   const { premises, conclusion } = problem.deduction_prompt;
 
   const initialLines = premises.map((premise, index) => ({
@@ -29,15 +28,21 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
     citedLines: []
   }));
 
-  const [newProposition, setNewProposition] = useState({
+  const initialProposition = {
     proposition: '',
     rule: Object.values(DEDUCTION_RULES)[0],
     citedLines: ''
-  });
+  };
 
+  const [newProposition, setNewProposition] = useState(initialProposition);
+
+  // Populate initial lines on reset or on start
   useEffect(() => {
-    setProblemResponse(problem.id, { linesOfProof: initialLines });
-  }, []);
+    if (value.linesOfProof.length === 0) {
+      setProblemResponse(problem.id, { linesOfProof: initialLines });
+      setNewProposition(initialProposition);
+    }
+  });
 
   const handleNewLinePropositionChange = ({ target: { value } }) => {
     setNewProposition({ ...newProposition, proposition: value });
