@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { number } from 'prop-types';
+import { bool, number } from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
 import Problem from './Problem';
@@ -183,7 +183,12 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
 };
 
 ProblemsetContainer.propTypes = {
+  isUserAuth: bool.isRequired,
   problemsetId: number
+};
+
+ProblemsetContainer.defaultProps = {
+  isUserAuth: false
 };
 
 export default ProblemsetContainer;

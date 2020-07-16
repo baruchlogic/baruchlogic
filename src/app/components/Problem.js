@@ -92,11 +92,18 @@ const Problem = ({
 };
 
 Problem.propTypes = {
+  isUserAuth: bool.isRequired,
   isIncorrectResponse: bool.isRequired,
   problem: object.isRequired,
   responseData: object,
-  setProblemResponse: func.isRequired,
+  setProblemResponse: func,
   value: any
+};
+
+Problem.defaultProps = {
+  isUserAuth: false,
+  isIncorrectResponse: true,
+  problem: {}
 };
 
 export default Problem;

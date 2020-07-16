@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { any, func, object } from 'prop-types';
+import { func, object } from 'prop-types';
 import styled from 'styled-components';
 import { Formula } from 'logically';
 
@@ -61,7 +61,7 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
 
   // Functions used to move focus around
   const focusNextElement = (j, k) => {
-    const focusedElement = document.querySelector('input:focus');
+    // const focusedElement = document.querySelector('input:focus');
     const nextTabindex = getNextIndex(j, k);
     const nextFocusedElement = document.querySelector(
       `input[tabindex="${nextTabindex}"]`
@@ -69,7 +69,7 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
     if (nextFocusedElement) nextFocusedElement.focus();
   };
   const focusPrevElement = (j, k) => {
-    const focusedElement = document.querySelector('input:focus');
+    // const focusedElement = document.querySelector('input:focus');
     const prevTabIndex = getPrevIndex(j, k);
     const prevFocusedElement = document.querySelector(
       `input[tabindex="${prevTabIndex}"]`
@@ -163,9 +163,15 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
 };
 
 TruthTable.propTypes = {
+  isUserAuth: object.isRequired,
   problem: object.isRequired,
-  setProblemResponse: func.isRequired,
-  value: any
+  setProblemResponse: func,
+  value: object
+};
+
+TruthTable.defaultProps = {
+  isUserAuth: false,
+  problem: {}
 };
 
 export default TruthTable;
