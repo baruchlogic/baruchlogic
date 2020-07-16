@@ -46,10 +46,15 @@ const Grades = () => {
       `${API_BASE_URL}/api/sections/${currentSectionId}/problemsets`
     ).then(res => res.json());
     // console.log('setCurrentProblemsetsHelper', problemsets);
-    setCurrentProblemsets(problemsets.sort(
-      (a, b) => a.default_order < b.default_order ? -1 :
-                a.default_order > b.default_order ? 1 : 0
-    ));
+    setCurrentProblemsets(
+      problemsets.sort((a, b) =>
+        a.default_order < b.default_order
+          ? -1
+          : a.default_order > b.default_order
+          ? 1
+          : 0
+      )
+    );
   };
 
   useEffect(() => {
@@ -136,7 +141,9 @@ const Grades = () => {
             <tr>
               <StyledTh />
               {currentProblemsets.map(problemset => (
-                <StyledTh key={problemset.id}>HW {problemset.default_order}</StyledTh>
+                <StyledTh key={problemset.id}>
+                  HW {problemset.default_order}
+                </StyledTh>
               ))}
             </tr>
           </thead>
