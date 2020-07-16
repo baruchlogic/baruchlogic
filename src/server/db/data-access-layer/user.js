@@ -7,9 +7,7 @@ const { query } = require('../index');
  * @return {boolean}
  */
 const checkIfKeyExists = async key => {
-  console.log('checkIfKeyExists');
   const user = await getUserByKey(key);
-  console.log('checkIfKeyExists result', user);
   return Object.keys(user).length > 0;
 };
 
@@ -56,7 +54,6 @@ const createNewUser = async (admin = false) => {
  */
 const getUserById = async id => {
   try {
-    console.log('getUserById', id)
     const user = await query(`SELECT * FROM logic_user WHERE id = ?`, [id]);
     if (!user[0].admin) {
       const sectionId = await query(
@@ -75,7 +72,6 @@ const getUserById = async id => {
  * @return {object|undefined} - the desired user, if found
  */
 const getUserByKey = async key => {
-  console.log('getUserByKey', key);
   try {
     const user = await query(`SELECT * FROM logic_user WHERE course_key = ?`, [
       key
@@ -87,7 +83,6 @@ const getUserByKey = async key => {
       );
       user[0].section_id = sectionId[0].section_id;
     }
-    console.log('getUserByKey returning', { ...user[0] });
     return user[0] ? { ...user[0] } : {};
   } catch (e) {}
 };

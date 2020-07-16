@@ -199,39 +199,29 @@ const addStudentToSection = async (sectionId, studentId) => {
  * @return {void}
  */
 const createNewSection = async ({ sectionNumber, term, year }) => {
-  console.log('CREATE NEW SECTION');
   try {
     const q = await query(
       `INSERT INTO section (section_number, term, year)
       VALUES (?, ?, ?)`,
       [sectionNumber, term, year]
     );
-    console.log('Q!!!', q);
     const r = await query(
       `SELECT id FROM section WHERE section_number = ? AND term = ? and year = ?`,
       [sectionNumber, term, year]
     )
-    console.log('R!!!', r);
     const newSectionId = r[0].id;
     // Assign due dates to the problemsets
+    //
+    // Add all problemsets to the new section.
     const problemsets = await getAllProblemsets();
-    console.log('ADD PROBLEMSETS', newSectionId);
     for (const problemset of problemsets) {
-      console.log(
-        'ADD PROBLEMSET',
-        newSectionId,
-        problemset.id,
-        problemset.default_order
-      );
       await query(
         `INSERT INTO section_problemset
         VALUES (?, ?, ?)`,
         [newSectionId, problemset.id, problemset.default_order]
       );
     }
-    console.log('ADD DUE DATES');
     for (const problemset of problemsets) {
-      console.log('DUE DATE:', newSectionId, problemset.id);
       await query(
         `INSERT INTO due_date (section_id, problemset_id, due_date)
         VALUES (?, ?, NOW())`,
@@ -251,7 +241,6 @@ const createNewSection = async ({ sectionNumber, term, year }) => {
  * @return {void}
  */
 const addInstructorToSection = async (instructorId, sectionId) => {
-  console.log('addInstructorToSection', instructorId, sectionId);
   await query(
     `INSERT INTO instructor_v_section (instructor_id, section_id)
     VALUES (?, ?)`,
@@ -266,39 +255,31 @@ const addInstructorToSection = async (instructorId, sectionId) => {
  * @return {void}
  */
 const createNewSectionWithInstructor = async (sectionData, instructorId) => {
-  console.log('createNewSectionWithInstructor', sectionData, instructorId);
   const newSectionId = await createNewSection(sectionData);
   await addInstructorToSection(instructorId, newSectionId);
 };
 
 const getUserGrades = async userId => {
-  console.log('getUserGrades');
   const q = await query(
     `SELECT problemset_id, score FROM problemset_score
     WHERE logic_user_id = ?`,
     [userId]
   );
-  // console.log("QUERY", q);
   const grades = q;
-  console.log('grades', grades);
   return grades;
 };
 
 const getUserGradesByUserKey = async key => {
-  console.log('getUserGradesByUserKey', key);
   const { id } = await getUserByKey(key);
-  console.log('id', id);
   const q = await query(
     `SELECT problemset_id, score FROM problemset_score
     WHERE logic_user_id = ?`,
     [id]
   );
-  console.log('QUERY', q);
   const grades = (q || []).reduce(
     (acc, row) => Object.assign(acc, { [row.problemset_id]: row.score }),
     {}
   );
-  console.log('grades', grades);
   return grades;
 };
 
@@ -347,7 +328,6 @@ const getSectionProblemsets = async sectionId => {
     WHERE due_date.section_id = ?`,
     [sectionId]
   );
-  console.log('sectionProblemsetIds', q);
   return (q || []).map(el => ({ ...el }));
 };
 
@@ -356,13 +336,10 @@ const removeUserFromSection = async (userId, sectionId) => {
     `DELETE FROM student_roster WHERE student_id = ? AND section_id = ?`,
     [userId, sectionId]
   );
-  console.log('DELETE user', q);
   return;
 };
 
 const updateProblemsetDueDate = async ({ problemsetId, sectionId, date }) => {
-  console.log('UPSERT', problemsetId, sectionId, date, typeof date);
-
   await query(
     `UPDATE due_date SET due_date = ?
     WHERE problemset_id = ? AND section_id = ?;`,
