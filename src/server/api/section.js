@@ -47,10 +47,11 @@ const configSectionRoutes = app => {
   });
 
   // Gets the due-dates for a section.
+  // TODO: FIX
   app.get(
     '/api/sections/:sectionId/problemsets/due-dates',
     async (req, res) => {
-      const { sectionId } = req.params;
+      // const { sectionId } = req.params;
       const dates = req.body;
       res.setHeader('Content-Type', 'application/json');
       res.send(dates);
@@ -74,8 +75,8 @@ const configSectionRoutes = app => {
     '/api/sections/:sectionId/problemsets/:problemsetId',
     async (req, res) => {
       const { problemsetId, sectionId } = req.params;
-      await deleteProblemsetFromSection(problemsetId, sectionId)
-      res.sendStatus(200)
+      await deleteProblemsetFromSection(problemsetId, sectionId);
+      res.sendStatus(200);
     }
   );
 
@@ -84,8 +85,8 @@ const configSectionRoutes = app => {
     '/api/sections/:sectionId/problemsets/:problemsetId',
     async (req, res) => {
       const { problemsetId, sectionId } = req.params;
-      await addProblemsetToSection(problemsetId, sectionId)
-      res.sendStatus(200)
+      await addProblemsetToSection(problemsetId, sectionId);
+      res.sendStatus(200);
     }
   );
 };

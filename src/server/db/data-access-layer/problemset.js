@@ -125,7 +125,6 @@ const saveBestScore = async (studentId, problemsetId, score) => {
  * @return {void}
  */
 const saveResponses = async (studentId, problemsetId, responses) => {
-
   // Save to problemset_last_response
   const q = await query(
     `SELECT * FROM problemset_last_response
@@ -175,11 +174,9 @@ const saveResponses = async (studentId, problemsetId, responses) => {
 };
 
 const saveBestResponses = async (studentId, problemsetId, responses) => {
-
   const { score } = await scoreResponses(responses, problemsetId);
 
   const currentScore = await getScore(problemsetId, studentId);
-
 
   if (currentScore === undefined || currentScore === null) {
     await query(
@@ -304,7 +301,9 @@ const scoreResponses = async (responses, problemsetId) => {
     problemsetScore += score;
   }
   const q = await query(
-    'SELECT COUNT(*) as count FROM problem_v_problemset WHERE problemset_id = ?',
+    `SELECT COUNT(*) as count
+    FROM problem_v_problemset
+    WHERE problemset_id = ?`,
     [problemsetId]
   );
   const count = Number(q[0].count);

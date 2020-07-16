@@ -23,11 +23,12 @@ const connection = mysql.createConnection({
 });
 connection.connect();
 
-const query = (query, params, callback) => new Promise((res, rej) => {
+const query = (query, params, callback) =>
+  new Promise((res, rej) => {
     connection.query(query, params, (error, results, fields) => {
       res(results);
     });
-});
+  });
 
 module.exports = {
   // pool,

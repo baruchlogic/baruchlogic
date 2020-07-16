@@ -152,7 +152,7 @@ const getUserIdFromKey = async key => {
       WHERE course_key = ?`,
       [key]
     );
-    console.log("OK!!!!", q);
+    console.log('OK!!!!', q);
     const id = q[0].id;
     return id;
   } catch (e) {}
@@ -200,15 +200,17 @@ const addStudentToSection = async (sectionId, studentId) => {
  */
 const createNewSection = async ({ sectionNumber, term, year }) => {
   try {
-    const q = await query(
+    await query(
       `INSERT INTO section (section_number, term, year)
       VALUES (?, ?, ?)`,
       [sectionNumber, term, year]
     );
     const r = await query(
-      `SELECT id FROM section WHERE section_number = ? AND term = ? and year = ?`,
+      `SELECT id FROM section
+      WHERE section_number = ?
+      AND term = ? and year = ?`,
       [sectionNumber, term, year]
-    )
+    );
     const newSectionId = r[0].id;
     // Assign due dates to the problemsets
     //
@@ -332,7 +334,7 @@ const getSectionProblemsets = async sectionId => {
 };
 
 const removeUserFromSection = async (userId, sectionId) => {
-  const q = await query(
+  await query(
     `DELETE FROM student_roster WHERE student_id = ? AND section_id = ?`,
     [userId, sectionId]
   );
@@ -345,90 +347,29 @@ const updateProblemsetDueDate = async ({ problemsetId, sectionId, date }) => {
     WHERE problemset_id = ? AND section_id = ?;`,
     [date, problemsetId, sectionId]
   );
-
-  // const p = await query(
-  //   `SELECT * FROM due_date
-  //   WHERE problemset_id = ? AND section_id = ?`,
-  //   [problemsetId, sectionId]
-  // );
-  // console.log('p', p);
-  // if (p) {
-  //   console.log('here', [date, problemsetId, sectionId]);
-  //   const q = await query(
-  //     `UPDATE due_date SET due_date = ?
-  //     WHERE problemset_id = ? AND section_id = ?;`,
-  //     [date, problemsetId, sectionId]
-  //   );
-  //   console.log('q!!!!', q);
-  //   return q;
-  // } else {
-  //   console.log('down here');
-  //   const q = await query(
-  //     `INSERT INTO due_date (due_date, problemset_id, section_id) VALUES(?, ?, ?)`,
-  //     [date, problemsetId, sectionId]
-  //   );
-  // }
-
-  // const r = await query(
-  //   `SELECT * FROM due_date (problemset_id, section_id, due_date)
-  //   WHERE due_date.problemset_id = $1
-  //   AND due_date.section_id = $2`,
-  //   [problemsetId, sectionId]
-  // );
-  // if (r.rows.length) {
-  //   const q = await query(
-  //     `UPDATE due_date SET due_date = $3::timestamptz
-  //     WHERE due_date.problemset_id = $1
-  //     AND due_date.section_id = $2`,
-  //     [problemsetId, sectionId, dueDate]
-  //   );
-  //   console.log('UPDATE due_date', q);
-  //   return q.rows;
-  // } else {
-  //   const q = await query(
-  //     `INSERT INTO due_date (problemset_id, section_id, due_date)
-  //     VALUES ($1, $2, $3)`,
-  //     [problemsetId, sectionId, dueDate]
-  //   );
-  //   console.log('INSERT due_date', q);
-  //   return q.rows;
-  // }
-  // OLD VERSION:
-  // const q = await query(
-  //   `
-  //   INSERT INTO due_date (problemset_id, section_id, due_date)
-  //   VALUES ($1, $2, $3)
-  //   ON CONFLICT ON CONSTRAINT unique_section_id_problemset_id
-  //   DO
-  //   UPDATE SET due_date = $3::timestamptz
-  //   WHERE due_date.problemset_id = $1
-  //   AND due_date.section_id = $2
-  // `,
-  //   [problemsetId, sectionId, dueDate]
-  // );
-  // console.log('HOLY SHIT', q);
-  // return q.rows;
 };
 
 const deleteProblemsetFromSection = async (psId, sectionId) => {
-  console.log("deleteProblemsetFromSection", sectionId, psId)
+  console.log('deleteProblemsetFromSection', sectionId, psId);
   await query(
-    "delete from section_problemset where section_id = ? and problemset_id = ?;",
+    `DELETE FROM section_problemset
+    WHERE section_id = ? AND problemset_id = ?;`,
     [sectionId, psId]
   );
   return;
 };
 
 const addProblemsetToSection = async (psId, sectionId) => {
-  console.log("addProblemsetToSection", sectionId, psId)
-  const q = await query(
-    "select default_order from problemset where id = ?",
-    [psId]
-  );
-  console.log("Q!!!!", q);
+  console.log('addProblemsetToSection', sectionId, psId);
+  const q = await query('select default_order from problemset where id = ?', [
+    psId
+  ]);
+  console.log('Q!!!!', q);
   const problemsetOrder = q[0].default_order;
   await query(
-    "insert into section_problemset (section_id, problemset_id, problemset_order) VALUES (?, ?, ?);",
+    `INSERT INTO section_problemset
+    (section_id, problemset_id, problemset_order)
+    VALUES (?, ?, ?);`,
     [sectionId, psId, problemsetOrder]
   );
   return;
