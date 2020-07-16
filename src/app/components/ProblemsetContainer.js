@@ -127,6 +127,8 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
 
   const isPastDueDate = dueDateMoment && dueDateMoment.isBefore(moment());
 
+  console.log("problemsetResponses", problemsetResponses);
+
   return (
     <StyledContainer>
       {problemset && <h1>{`Problemset #${problemset.default_order}`}</h1>}
@@ -141,9 +143,6 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
           isIncorrectResponse={
             !!incorrectProblems[problem.id] ||
             (hasSubmitted && problemsetResponses[problem.id] === undefined)
-          }
-          responseData={
-            problem
           }
           value={problemsetResponses[problem.id]}
           problem={problem}
