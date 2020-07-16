@@ -208,7 +208,7 @@ const Problemsets = () => {
             )
           )}
         </select>
-        <button onClick={addProblemset}>REMOVE</button>
+        <button onClick={addProblemset}>ADD</button>
       </div>
     </StyledCard>
     </>
