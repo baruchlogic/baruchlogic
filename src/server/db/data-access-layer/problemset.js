@@ -126,6 +126,7 @@ const saveBestScore = async (studentId, problemsetId, score) => {
  */
 const saveResponses = async (studentId, problemsetId, responses) => {
 
+  // Save to problemset_last_response
   const q = await query(
     `SELECT * FROM problemset_last_response
     WHERE problemset_last_response.problemset_id = ?
@@ -148,6 +149,16 @@ const saveResponses = async (studentId, problemsetId, responses) => {
       [studentId, problemsetId, JSON.stringify(responses)]
     );
   }
+
+  // Save to problemset_all_responses
+  await query(
+    `INSERT INTO problemset_all_responses
+    (user_id, problemset_id, response)
+    VALUES
+    (?, ?, ?)`,
+    [studentId, problemsetId, JSON.stringify(responses)]
+  );
+
   // Upsert last response
   // await query(
   //   `INSERT INTO problemset_last_response
