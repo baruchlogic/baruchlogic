@@ -55,9 +55,6 @@ const Problemsets = () => {
     setMissingProblemsets(
       allProblemsets.filter(pset => !problemsets.find(p => p.id === pset.id))
     );
-    if (problemsets.length) {
-      setRemoveProblemsetId(problemsets[0].id);
-    }
   }, [problemsets, allProblemsets]);
 
   const handleDateChange = (value, problemsetId) => {
@@ -105,11 +102,9 @@ const Problemsets = () => {
           new Date(dates[problemset.id]).toISOString() !==
           new Date(problemset.due_date).toISOString()
         ) {
-          console.log('diff');
           await authFetch(
-            `${API_BASE_URL}/api/
-            sections/${currentSection.id}/
-            problemsets/due-dates/
+            `${API_BASE_URL}/api/sections/
+            ${currentSection.id}/problemsets/due-dates/
             ${problemset.id}`,
             'POST',
             {
@@ -132,7 +127,7 @@ const Problemsets = () => {
         <h1>Problemsets</h1>
         <section>
           <h2>Pick a section:</h2>
-          <select onBlur={handleSectionChange}>
+          <select onChange={handleSectionChange} onBlur={handleSectionChange}>
             {instructorSections.map(section => (
               <option value={section.section_number} key={section.id}>
                 {section.section_number}
@@ -186,7 +181,12 @@ const Problemsets = () => {
         <h2>Remove a Problemset:</h2>
         <div style={{ display: 'flex ', justifyContent: 'center' }}>
           <div>Problemset:</div>
-          <select onBlur={onRemoveSelectChange} value={removeProblemsetId}>
+          <select
+            onChange={onRemoveSelectChange}
+            onBlur={onRemoveSelectChange}
+            value={removeProblemsetId}
+          >
+            <option key="1" value=""></option>
             {problemsets.map(problemset => (
               <option key={problemset.id} value={problemset.id}>
                 problemset #{problemset.default_order}
@@ -199,7 +199,12 @@ const Problemsets = () => {
         <h2>Add a Problemset:</h2>
         <div style={{ display: 'flex ', justifyContent: 'center' }}>
           <div>Problemset:</div>
-          <select onBlur={onAddSelectChange} value={addProblemsetId}>
+          <select
+            onChange={onAddSelectChange}
+            onBlur={onAddSelectChange}
+            value={addProblemsetId}
+          >
+            <option key="1" value=""></option>
             {missingProblemsets.map(problemset => (
               <option key={problemset.id} value={problemset.id}>
                 problemset #{problemset.default_order}
