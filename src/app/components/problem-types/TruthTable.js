@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { bool, func, object } from 'prop-types';
+import { any, func, object } from 'prop-types';
 import styled from 'styled-components';
 import { Formula } from 'logically';
 
@@ -25,7 +25,7 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
     const initialValue = Formula.generateTruthTable(problem.prompt, true).map(
       row => row.map(el => (el === true ? 'T' : el === false ? 'F' : ''))
     );
-    if (Object.values(value).length === 0) {
+    if (Object.values(value || {}).length === 0) {
       setProblemResponse(problem.id, initialValue);
     }
   }, [value]);
@@ -163,16 +163,9 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
 };
 
 TruthTable.propTypes = {
-  isUserAuth: bool.isRequired,
   problem: object.isRequired,
-  setProblemResponse: func,
-  value: object.isRequired
-};
-
-TruthTable.defaultProps = {
-  isUserAuth: false,
-  problem: {},
-  value: {}
+  setProblemResponse: func.isRequired,
+  value: any
 };
 
 export default TruthTable;

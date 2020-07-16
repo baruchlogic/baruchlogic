@@ -34,7 +34,7 @@ const Roster = ({ sectionId, sectionNumber }) => {
   }, [studentNames]);
 
   const onAddStudent = async () => {
-    await authFetch(`${API_BASE_URL}/api/users`, 'POST', {
+    const newStudentKey = await authFetch(`${API_BASE_URL}/api/users`, 'POST', {
       body: JSON.stringify({ sectionId })
     });
     await getStudentsInSection(sectionId);
