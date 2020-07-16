@@ -51,18 +51,6 @@ const getProblemsByProblemsetId = async id => {
       ORDER BY problem_index ASC;`,
       [id]
     );
-    // PostgreSQL 9:
-    // const response = await query(
-    //   `SELECT row_to_json(problem)
-    //   FROM (select id, type, prompt, choices, deduction_prompt,
-    //   problem_v_problemset.problem_index
-    //   FROM problem
-    //   INNER JOIN problem_v_problemset
-    //   ON problem.id = problem_v_problemset.problem_id
-    //   WHERE problem_v_problemset.problemset_id = $1) problem
-    //   ORDER BY problem_index ASC;`,
-    //   [id]
-    // );
     return response.map(row => {
       row.choices = row.choices ? JSON.parse(row.choices) : row.choices;
       row.deduction_prompt = row.deduction_prompt
@@ -101,20 +89,6 @@ const saveBestScore = async (studentId, problemsetId, score) => {
       [studentId, problemsetId, score]
     );
   }
-  // await query(
-  //   `INSERT INTO problemset_score
-  //   (student_id, problemset_id, score)
-  //   VALUES
-  //   ($1, $2, $3)
-  //   ON CONFLICT ON CONSTRAINT
-  //   problemset_score_unique
-  //   DO
-  //   UPDATE SET score = $3
-  //   WHERE problemset_score.problemset_id = $2
-  //   AND problemset_score.student_id = $1
-  //   AND problemset_score.score < $3`,
-  //   [studentId, problemsetId, score]
-  // );
 };
 
 /**
@@ -195,22 +169,6 @@ const saveBestResponses = async (studentId, problemsetId, responses) => {
       [JSON.stringify(responses), problemsetId, studentId]
     );
   }
-
-  // if (!currentScore || score > currentScore) {
-  //   // Upsert best response if score is higher
-  //   await query(
-  //     `INSERT INTO problemset_best_response
-  //     (user_id, problemset_id, response)
-  //     VALUES
-  //     ($1, $2, $3)
-  //     ON CONFLICT ON CONSTRAINT unique_problemset_id_user_id
-  //     DO
-  //     UPDATE SET response = $3
-  //     WHERE problemset_best_response.problemset_id = $2
-  //     AND problemset_best_response.user_id = $1`,
-  //     [studentId, problemsetId, responses]
-  //   );
-  // }
 };
 
 /**
@@ -245,11 +203,7 @@ const scoreTruthTable = (problem, response) => {
 const scoreNaturalDeduction = (problem, response) => {
   const { linesOfProof } = response;
   const conclusion = JSON.parse(problem.deduction_prompt).conclusion;
-  // const {
-  //   deduction_prompt: { conclusion }
-  // } = problem;
   const proof = new Proof();
-  // proof.conclusion = conclusion;
   proof.setConclusion(conclusion);
   for (const line of linesOfProof) {
     const newLineFormula = new Formula(line.proposition.cleansedFormulaString);
@@ -288,13 +242,10 @@ const scoreResponses = async (responses, problemsetId) => {
   let problemsetScore = 0;
   const incorrectProblems = [];
   for (const id of ids) {
-    console.log(id);
     const q = await query('SELECT * FROM problem WHERE id = ?', [id]);
-    console.log(q);
     const problem = { ...q[0] };
     const response = responses[id];
     const { score, responseData } = scoreProblemResponse(problem, response);
-    console.log(score, response, scoreProblemResponse(problem, response));
     if (!score) {
       incorrectProblems.push({ id, responseData });
     }
