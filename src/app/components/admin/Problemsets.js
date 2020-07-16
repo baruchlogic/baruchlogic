@@ -11,6 +11,7 @@ const Problemsets = () => {
   const instructorSections = useInstructorSections();
   const [currentSection, setCurrentSection] = useState({});
   const [problemsets, setProblemsets] = useState([]);
+  const [allProblemsets, setAllProblemsets] = useState([]);
   const [dates, setDates] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -30,9 +31,16 @@ const Problemsets = () => {
       )
     );
   };
+  const fetchAllProblemSets = async () => {
+    const problemsets = await fetch(`${API_BASE_URL}/api/problemsets`).then(res => res.json());
+    setAllProblemsets(problemsets);
+  }
   useEffect(() => {
     fetchProblemSets();
   }, [currentSection]);
+  useEffect(() => {
+    fetchAllProblemSets();
+  }, []);
 
   useEffect(() => {
     if (instructorSections.length && !currentSection.id) {
@@ -78,6 +86,7 @@ const Problemsets = () => {
   };
 
   return (
+    <>
     <StyledCard elevation={Elevation.THREE}>
       <h1>Problemsets</h1>
       <section>
@@ -135,6 +144,22 @@ const Problemsets = () => {
           </Button>
       </div>
     </StyledCard>
+    <StyledCard>
+      <h2>Remove a Problemset:</h2>
+      <div style={{ display: "flex ", justifyContent: "center"}}>
+        <div>Problemset:</div>
+        <select>
+          {allProblemsets.map(
+            problemset => (
+              <option value={problemset.default_order}>
+                problemset #{problemset.default_order}
+              </option>
+            )
+          )}
+        </select>
+      </div>
+    </StyledCard>
+    </>
   );
 };
 
