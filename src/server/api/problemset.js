@@ -1,5 +1,6 @@
 const moment = require('moment');
 const {
+  addProblemsetScore,
   getAllProblemsets,
   getBestResponses,
   getProblemsByProblemsetId,
@@ -7,8 +8,10 @@ const {
   getScore,
   saveBestScore,
   saveBestResponses,
+  scoreExists,
   saveResponses,
-  scoreResponses
+  scoreResponses,
+  updateProblemsetScore
 } = require('../db/data-access-layer/problemset');
 
 const {
@@ -87,6 +90,22 @@ const configProblemsetRoutes = app => {
       const bestResponses = await getBestResponses(problemsetId, studentId);
       res.setHeader('Content-Type', 'application/json');
       res.send({ responses: bestResponses });
+    }
+  });
+
+  app.post('/api/problemsets/:id/score', async (req, res) => {
+    console.log('/api/problemsets/:id/score');
+    const { id: problemsetId } = req.params;
+    const { id: studentId } = req.user;
+    console.log("ReQ", req.body.score);
+    const score = req.body.score;
+    const scoreExistsVar = await scoreExists(studentId, problemsetId);
+    if (scoreExistsVar) {
+      console.log("YO")
+      await updateProblemsetScore(studentId, problemsetId, score);
+    } else {
+      console.log("HO", studentId, problemsetId, score)
+      await addProblemsetScore(studentId, problemsetId, score);
     }
   });
 };

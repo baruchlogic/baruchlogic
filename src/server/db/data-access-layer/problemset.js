@@ -71,7 +71,6 @@ const saveBestScore = async (studentId, problemsetId, score) => {
     [studentId, problemsetId]
   );
   if (q && q.length) {
-    console.log(1);
     await query(
       `UPDATE problemset_score
       SET score = ?
@@ -81,7 +80,6 @@ const saveBestScore = async (studentId, problemsetId, score) => {
       [score, problemsetId, studentId, score]
     );
   } else {
-    console.log(2);
     await query(
       `INSERT INTO problemset_score
       (logic_user_id, problemset_id, score)
@@ -275,7 +273,25 @@ const getScore = async (problemsetId, studentId) => {
   return q && q[0] && q[0].score;
 };
 
+const scoreExists = async (studentId, problemsetId) => {
+  const q = await query(
+    `SELECT score FROM problemset_score
+    WHERE logic_user_id = ? AND problemset_id = ?`,
+    [studentId, problemsetId]
+  );
+  return q.rows && q.rows.length;
+};
+
+const updateProblemsetScore = async (studentId, problemsetId, score) => {
+  await query("UPDATE problemset_score set score = ? where logic_user_id = ? AND problemset_id = ?", [score, studentId, problemsetId]);
+};
+
+const addProblemsetScore = async (studentId, problemsetId, score) => {
+  await query("INSERT INTO problemset_score (logic_user_id, problemset_id, score) VALUES (?, ?, ?)", [studentId, problemsetId, score]);
+};
+
 module.exports = {
+  addProblemsetScore,
   getBestResponses,
   getAllProblemsets,
   getProblemsByProblemsetId,
@@ -284,5 +300,7 @@ module.exports = {
   saveBestScore,
   saveBestResponses,
   saveResponses,
-  scoreResponses
+  scoreExists,
+  scoreResponses,
+  updateProblemsetScore
 };

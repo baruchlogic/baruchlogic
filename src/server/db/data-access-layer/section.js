@@ -274,13 +274,16 @@ const getUserGradesByUserKey = async key => {
  * @return {object}  Map from user ID's to their grades.
  */
 const getSectionGrades = async sectionId => {
+  console.log("getSectionGrades")
   const result = {};
   const users = await getStudentsInSection(sectionId);
+  console.log("users", users);
   const grades = users.map(async user => {
     const grades = await getUserGradesByUserKey(user.course_key);
     result[user.course_key] = grades;
   });
   await Promise.all(grades);
+  console.log("RESULT", result);
   return result;
 };
 
