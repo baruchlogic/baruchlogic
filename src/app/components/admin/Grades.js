@@ -49,7 +49,7 @@ const Grades = () => {
     const grades = await fetch(
       `${API_BASE_URL}/api/sections/${currentSectionId}/grades`
     ).then(res => res.json());
-    console.log("GRADEs", grades);
+    console.log('GRADEs', grades);
     setCurrentGrades(grades);
   };
 
@@ -121,17 +121,13 @@ const Grades = () => {
   };
 
   const setUpdateScoreVal = async (e, id) => {
-    console.log("setUpdateScoreVal", e.target.value, id);
-    await authFetch(
-      `${API_BASE_URL}/api/problemsets/${id}/score`,
-      'POST',
-      {
-        body: JSON.stringify({score: e.target.value})
-      }
-    );
+    console.log('setUpdateScoreVal', e.target.value, id);
+    await authFetch(`${API_BASE_URL}/api/problemsets/${id}/score`, 'POST', {
+      body: JSON.stringify({ score: e.target.value })
+    });
   };
 
-  console.log('currentGrades', currentGrades)
+  console.log('currentGrades', currentGrades);
 
   return (
     <div>
@@ -169,7 +165,10 @@ const Grades = () => {
                   <pre>{studentNames[userId] || userId}</pre>
                 </StyledTd>
                 {currentProblemsets.map((problemset, col) => {
-                  if (row === cellIsBeingEdited[0] && col === cellIsBeingEdited[1]) {
+                  if (
+                    row === cellIsBeingEdited[0] &&
+                    col === cellIsBeingEdited[1]
+                  ) {
                     return (
                       <StyledTd key={problemset.id}>
                         <StyledInput
@@ -177,17 +176,21 @@ const Grades = () => {
                           name="grade"
                           value={currentGrades[userId][problemset.id] || 0}
                           onChange={e => {
-                            currentGrades[userId][problemset.id] = e.target.value
+                            currentGrades[userId][problemset.id] =
+                              e.target.value;
                           }}
                           onBlur={e => {
                             setUpdateScoreVal(e, problemset.id);
                           }}
                         />
                       </StyledTd>
-                    )
+                    );
                   }
                   return (
-                    <StyledTd key={problemset.id} onDoubleClick={() => setCellIsBeingEdited([row, col])} >
+                    <StyledTd
+                      key={problemset.id}
+                      onDoubleClick={() => setCellIsBeingEdited([row, col])}
+                    >
                       {currentGrades[userId][problemset.id] || 0}
                     </StyledTd>
                   );
