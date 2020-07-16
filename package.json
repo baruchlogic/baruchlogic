@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "build": "webpack --mode production",
-    "lint": "eslint --fix src/ --ext .js,.jsx",
+    "lint": "eslint --fix --ext .js,.jsx src/",
     "start:frontend": "webpack-dev-server --mode development",
     "start:server": "node ./src/server/index.js",
     "start": "npm run start:server && npm run start:frontend"
