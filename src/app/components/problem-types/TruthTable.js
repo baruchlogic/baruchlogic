@@ -19,18 +19,16 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
 
   // Create initial response matrix
   const columns = Formula.generateTruthTableHeaders(problem.prompt);
-  // console.log('COLUMNS', columns);
-  console.log('hiii', problem.prompt, Formula
-    .generateTruthTable(problem.prompt, true));
-  const initialValue = Formula
-    .generateTruthTable(problem.prompt, true)
-    .map(row => row.map(el => (el === true ? 'T' : el === false ? 'F' : '')));
   const atomicVariables = Formula.getAtomicVariables(problem.prompt);
   const nRows = Math.pow(2, atomicVariables.length);
   useEffect(() => {
-    // console.log('SET', problem.id);
-    setProblemResponse(problem.id, initialValue);
-  }, []);
+    const initialValue = Formula
+      .generateTruthTable(problem.prompt, true)
+      .map(row => row.map(el => (el === true ? 'T' : el === false ? 'F' : '')));
+    if (Object.values(value || {}).length === 0) {
+      setProblemResponse(problem.id, initialValue);
+    }
+  }, [value]);
 
   // console.log('isUserAuth, problem, setProblemResponse, value', isUserAuth, problem, setProblemResponse, value);
 
