@@ -52,13 +52,13 @@ const Problemsets = () => {
     }
   }, [instructorSections, currentSection.id]);
   useEffect(() => {
-    setMissingProblemsets(allProblemsets.filter(
-      pset => !problemsets.find(p => p.id === pset.id)
-    ))
+    setMissingProblemsets(
+      allProblemsets.filter(pset => !problemsets.find(p => p.id === pset.id))
+    );
     if (problemsets.length) {
-      setRemoveProblemsetId(problemsets[0].id)
+      setRemoveProblemsetId(problemsets[0].id);
     }
-  }, [problemsets, allProblemsets])
+  }, [problemsets, allProblemsets]);
 
   const handleDateChange = (value, problemsetId) => {
     setDates({ ...dates, [problemsetId]: value });
@@ -73,7 +73,9 @@ const Problemsets = () => {
 
   const removeProblemset = async () => {
     await authFetch(
-      `${API_BASE_URL}/api/sections/${currentSection.id}/problemsets/${removeProblemsetId}`,
+      `${API_BASE_URL}/api/sections/${
+        currentSection.id
+      }/problemsets/${removeProblemsetId}`,
       'DELETE'
     );
     fetchProblemSets();
@@ -85,7 +87,9 @@ const Problemsets = () => {
 
   const addProblemset = async () => {
     await authFetch(
-      `${API_BASE_URL}/api/sections/${currentSection.id}/problemsets/${addProblemsetId}`,
+      `${API_BASE_URL}/api/sections/${
+        currentSection.id
+      }/problemsets/${addProblemsetId}`,
       'POST'
     );
     fetchProblemSets();
@@ -105,7 +109,9 @@ const Problemsets = () => {
         ) {
           console.log('diff');
           await authFetch(
-            `${API_BASE_URL}/api/sections/${currentSection.id}/problemsets/due-dates/${problemset.id}`,
+            `${API_BASE_URL}/api/sections/${
+              currentSection.id
+            }/problemsets/due-dates/${problemset.id}`,
             'POST',
             {
               body: JSON.stringify({
@@ -123,94 +129,87 @@ const Problemsets = () => {
 
   return (
     <>
-    <StyledCard elevation={Elevation.THREE}>
-      <h1>Problemsets</h1>
-      <section>
-        <h2>Pick a section:</h2>
-        <select onChange={handleSectionChange} onBlur={handleSectionChange}>
-          {instructorSections.map(section => (
-            <option value={section.section_number} key={section.id}>
-              {section.section_number}
-            </option>
-          ))}
-        </select>
-      </section>
-      <div>
-        <div style={{ display: 'flex' }}>
-          <div key="1">Problemsets</div>
-          <div key="2">Due Dates</div>
-          <div key="3">Change due date:</div>
-        </div>
-        {problemsets
-          .sort((a, b) =>
-            a.default_order < b.default_order
-              ? -1
-              : a.default_order > b.default_order
-              ? 1
-              : 0
-          )
-          .map((problemset, index) => (
-            <div
-              style={{ display: 'flex', justifyContent: 'space-between' }}
-              key={problemset.id}
-            >
-              <div key={problemset.id + 'order'}>
-                <span>Problemset #{problemset.default_order}</span>
+      <StyledCard elevation={Elevation.THREE}>
+        <h1>Problemsets</h1>
+        <section>
+          <h2>Pick a section:</h2>
+          <select onBlur={handleSectionChange}>
+            {instructorSections.map(section => (
+              <option value={section.section_number} key={section.id}>
+                {section.section_number}
+              </option>
+            ))}
+          </select>
+        </section>
+        <div>
+          <div style={{ display: 'flex' }}>
+            <div key="1">Problemsets</div>
+            <div key="2">Due Dates</div>
+            <div key="3">Change due date:</div>
+          </div>
+          {problemsets
+            .sort((a, b) =>
+              a.default_order < b.default_order
+                ? -1
+                : a.default_order > b.default_order
+                ? 1
+                : 0
+            )
+            .map((problemset, index) => (
+              <div
+                style={{ display: 'flex', justifyContent: 'space-between' }}
+                key={problemset.id}
+              >
+                <div key={problemset.id + 'order'}>
+                  <span>Problemset #{problemset.default_order}</span>
+                </div>
+                <div key={problemset.id + 'date'}>
+                  <span>
+                    {problemset.due_date
+                      ? moment(problemset.due_date).format(MOMENT_FORMAT)
+                      : 'N/A'}
+                  </span>
+                </div>
+                <div>
+                  <DateTimePicker
+                    onChange={val => handleDateChange(val, problemset.id)}
+                    value={dates[problemset.id]}
+                  />
+                </div>
               </div>
-              <div key={problemset.id + 'date'}>
-                <span>
-                  {problemset.due_date
-                    ? moment(problemset.due_date).format(MOMENT_FORMAT)
-                    : 'N/A'}
-                </span>
-              </div>
-              <div>
-                <DateTimePicker
-                  onChange={val => handleDateChange(val, problemset.id)}
-                  value={dates[problemset.id]}
-                />
-              </div>
-            </div>
-          ))}
-          <Button
-            intent={Intent.WARNING}
-            onClick={onSubmit}
-          >
+            ))}
+          <Button intent={Intent.WARNING} onClick={onSubmit}>
             {loading ? 'LOADING' : 'SUBMIT CHANGES'}
           </Button>
-      </div>
-    </StyledCard>
-    <StyledCard>
-      <h2>Remove a Problemset:</h2>
-      <div style={{ display: "flex ", justifyContent: "center"}}>
-        <div>Problemset:</div>
-        <select onChange={onRemoveSelectChange} value={removeProblemsetId}>
-          {problemsets.map(
-            problemset => (
-              <option value={problemset.id}>
+        </div>
+      </StyledCard>
+      <StyledCard>
+        <h2>Remove a Problemset:</h2>
+        <div style={{ display: 'flex ', justifyContent: 'center' }}>
+          <div>Problemset:</div>
+          <select onBlur={onRemoveSelectChange} value={removeProblemsetId}>
+            {problemsets.map(problemset => (
+              <option key={problemset.id} value={problemset.id}>
                 problemset #{problemset.default_order}
               </option>
-            )
-          )}
-        </select>
-        <button onClick={removeProblemset}>REMOVE</button>
-      </div>
-      <br />
-      <h2>Add a Problemset:</h2>
-      <div style={{ display: "flex ", justifyContent: "center"}}>
-        <div>Problemset:</div>
-        <select onChange={onAddSelectChange} value={addProblemsetId}>
-          {missingProblemsets.map(
-            problemset => (
-              <option value={problemset.id}>
+            ))}
+          </select>
+          <button onClick={removeProblemset}>REMOVE</button>
+        </div>
+        <br />
+        <h2>Add a Problemset:</h2>
+        <div style={{ display: 'flex ', justifyContent: 'center' }}>
+          <div>Problemset:</div>
+          <select onBlur={onAddSelectChange} value={addProblemsetId}>
+            {missingProblemsets.map(problemset => (
+              <option key={problemset.id} value={problemset.id}>
                 problemset #{problemset.default_order}
               </option>
-            )
-          )}
-        </select>
-        <button onClick={addProblemset}>ADD</button>
-      </div>
-    </StyledCard>
+            ))}
+          </select>
+          <button onClick={addProblemset}>ADD</button>
+        </div>
+      </StyledCard>
     </>
   );
 };
