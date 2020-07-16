@@ -19,23 +19,17 @@ const {
 const configProblemsetRoutes = app => {
   // Returns all problemsets.
   app.get('/api/problemsets', async (req, res) => {
-    console.log('configProblemsetRoutes')
     const problemsets = await getAllProblemsets();
-    console.log(problemsets);
     res.status(200).send(problemsets);
   });
 
   // Returns problemset with a given ID.
   app.get('/api/problemsets/:id', async (req, res) => {
-    console.log('HERE');
     const problemset = await getProblemSetById(Number(req.params.id));
-    console.log(problemset);
 
     const { section_id: sectionId } = req.user || {};
 
-    console.log('USER SECTION', sectionId);
     const dueDate = await getDueDate(problemset.id, sectionId);
-    console.log('DUE DATE &&&&&', dueDate);
 
     const problemsetResponse = { ...problemset, due_date: dueDate };
 
@@ -51,26 +45,16 @@ const configProblemsetRoutes = app => {
   // Submits a user's responses to a problemset.
   // Returns the incorrect problems and the score.
   app.post('/api/problemsets/:id', async (req, res) => {
-    console.log('PROBLEMSETS POST', req.body);
-    // console.log('USER', req.user);
     // const json = await req.json();
-    // console.log('JSON', json);
     const { id: problemsetId } = req.params;
     const { id: studentId } = req.user;
     const sectionId = await getUserSection(studentId);
-    console.log('studentId', studentId);
-    console.log('problemsetId', problemsetId);
-    console.log('req.body', req.body);
     const { incorrectProblems, score } = await scoreResponses(
       req.body,
       problemsetId
     );
-    console.log('SCORE', score);
-    console.log('INCORRECT PROBLEMS', incorrectProblems);
-    console.log('USER', req.user);
 
     const dueDate = await getDueDate(problemsetId, sectionId);
-    console.log('DUE DATE &&&&&', dueDate);
 
     await saveResponses(studentId, problemsetId, req.body);
 
@@ -78,7 +62,6 @@ const configProblemsetRoutes = app => {
 
     if (!isPastDueDate) {
       // Only save the best score if it's not after the due date
-      console.log('save the best score@@@@!!!!');
       await saveBestResponses(studentId, problemsetId, req.body);
       await saveBestScore(studentId, problemsetId, score);
     }
@@ -102,7 +85,6 @@ const configProblemsetRoutes = app => {
       const { id: studentId } = req.user;
       const { problemsetId } = req.params;
       const bestResponses = await getBestResponses(problemsetId, studentId);
-      console.log('GOT THE RESPONSES', bestResponses);
       res.setHeader('Content-Type', 'application/json');
       res.send({ responses: bestResponses });
     }

@@ -4,7 +4,6 @@ const { addStudentsToSectionById } = require('../db/data-access-layer/section');
 const configUserRoutes = app => {
   // Add a user to a section.
   app.post('/api/users', async (req, res) => {
-    console.log('/api/users');
     const { sectionId } = req.body;
     const newKey = await createNewUser();
     await addStudentsToSectionById(sectionId, [newKey]);
