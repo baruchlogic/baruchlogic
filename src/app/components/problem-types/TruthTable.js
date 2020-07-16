@@ -30,8 +30,6 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
     }
   }, [value]);
 
-  // console.log('isUserAuth, problem, setProblemResponse, value', isUserAuth, problem, setProblemResponse, value);
-
   // Set a value in the response matrix
   const setCellValueCopy = (matrix, i, j, value) => {
     const copy = matrix.map(row => [...row]);
@@ -41,7 +39,6 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
 
   // Functions used for keyboard navigation
   const getNextIndex = (j, k) => {
-    // console.log('j', j, 'k', k, 'nRows', nRows);
     if (j < nRows - 1) {
       return `${k * 1000 + j + 2}-${problem.id}`;
     } else {
@@ -49,7 +46,6 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
     }
   };
   const getPrevIndex = (j, k) => {
-    // console.log('j', j, 'k', k, 'nRows', nRows);
     if (j === 0) {
       return `${(k - 1) * 1000 + nRows}-${problem.id}`;
     } else {
@@ -66,24 +62,18 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
   // Functions used to move focus around
   const focusNextElement = (j, k) => {
     const focusedElement = document.querySelector('input:focus');
-    // console.log('FE', focusedElement);
     const nextTabindex = getNextIndex(j, k);
-    // console.log('nextTabindex', nextTabindex);
     const nextFocusedElement = document.querySelector(
       `input[tabindex="${nextTabindex}"]`
     );
-    // console.log('nextFocusedElement', nextFocusedElement);
     if (nextFocusedElement) nextFocusedElement.focus();
   };
   const focusPrevElement = (j, k) => {
     const focusedElement = document.querySelector('input:focus');
-    // console.log('FE', focusedElement);
     const prevTabIndex = getPrevIndex(j, k);
-    // console.log('prevTabIndex', prevTabIndex);
     const prevFocusedElement = document.querySelector(
       `input[tabindex="${prevTabIndex}"]`
     );
-    // console.log('prevFocusedElement', prevFocusedElement);
     if (prevFocusedElement) prevFocusedElement.focus();
   };
   const focusLeftElement = (j, k) => {
@@ -103,7 +93,6 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
 
   const handleKeyDown = (e, j, k) => {
     const { key } = e;
-    // console.log('key', key);
     switch (key) {
       case 't':
       case 'T':
@@ -115,7 +104,6 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
         break;
       }
       case 'Backspace':
-        // console.log('backspace');
         if (value[j][k]) {
           const newValue = setCellValueCopy(value, j, k, '');
           setProblemResponse(problem.id, newValue);
