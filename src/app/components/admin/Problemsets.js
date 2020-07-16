@@ -73,9 +73,8 @@ const Problemsets = () => {
 
   const removeProblemset = async () => {
     await authFetch(
-      `${API_BASE_URL}/api/sections/${
-        currentSection.id
-      }/problemsets/${removeProblemsetId}`,
+      `${API_BASE_URL}/api/sections/
+      ${currentSection.id}/problemsets/${removeProblemsetId}`,
       'DELETE'
     );
     fetchProblemSets();
@@ -87,9 +86,8 @@ const Problemsets = () => {
 
   const addProblemset = async () => {
     await authFetch(
-      `${API_BASE_URL}/api/sections/${
-        currentSection.id
-      }/problemsets/${addProblemsetId}`,
+      `${API_BASE_URL}/api/sections/
+      ${currentSection.id}/problemsets/${addProblemsetId}`,
       'POST'
     );
     fetchProblemSets();
@@ -109,9 +107,10 @@ const Problemsets = () => {
         ) {
           console.log('diff');
           await authFetch(
-            `${API_BASE_URL}/api/sections/${
-              currentSection.id
-            }/problemsets/due-dates/${problemset.id}`,
+            `${API_BASE_URL}/api/
+            sections/${currentSection.id}/
+            problemsets/due-dates/
+            ${problemset.id}`,
             'POST',
             {
               body: JSON.stringify({
