@@ -62,7 +62,10 @@ const NaturalDeduction = ({ problem, setProblemResponse, value = {} }) => {
 
   const deleteLine = index => {
     setProblemResponse(problem.id, {
-      linesOfProof: value.linesOfProof.slice().splice(index, 1)
+      linesOfProof: [
+        ...value.linesOfProof.slice(0, index),
+        ...value.linesOfProof.slice(index + 1)
+      ]
     });
   };
 
