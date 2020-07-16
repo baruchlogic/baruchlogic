@@ -39,7 +39,6 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
     const result = await fetch(
       `${API_BASE_URL}/api/problemsets/${problemsetId}/problems`
     ).then(res => res.json());
-    // console.log('RESULT', result);
     setProblems(result);
   };
 
@@ -73,12 +72,7 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
     onReset();
   }, [problemsetId]);
 
-  // useEffect(() => {
-  //   // console.log('problemsetResponses', problemsetResponses);
-  // }, [problemsetResponses]);
-
   const setProblemResponse = (problemId, response) => {
-    // console.log('setProblemResponse', problemsetResponses, problemId, response);
     setProblemsetResponses(problemsetResponses => ({
       ...problemsetResponses,
       [problemId]: response
@@ -86,7 +80,6 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
   };
 
   const onSubmit = async () => {
-    // console.log(JSON.stringify(problemsetResponses));
     const response = await authFetch(
       `${API_BASE_URL}/api/problemsets/${problemsetId}`,
       'POST',
@@ -96,7 +89,6 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
       incorrectProblems: incorrectProblemsResponse,
       score
     } = await response.json();
-    // console.log('incorrectProblemsResponse', incorrectProblemsResponse);
     setCurrentScore(score);
     setIncorrectProblems(
       incorrectProblemsResponse.reduce(
@@ -118,25 +110,17 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
   const dueDateMoment =
     problemset && problemset.due_date ? moment(problemset.due_date) : null;
 
-  // console.log('dueDateMoment', dueDateMoment);
-
   const styledDueDate =
     dueDateMoment && dueDateMoment.format('MMMM Do YYYY, h:mm');
 
-  // console.log('styledDueDate', styledDueDate, moment());
-
   const isPastDueDate = dueDateMoment && dueDateMoment.isBefore(moment());
-
-  console.log("problemsetResponses", problemsetResponses);
 
   return (
     <StyledContainer>
       {problemset && <h1>{`Problemset #${problemset.default_order}`}</h1>}
       {styledDueDate && <h2>{`Due date: ${styledDueDate}`}</h2>}
       {isPastDueDate && <h2>NOTE: Due date has passed</h2>}
-      {!isUserAuth && (
-        <h2>Please log in to interact with the problemsets.</h2>
-      )}
+      {!isUserAuth && <h2>Please log in to interact with the problemsets.</h2>}
       {problems.map(problem => (
         <Problem
           key={problem.id}
@@ -158,12 +142,22 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
               not be recorded.
             </div>
           )}
-          <StyledButton intent="success" large onClick={onSubmit} disabled={!isUserAuth}>
+          <StyledButton
+            intent="success"
+            large
+            onClick={onSubmit}
+            disabled={!isUserAuth}
+          >
             SUBMIT
           </StyledButton>
         </div>
         <div>
-          <StyledResetButton intent="success" large onClick={onReset} disabled={!isUserAuth}>
+          <StyledResetButton
+            intent="success"
+            large
+            onClick={onReset}
+            disabled={!isUserAuth}
+          >
             RESET RESPONSES
           </StyledResetButton>
         </div>
@@ -171,8 +165,8 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
           <StyledResetButton
             intent="success"
             large
-            onClick={onRestoreBestResponses}
             disabled={!isUserAuth}
+            onClick={onRestoreBestResponses}
           >
             RESTORE BEST RESPONSES
           </StyledResetButton>
