@@ -134,7 +134,10 @@ const Grades = () => {
   };
 
   const updateTempVal = e => {
-    const val = e.target.value;
+    const val = Number(e.target.value);
+    if (!Number.isInteger(val) || val < 0 || val > 100) {
+      return;
+    }
     setTempVal(val);
   };
 
