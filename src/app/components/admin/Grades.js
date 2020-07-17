@@ -120,14 +120,20 @@ const Grades = () => {
     }
   };
 
-  const setUpdateScoreVal = async (e, id) => {
-    console.log('setUpdateScoreVal', e.target.value, id);
-    await authFetch(`${API_BASE_URL}/api/problemsets/${id}/score`, 'POST', {
-      body: JSON.stringify({ score: e.target.value })
-    });
+  const setUpdatedScoreVal = async (userId, problemsetId, score) => {
+    console.log('setUpdatedScoreVal', userId, problemsetId, score);
+    await authFetch(
+      `${API_BASE_URL}/api/sections/
+      ${currentSectionId}/grades/${problemsetId}/${userId}`,
+      'POST',
+      {
+        body: JSON.stringify({ score })
+      }
+    );
   };
 
   console.log('currentGrades', currentGrades);
+  console.log('cellIsBeingEdited', cellIsBeingEdited);
 
   return (
     <div>
@@ -164,37 +170,28 @@ const Grades = () => {
                 <StyledTd>
                   <pre>{studentNames[userId] || userId}</pre>
                 </StyledTd>
-                {currentProblemsets.map((problemset, col) => {
-                  if (
-                    row === cellIsBeingEdited[0] &&
-                    col === cellIsBeingEdited[1]
-                  ) {
-                    return (
-                      <StyledTd key={problemset.id}>
-                        <StyledInput
-                          type="number"
-                          name="grade"
-                          value={currentGrades[userId][problemset.id] || 0}
-                          onChange={e => {
-                            currentGrades[userId][problemset.id] =
-                              e.target.value;
-                          }}
-                          onBlur={e => {
-                            setUpdateScoreVal(e, problemset.id);
-                          }}
-                        />
-                      </StyledTd>
-                    );
-                  }
-                  return (
-                    <StyledTd
-                      key={problemset.id}
-                      onDoubleClick={() => setCellIsBeingEdited([row, col])}
-                    >
-                      {currentGrades[userId][problemset.id] || 0}
-                    </StyledTd>
-                  );
-                })}
+                {currentProblemsets.map((problemset, col) => (
+                  <td
+                    key={problemset.id}
+                    onDoubleClick={() => setCellIsBeingEdited([row, col])}
+                  >
+                    <StyledInput
+                      defaultValue={currentGrades[userId][problemset.id] || 0}
+                      disabled={
+                        row !== cellIsBeingEdited[0] ||
+                        col !== cellIsBeingEdited[1]
+                      }
+                      onBlur={e => {
+                        setCellIsBeingEdited([]);
+                        setUpdatedScoreVal(
+                          userId,
+                          problemset.id,
+                          e.target.value
+                        );
+                      }}
+                    />
+                  </td>
+                ))}
               </tr>
             ))}
           </tbody>

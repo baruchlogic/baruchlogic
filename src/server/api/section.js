@@ -1,13 +1,16 @@
 const {
   addProblemsetToSection,
+  addStudentGrade,
   getInstructorSections,
   getSectionGrades,
   // getSectionProblemsetIds,
   getSectionProblemsets,
   getStudentsInSection,
+  getUserIdFromKey,
   removeUserFromSection,
   updateProblemsetDueDate,
-  deleteProblemsetFromSection
+  deleteProblemsetFromSection,
+  updateStudentGrade
 } = require('../db/data-access-layer/section');
 
 const configSectionRoutes = app => {
@@ -36,8 +39,37 @@ const configSectionRoutes = app => {
   app.get('/api/sections/:sectionId/grades', async (req, res) => {
     const { sectionId } = req.params;
     const grades = await getSectionGrades(Number(sectionId));
+    console.log("GRADES", grades);
     res.send(grades);
   });
+
+  // Set student's grade for a problemset.
+  app.post(
+    '/api/sections/:sectionId/grades/:problemsetId/:studentId',
+    async (req, res) => {
+      console.log('HERE!!!');
+      const {
+        params: { problemsetId, sectionId, studentId },
+        body: { score }
+      } = req;
+      console.log(problemsetId, sectionId, studentId, score);
+      // const { problemsetId, sectionId } = req.params;
+      // const { id: studentId } = req.user;
+      // const { body: score } = request;
+      const grades = await getSectionGrades(Number(sectionId));
+      console.log('GRADES', grades, score);
+      const studentHasGradeForProblemset =
+        grades[studentId][problemsetId] !== undefined;
+      console.log('studentHasGradeForProblemset', studentHasGradeForProblemset);
+      const id = await getUserIdFromKey(studentId);
+      if (studentHasGradeForProblemset) {
+        await updateStudentGrade(id, problemsetId, score);
+      } else {
+        await addStudentGrade(id, problemsetId, score);
+      }
+      res.sendStatus(200);
+    }
+  );
 
   // Get the problemsets for a section.
   app.get('/api/sections/:sectionId/problemsets', async (req, res) => {

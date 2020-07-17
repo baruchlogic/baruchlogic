@@ -283,8 +283,29 @@ const getSectionGrades = async sectionId => {
     result[user.course_key] = grades;
   });
   await Promise.all(grades);
-  console.log("RESULT", result);
   return result;
+};
+
+const updateStudentGrade = async (studentId, problemsetId, score) => {
+  console.log("updateStudentGrade", updateStudentGrade, studentId, problemsetId, score);
+  await query(
+    `UPDATE problemset_score SET score = ?
+    WHERE logic_user_id = ? AND problemset_id = ?;
+    `,
+    [Number(score), studentId, problemsetId]
+  );
+  return;
+};
+
+const addStudentGrade = async (studentId, problemsetId, score) => {
+  console.log("addStudentGrade", updateStudentGrade, studentId, problemsetId, score);
+  await query(
+    `INSERT INTO problemset_score (logic_user_id, problemset_id, score)
+    VALUES (?, ?, ?);
+    `,
+    [studentId, problemsetId, score]
+  );
+  return;
 };
 
 const getSectionProblemsetIds = async sectionId => {
@@ -360,6 +381,7 @@ const addProblemsetToSection = async (psId, sectionId) => {
 
 module.exports = {
   addProblemsetToSection,
+  addStudentGrade,
   addStudents,
   addStudentsToSection,
   addStudentsToSectionById,
@@ -372,8 +394,10 @@ module.exports = {
   getSectionProblemsetIds,
   getSectionProblemsets,
   getStudentsInSection,
+  getUserIdFromKey,
   getUserSection,
   getUserGrades,
   removeUserFromSection,
-  updateProblemsetDueDate
+  updateProblemsetDueDate,
+  updateStudentGrade
 };
