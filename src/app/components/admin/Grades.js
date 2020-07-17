@@ -32,6 +32,7 @@ const Grades = () => {
   const [currentProblemsets, setCurrentProblemsets] = useState([]);
   const [studentNames, setStudentNames] = useState({});
   const [cellIsBeingEdited, setCellIsBeingEdited] = useState([]);
+  const [tempVal, setTempVal] = useState();
 
   let localStorageNames = {};
   try {
@@ -132,8 +133,14 @@ const Grades = () => {
     );
   };
 
+  const updateTempVal = e => {
+    const val = e.target.value;
+    setTempVal(val);
+  };
+
   console.log('currentGrades', currentGrades);
   console.log('cellIsBeingEdited', cellIsBeingEdited);
+  console.log('tempVal', tempVal);
 
   return (
     <div>
@@ -170,28 +177,44 @@ const Grades = () => {
                 <StyledTd>
                   <pre>{studentNames[userId] || userId}</pre>
                 </StyledTd>
-                {currentProblemsets.map((problemset, col) => (
-                  <td
-                    key={problemset.id}
-                    onDoubleClick={() => setCellIsBeingEdited([row, col])}
-                  >
-                    <StyledInput
-                      defaultValue={currentGrades[userId][problemset.id] || 0}
-                      disabled={
-                        row !== cellIsBeingEdited[0] ||
-                        col !== cellIsBeingEdited[1]
-                      }
-                      onBlur={e => {
-                        setCellIsBeingEdited([]);
-                        setUpdatedScoreVal(
-                          userId,
-                          problemset.id,
-                          e.target.value
-                        );
+                {currentProblemsets.map((problemset, col) => {
+                  const isEditing =
+                    row === cellIsBeingEdited[0] &&
+                    col === cellIsBeingEdited[1];
+                  if (isEditing) {
+                    console.log('isEditing', row, col);
+                  }
+                  return (
+                    <td
+                      key={problemset.id}
+                      onDoubleClick={() => {
+                        setTempVal(currentGrades[userId][problemset.id] || 0);
+                        setCellIsBeingEdited([row, col]);
                       }}
-                    />
-                  </td>
-                ))}
+                    >
+                      <StyledInput
+                        defaultValue={currentGrades[userId][problemset.id] || 0}
+                        value={
+                          isEditing
+                            ? tempVal
+                            : currentGrades[userId][problemset.id] || 0
+                        }
+                        onChange={updateTempVal}
+                        readOnly={!isEditing}
+                        onBlur={async e => {
+                          await setUpdatedScoreVal(
+                            userId,
+                            problemset.id,
+                            e.target.value
+                          );
+                          await setCurrentSectionGrades();
+                          setCellIsBeingEdited([]);
+                          setTempVal();
+                        }}
+                      />
+                    </td>
+                  );
+                })}
               </tr>
             ))}
           </tbody>
