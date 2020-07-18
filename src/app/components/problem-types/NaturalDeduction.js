@@ -109,6 +109,7 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
     setProblemResponse(problem.id, {
       linesOfProof: value.linesOfProof.concat(newLine)
     });
+    setNewProposition(initialProposition);
   };
 
   return (
