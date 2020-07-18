@@ -14,8 +14,7 @@
   "workspaces": ["src/server", "src/app"],
   "lint-staged": {
     "*.js": [
-      "npm run lint",
-      "git add"
+      "npm run lint"
     ]
   },
   "husky": {
