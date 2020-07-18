@@ -137,7 +137,13 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
         <thead>
           <tr>
             {columns.map((row, i) => (
-              <StyledHeaderTD key={`col-${i}-${problem.id}`} style={{ borderRight: i === columns.length -1 ? 'none' : '2px solid black' }} >
+              <StyledHeaderTD
+                key={`col-${i}-${problem.id}`}
+                style={{
+                  borderRight:
+                    i === columns.length - 1 ? 'none' : '2px solid black'
+                }}
+              >
                 {row}
               </StyledHeaderTD>
             ))}
