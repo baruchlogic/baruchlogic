@@ -94,17 +94,13 @@ const configProblemsetRoutes = app => {
   });
 
   app.post('/api/problemsets/:id/score', async (req, res) => {
-    console.log('/api/problemsets/:id/score');
     const { id: problemsetId } = req.params;
     const { id: studentId } = req.user;
-    console.log("ReQ", req.body.score);
     const score = req.body.score;
     const scoreExistsVar = await scoreExists(studentId, problemsetId);
     if (scoreExistsVar) {
-      console.log("YO")
       await updateProblemsetScore(studentId, problemsetId, score);
     } else {
-      console.log("HO", studentId, problemsetId, score)
       await addProblemsetScore(studentId, problemsetId, score);
     }
   });

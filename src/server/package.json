@@ -7,7 +7,13 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "lint": "eslint --fix './**/*.{js,jsx}'",
     "start": "node ./index.js"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
   },
   "dependencies": {
     "@babel/preset-react": "^7.0.0",

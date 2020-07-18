@@ -39,7 +39,6 @@ const configSectionRoutes = app => {
   app.get('/api/sections/:sectionId/grades', async (req, res) => {
     const { sectionId } = req.params;
     const grades = await getSectionGrades(Number(sectionId));
-    console.log("GRADES", grades);
     res.send(grades);
   });
 
@@ -47,7 +46,6 @@ const configSectionRoutes = app => {
   app.post(
     '/api/sections/:sectionId/grades/:problemsetId/:studentId',
     async (req, res) => {
-      console.log('HERE!!!');
       const {
         params: { problemsetId, sectionId, studentId },
         body: { score }
@@ -57,10 +55,8 @@ const configSectionRoutes = app => {
       // const { id: studentId } = req.user;
       // const { body: score } = request;
       const grades = await getSectionGrades(Number(sectionId));
-      console.log('GRADES', grades, score);
       const studentHasGradeForProblemset =
         grades[studentId][problemsetId] !== undefined;
-      console.log('studentHasGradeForProblemset', studentHasGradeForProblemset);
       const id = await getUserIdFromKey(studentId);
       if (studentHasGradeForProblemset) {
         await updateStudentGrade(id, problemsetId, score);

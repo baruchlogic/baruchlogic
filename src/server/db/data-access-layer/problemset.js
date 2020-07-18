@@ -283,11 +283,19 @@ const scoreExists = async (studentId, problemsetId) => {
 };
 
 const updateProblemsetScore = async (studentId, problemsetId, score) => {
-  await query("UPDATE problemset_score set score = ? where logic_user_id = ? AND problemset_id = ?", [score, studentId, problemsetId]);
+  await query(
+    `UPDATE problemset_score SET score = ?
+    WHERE logic_user_id = ? AND problemset_id = ?`,
+    [score, studentId, problemsetId]
+  );
 };
 
 const addProblemsetScore = async (studentId, problemsetId, score) => {
-  await query("INSERT INTO problemset_score (logic_user_id, problemset_id, score) VALUES (?, ?, ?)", [studentId, problemsetId, score]);
+  await query(
+    `INSERT INTO problemset_score (logic_user_id, problemset_id, score)
+    VALUES (?, ?, ?)`,
+    [studentId, problemsetId, score]
+  );
 };
 
 module.exports = {

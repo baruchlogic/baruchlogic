@@ -274,10 +274,8 @@ const getUserGradesByUserKey = async key => {
  * @return {object}  Map from user ID's to their grades.
  */
 const getSectionGrades = async sectionId => {
-  console.log("getSectionGrades")
   const result = {};
   const users = await getStudentsInSection(sectionId);
-  console.log("users", users);
   const grades = users.map(async user => {
     const grades = await getUserGradesByUserKey(user.course_key);
     result[user.course_key] = grades;
@@ -287,7 +285,6 @@ const getSectionGrades = async sectionId => {
 };
 
 const updateStudentGrade = async (studentId, problemsetId, score) => {
-  console.log("updateStudentGrade", updateStudentGrade, studentId, problemsetId, score);
   await query(
     `UPDATE problemset_score SET score = ?
     WHERE logic_user_id = ? AND problemset_id = ?;
@@ -298,7 +295,6 @@ const updateStudentGrade = async (studentId, problemsetId, score) => {
 };
 
 const addStudentGrade = async (studentId, problemsetId, score) => {
-  console.log("addStudentGrade", updateStudentGrade, studentId, problemsetId, score);
   await query(
     `INSERT INTO problemset_score (logic_user_id, problemset_id, score)
     VALUES (?, ?, ?);
