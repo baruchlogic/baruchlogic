@@ -10,6 +10,7 @@ import Roster from './Roster';
  */
 const RosterContainer = () => {
   const instructorSections = useInstructorSections();
+  console.log('instructorSections', instructorSections);
   const [currentSection, setCurrentSection] = useState({});
   const [inputCourseNumber, setInputCourseNumber] = useState();
   useEffect(() => {
@@ -19,17 +20,11 @@ const RosterContainer = () => {
     }
   }, [instructorSections]);
   useEffect(() => {
-    // console.log('inputCourseNumber', inputCourseNumber);
     const section = instructorSections.find(
       section => section.section_number == inputCourseNumber
     );
     setCurrentSection(section);
   }, [inputCourseNumber]);
-  useEffect(() => {
-    // console.log('currentSection', currentSection);
-    // console.log('instructorSections', instructorSections);
-  });
-  // console.log('currentSection', currentSection);
   return (
     <div>
       <StyledCard elevation={Elevation.THREE}>
@@ -47,9 +42,8 @@ const RosterContainer = () => {
           >
             {instructorSections.map(section => (
               <option
-                key={`${section.section_number}-${section.term}-${
-                  section.year
-                }`}
+                key={`${section.section_number}-
+                ${section.term}-${section.year}`}
                 value={section.section_number}
                 selected={
                   currentSection &&

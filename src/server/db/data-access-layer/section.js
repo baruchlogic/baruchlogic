@@ -10,7 +10,7 @@ const { getAllProblemsets } = require('./problemset');
 const addStudents = async studentKeys => {
   Promise.all(
     studentKeys.map(async studentKey => {
-      query('INSERT INTO logic_user (key, admin) VALUES ($1, false);', [
+      query('INSERT INTO logic_user (course_key, admin) VALUES (?, false);', [
         studentKey
       ]);
     })
@@ -24,11 +24,9 @@ const addStudents = async studentKeys => {
  */
 const addStudentsToSection = async (sectionData, studentKeys) => {
   const sectionId = await getSectionIdFromSectionNumber(sectionData);
-  console.log('HERE', sectionId);
   Promise.all(
     studentKeys.map(async studentKey => {
       const studentId = await getUserIdFromKey(studentKey);
-      console.log('new student ID', studentId);
       addStudentToSection(sectionId, studentId);
     })
   );
@@ -40,7 +38,6 @@ const addStudentsToSection = async (sectionData, studentKeys) => {
  * @param {string[]} studentKeys    Array of student keys
  */
 const addStudentsToSectionById = async (sectionId, studentKeys) => {
-  console.log('addStudentsToSectionById', sectionId);
   Promise.all(
     studentKeys.map(async studentKey => {
       const studentId = await getUserIdFromKey(studentKey);
@@ -59,12 +56,12 @@ const addStudentsToSectionById = async (sectionId, studentKeys) => {
 const checkIfSectionExists = async ({ sectionNumber, term, year }) => {
   const q = await query(
     `SELECT id FROM section
-    WHERE section_number = $1
-    AND term = $2
-    AND year = $3`,
+    WHERE section_number = ?
+    AND term = ?
+    AND year = ?`,
     [sectionNumber, term, year]
   );
-  return q.rows.length > 0;
+  return q.length > 0;
 };
 
 /**
@@ -74,31 +71,27 @@ const checkIfSectionExists = async ({ sectionNumber, term, year }) => {
  */
 const getInstructorSections = async instructorId => {
   try {
-    console.log('getInstructorSections', instructorId);
     const q = await query(
       `SELECT * FROM section
       INNER JOIN instructor_v_section
       ON instructor_v_section.section_id = section.id
-      WHERE instructor_id = $1`,
+      WHERE instructor_v_section.instructor_id = ?`,
       [instructorId]
     );
-    console.log('Q!!!!', q);
-    return q.rows;
+    return q.map(el => ({ ...el }));
   } catch (e) {
     console.log(e);
   }
 };
 
 const getDueDate = async (problemsetId, sectionId) => {
-  console.log('getDueDate', problemsetId, sectionId);
   try {
     const response = await query(
       `SELECT due_date from due_date
-      WHERE problemset_id = $1 AND section_id = $2`,
+      WHERE problemset_id = ? AND section_id = ?`,
       [problemsetId, sectionId]
     );
-    console.log('response', response);
-    return response.rows[0].due_date;
+    return response[0] ? response[0].due_date : null;
   } catch (e) {
     console.log(e);
   }
@@ -106,14 +99,12 @@ const getDueDate = async (problemsetId, sectionId) => {
 
 const getUserSection = async userId => {
   try {
-    console.log('getUserSection', userId);
     const q = await query(
       `SELECT section_id FROM student_roster
-      WHERE student_id = $1`,
+      WHERE student_id = ?`,
       [userId]
     );
-    console.log('Q!!!!', q);
-    return q.rows[0].section_id;
+    return q[0].section_id;
   } catch (e) {
     console.log(e);
   }
@@ -125,15 +116,13 @@ const getUserSection = async userId => {
  * @return {string} The section ID.
  */
 const getSectionIdFromSectionNumber = async ({ sectionNumber, term, year }) => {
-  console.log('getSectionIdFromSectionNumber', sectionNumber, term, year);
   try {
     const q = await query(
       `SELECT id FROM section
-      WHERE section_number = $1 AND term = $2 AND year = $3`,
+      WHERE section_number = ? AND term = ? AND year = ?`,
       [sectionNumber, term, year]
     );
-    console.log('q!!!!', q);
-    const sectionId = q.rows[0].id;
+    const sectionId = q[0].id;
     return sectionId;
   } catch (e) {}
 };
@@ -144,31 +133,28 @@ const getSectionIdFromSectionNumber = async ({ sectionNumber, term, year }) => {
  * @return {string} ID
  */
 const getUserIdFromKey = async key => {
-  console.log('getUserIdFromKey', key);
   try {
     const q = await query(
       `SELECT id FROM logic_user
-      WHERE key = $1`,
+      WHERE course_key = ?`,
       [key]
     );
-    const id = q.rows[0].id;
+    const id = q[0].id;
     return id;
   } catch (e) {}
 };
 
 const getStudentsInSection = async sectionId => {
-  console.log('getStudentsInSection HERE', sectionId, typeof sectionId);
   try {
     const q = await query(
-      `SELECT id, key FROM logic_user
+      `SELECT id, course_key FROM logic_user
       INNER JOIN student_roster
       ON logic_user.id = student_roster.student_id
       WHERE logic_user.admin = false
-      AND student_roster.section_id = $1`,
+      AND student_roster.section_id = ?`,
       [sectionId]
     );
-    console.log('q', q);
-    return q.rows;
+    return q ? q.map(el => ({ ...el })) : [];
   } catch (e) {
     console.log(e);
   }
@@ -181,10 +167,9 @@ const getStudentsInSection = async sectionId => {
  * @return {void}
  */
 const addStudentToSection = async (sectionId, studentId) => {
-  console.log('addStudentToSection', sectionId, studentId);
   const q = await query(
     `INSERT INTO student_roster (section_id, student_id)
-    VALUES ($1, $2)`,
+    VALUES (?, ?)`,
     [sectionId, studentId]
   );
   console.log(q);
@@ -197,36 +182,34 @@ const addStudentToSection = async (sectionId, studentId) => {
  * @return {void}
  */
 const createNewSection = async ({ sectionNumber, term, year }) => {
-  console.log('CREATE NEW SECTION');
   try {
-    const q = await query(
+    await query(
       `INSERT INTO section (section_number, term, year)
-      VALUES ($1, $2, $3) RETURNING id`,
+      VALUES (?, ?, ?)`,
       [sectionNumber, term, year]
     );
-    const newSectionId = q.rows[0].id;
+    const r = await query(
+      `SELECT id FROM section
+      WHERE section_number = ?
+      AND term = ? and year = ?`,
+      [sectionNumber, term, year]
+    );
+    const newSectionId = r[0].id;
     // Assign due dates to the problemsets
+    //
+    // Add all problemsets to the new section.
     const problemsets = await getAllProblemsets();
-    console.log('ADD PROBLEMSETS', newSectionId);
     for (const problemset of problemsets) {
-      console.log(
-        'ADD PROBLEMSET',
-        newSectionId,
-        problemset.id,
-        problemset.default_order
-      );
       await query(
         `INSERT INTO section_problemset
-        VALUES ($1, $2, $3)`,
+        VALUES (?, ?, ?)`,
         [newSectionId, problemset.id, problemset.default_order]
       );
     }
-    console.log('ADD DUE DATES');
     for (const problemset of problemsets) {
-      console.log('DUE DATE:', newSectionId, problemset.id);
       await query(
         `INSERT INTO due_date (section_id, problemset_id, due_date)
-        VALUES ($1, $2, NOW())`,
+        VALUES (?, ?, NOW())`,
         [newSectionId, problemset.id]
       );
     }
@@ -243,10 +226,9 @@ const createNewSection = async ({ sectionNumber, term, year }) => {
  * @return {void}
  */
 const addInstructorToSection = async (instructorId, sectionId) => {
-  console.log('addInstructorToSection', instructorId, sectionId);
   await query(
     `INSERT INTO instructor_v_section (instructor_id, section_id)
-    VALUES ($1, $2)`,
+    VALUES (?, ?)`,
     [instructorId, sectionId]
   );
 };
@@ -258,39 +240,31 @@ const addInstructorToSection = async (instructorId, sectionId) => {
  * @return {void}
  */
 const createNewSectionWithInstructor = async (sectionData, instructorId) => {
-  console.log('createNewSectionWithInstructor', sectionData, instructorId);
   const newSectionId = await createNewSection(sectionData);
   await addInstructorToSection(instructorId, newSectionId);
 };
 
 const getUserGrades = async userId => {
-  console.log('getUserGrades');
   const q = await query(
     `SELECT problemset_id, score FROM problemset_score
-    WHERE student_id = $1`,
+    WHERE logic_user_id = ?`,
     [userId]
   );
-  // console.log("QUERY", q);
-  const grades = q.rows;
-  console.log('grades', grades);
+  const grades = q;
   return grades;
 };
 
 const getUserGradesByUserKey = async key => {
-  console.log('getUserGradesByKey');
   const { id } = await getUserByKey(key);
-  console.log('id', id);
   const q = await query(
     `SELECT problemset_id, score FROM problemset_score
-    WHERE student_id = $1`,
+    WHERE logic_user_id = ?`,
     [id]
   );
-  // console.log('QUERY', q);
-  const grades = q.rows.reduce(
+  const grades = (q || []).reduce(
     (acc, row) => Object.assign(acc, { [row.problemset_id]: row.score }),
     {}
   );
-  console.log('grades', grades);
   return grades;
 };
 
@@ -302,31 +276,49 @@ const getUserGradesByUserKey = async key => {
 const getSectionGrades = async sectionId => {
   const result = {};
   const users = await getStudentsInSection(sectionId);
-  console.log('got users');
   const grades = users.map(async user => {
-    const grades = await getUserGradesByUserKey(user.key);
-    result[user.key] = grades;
+    const grades = await getUserGradesByUserKey(user.course_key);
+    result[user.course_key] = grades;
   });
   await Promise.all(grades);
   return result;
 };
 
+const updateStudentGrade = async (studentId, problemsetId, score) => {
+  await query(
+    `UPDATE problemset_score SET score = ?
+    WHERE logic_user_id = ? AND problemset_id = ?;
+    `,
+    [Number(score), studentId, problemsetId]
+  );
+  return;
+};
+
+const addStudentGrade = async (studentId, problemsetId, score) => {
+  await query(
+    `INSERT INTO problemset_score (logic_user_id, problemset_id, score)
+    VALUES (?, ?, ?);
+    `,
+    [studentId, problemsetId, score]
+  );
+  return;
+};
+
 const getSectionProblemsetIds = async sectionId => {
   const q = await query(
-    `SELECT problemset_id AS id, section_problemset.order
-    FROM section_problemset WHERE section_id = $1
-    ORDER BY section_problemset.order`,
+    `SELECT problemset_id AS id, section_problemset.problemset_order
+    FROM section_problemset WHERE section_id = ?
+    ORDER BY section_problemset.problemset_order`,
     [sectionId]
   );
-  console.log('sectionProblemsetIds', q);
-  return q.rows;
+  return q.map(el => ({ ...el })); // TODO: Util function
 };
 
 const getSectionProblemsets = async sectionId => {
   const q = await query(
     `SELECT due_date.section_id,
-    due_date.problemset_id as id,
-    section_problemset.order,
+    due_date.problemset_id AS id,
+    section_problemset.problemset_order,
     problemset.unit,
     problemset.index_in_unit,
     due_date,
@@ -338,85 +330,70 @@ const getSectionProblemsets = async sectionId => {
     AND due_date.problemset_id = section_problemset.problemset_id
     JOIN problemset
     ON section_problemset.problemset_id = problemset.id
-    WHERE due_date.section_id = $1`,
+    WHERE due_date.section_id = ?`,
     [sectionId]
   );
-  console.log('sectionProblemsetIds', q);
-  return q.rows;
+  return (q || []).map(el => ({ ...el }));
 };
 
 const removeUserFromSection = async (userId, sectionId) => {
-  const q = await query(
-    `DELETE FROM student_roster WHERE student_id = $1 AND section_id = $2`,
+  await query(
+    `DELETE FROM student_roster WHERE student_id = ? AND section_id = ?`,
     [userId, sectionId]
   );
-  console.log('DELETE user', q);
   return;
 };
 
-const upsertProblemsetDueDate = async (problemsetId, sectionId, dueDate) => {
-  console.log('UPSERT', problemsetId, sectionId, dueDate, typeof dueDate);
-  const q = await query(
-    `UPDATE due_date SET due_date = $3::timestamptz
-    WHERE problemset_id = $1 AND section_id = $2`,
-    [problemsetId, sectionId, dueDate]
+const updateProblemsetDueDate = async ({ problemsetId, sectionId, date }) => {
+  await query(
+    `UPDATE due_date SET due_date = ?
+    WHERE problemset_id = ? AND section_id = ?;`,
+    [date, problemsetId, sectionId]
   );
-  return q;
-  // const r = await query(
-  //   `SELECT * FROM due_date (problemset_id, section_id, due_date)
-  //   WHERE due_date.problemset_id = $1
-  //   AND due_date.section_id = $2`,
-  //   [problemsetId, sectionId]
-  // );
-  // if (r.rows.length) {
-  //   const q = await query(
-  //     `UPDATE due_date SET due_date = $3::timestamptz
-  //     WHERE due_date.problemset_id = $1
-  //     AND due_date.section_id = $2`,
-  //     [problemsetId, sectionId, dueDate]
-  //   );
-  //   console.log('UPDATE due_date', q);
-  //   return q.rows;
-  // } else {
-  //   const q = await query(
-  //     `INSERT INTO due_date (problemset_id, section_id, due_date)
-  //     VALUES ($1, $2, $3)`,
-  //     [problemsetId, sectionId, dueDate]
-  //   );
-  //   console.log('INSERT due_date', q);
-  //   return q.rows;
-  // }
-  // OLD VERSION:
-  // const q = await query(
-  //   `
-  //   INSERT INTO due_date (problemset_id, section_id, due_date)
-  //   VALUES ($1, $2, $3)
-  //   ON CONFLICT ON CONSTRAINT unique_section_id_problemset_id
-  //   DO
-  //   UPDATE SET due_date = $3::timestamptz
-  //   WHERE due_date.problemset_id = $1
-  //   AND due_date.section_id = $2
-  // `,
-  //   [problemsetId, sectionId, dueDate]
-  // );
-  // console.log('HOLY SHIT', q);
-  // return q.rows;
+};
+
+const deleteProblemsetFromSection = async (psId, sectionId) => {
+  await query(
+    `DELETE FROM section_problemset
+    WHERE section_id = ? AND problemset_id = ?;`,
+    [sectionId, psId]
+  );
+  return;
+};
+
+const addProblemsetToSection = async (psId, sectionId) => {
+  const q = await query('select default_order from problemset where id = ?', [
+    psId
+  ]);
+  const problemsetOrder = q[0].default_order;
+  await query(
+    `INSERT INTO section_problemset
+    (section_id, problemset_id, problemset_order)
+    VALUES (?, ?, ?);`,
+    [sectionId, psId, problemsetOrder]
+  );
+  return;
 };
 
 module.exports = {
+  addProblemsetToSection,
+  addStudentGrade,
   addStudents,
   addStudentsToSection,
   addStudentsToSectionById,
   checkIfSectionExists,
   createNewSectionWithInstructor,
+  deleteProblemsetFromSection,
   getDueDate,
   getInstructorSections,
   getSectionGrades,
   getSectionProblemsetIds,
   getSectionProblemsets,
   getStudentsInSection,
+  getUserIdFromKey,
   getUserSection,
   getUserGrades,
   removeUserFromSection,
-  upsertProblemsetDueDate
+  updateProblemsetDueDate,
+  updateStudentGrade
 };

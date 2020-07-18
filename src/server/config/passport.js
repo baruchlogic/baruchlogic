@@ -15,6 +15,7 @@ const configPassport = app => {
         console.log('AUTHENTICATE STRATEGY', username, password);
         try {
           const user = await getUserByKey(password);
+          console.log('user!!!', user);
           if (!user) {
             console.log('user not found');
             return done(null, false, { message: 'Invalid key.' });
@@ -42,7 +43,7 @@ const configPassport = app => {
   passport.deserializeUser(async function(id, done) {
     try {
       const user = await getUserById(id);
-      console.log('USER', user);
+      console.log('USER BY ID', user);
       done(null, user);
     } catch (e) {
       done(e);

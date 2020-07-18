@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { any, func, object } from 'prop-types';
+import { func, object } from 'prop-types';
 import styled from 'styled-components';
 import { Formula } from 'logically';
 
@@ -18,18 +18,18 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
   const emptyFn = () => {};
 
   // Create initial response matrix
-  const formula = new Formula();
-  const columns = formula.generateTruthTableHeaders(problem.prompt);
-  // console.log('COLUMNS', columns);
-  const initialValue = formula
-    .generateTruthTable(problem.prompt, true)
-    .map(row => row.map(el => (el === true ? 'T' : el === false ? 'F' : '')));
-  const atomicVariables = formula.getAtomicVariables(problem.prompt);
+  const columns = Formula.generateTruthTableHeaders(problem.prompt);
+  const atomicVariables = Formula.getAtomicVariables(problem.prompt);
   const nRows = Math.pow(2, atomicVariables.length);
   useEffect(() => {
-    // console.log('SET', problem.id);
-    setProblemResponse(problem.id, initialValue);
-  }, []);
+    const initialValue = Formula.generateTruthTable(
+      problem.prompt,
+      true
+    ).map(row => row.map(el => (el === true ? 'T' : el === false ? 'F' : '')));
+    if (Object.values(value || {}).length === 0) {
+      setProblemResponse(problem.id, initialValue);
+    }
+  }, [value]);
 
   // Set a value in the response matrix
   const setCellValueCopy = (matrix, i, j, value) => {
@@ -40,7 +40,6 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
 
   // Functions used for keyboard navigation
   const getNextIndex = (j, k) => {
-    // console.log('j', j, 'k', k, 'nRows', nRows);
     if (j < nRows - 1) {
       return `${k * 1000 + j + 2}-${problem.id}`;
     } else {
@@ -48,7 +47,6 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
     }
   };
   const getPrevIndex = (j, k) => {
-    // console.log('j', j, 'k', k, 'nRows', nRows);
     if (j === 0) {
       return `${(k - 1) * 1000 + nRows}-${problem.id}`;
     } else {
@@ -64,25 +62,19 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
 
   // Functions used to move focus around
   const focusNextElement = (j, k) => {
-    const focusedElement = document.querySelector('input:focus');
-    // console.log('FE', focusedElement);
+    // const focusedElement = document.querySelector('input:focus');
     const nextTabindex = getNextIndex(j, k);
-    // console.log('nextTabindex', nextTabindex);
     const nextFocusedElement = document.querySelector(
       `input[tabindex="${nextTabindex}"]`
     );
-    // console.log('nextFocusedElement', nextFocusedElement);
     if (nextFocusedElement) nextFocusedElement.focus();
   };
   const focusPrevElement = (j, k) => {
-    const focusedElement = document.querySelector('input:focus');
-    // console.log('FE', focusedElement);
+    // const focusedElement = document.querySelector('input:focus');
     const prevTabIndex = getPrevIndex(j, k);
-    // console.log('prevTabIndex', prevTabIndex);
     const prevFocusedElement = document.querySelector(
       `input[tabindex="${prevTabIndex}"]`
     );
-    // console.log('prevFocusedElement', prevFocusedElement);
     if (prevFocusedElement) prevFocusedElement.focus();
   };
   const focusLeftElement = (j, k) => {
@@ -101,8 +93,8 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
   };
 
   const handleKeyDown = (e, j, k) => {
+    e.preventDefault();
     const { key } = e;
-    // console.log('key', key);
     switch (key) {
       case 't':
       case 'T':
@@ -114,7 +106,6 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
         break;
       }
       case 'Backspace':
-        // console.log('backspace');
         if (value[j][k]) {
           const newValue = setCellValueCopy(value, j, k, '');
           setProblemResponse(problem.id, newValue);
@@ -126,6 +117,7 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
         focusPrevElement(j, k);
         break;
       case 'ArrowDown':
+      case 'Tab':
         focusNextElement(j, k);
         break;
       case 'ArrowLeft':
@@ -140,43 +132,57 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
   };
 
   return (
-    <table>
-      <thead>
-        <tr>
-          {columns.map((row, i) => (
-            <StyledHeaderTD key={`col-${i}-${problem.id}`}>
-              {row}
-            </StyledHeaderTD>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {new Array(nRows).fill(0).map((row, j) => (
-          <tr key={`row-${j}-${problem.id}`}>
-            {columns.map((row, k) => (
-              <td key={`cell-${k}-${problem.id}`}>
-                <StyledInput
-                  onKeyDown={e => {
-                    handleKeyDown(e, j, k);
-                  }}
-                  onChange={emptyFn}
-                  value={(value && value[j][k]) || ''}
-                  tabIndex={`${k * 1000 + j + 1}-${problem.id}`}
-                  disabled={k < atomicVariables.length || !isUserAuth}
-                />
-              </td>
+    <div style={{ overflow: 'scroll', width: '100%' }}>
+      <table style={{ margin: 'auto' }}>
+        <thead>
+          <tr>
+            {columns.map((row, i) => (
+              <StyledHeaderTD
+                key={`col-${i}-${problem.id}`}
+                style={{
+                  borderRight:
+                    i === columns.length - 1 ? 'none' : '2px solid black'
+                }}
+              >
+                {row}
+              </StyledHeaderTD>
             ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {new Array(nRows).fill(0).map((row, j) => (
+            <tr key={`row-${j}-${problem.id}`}>
+              {columns.map((row, k) => (
+                <td key={`cell-${k}-${problem.id}`}>
+                  <StyledInput
+                    onKeyDown={e => {
+                      handleKeyDown(e, j, k);
+                    }}
+                    onChange={emptyFn}
+                    value={(value && value[j][k]) || ''}
+                    tabIndex={`${k * 1000 + j + 1}-${problem.id}`}
+                    disabled={k < atomicVariables.length || !isUserAuth}
+                  />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
 TruthTable.propTypes = {
+  isUserAuth: object.isRequired,
   problem: object.isRequired,
-  setProblemResponse: func.isRequired,
-  value: any
+  setProblemResponse: func,
+  value: object
+};
+
+TruthTable.defaultProps = {
+  isUserAuth: false,
+  problem: {}
 };
 
 export default TruthTable;

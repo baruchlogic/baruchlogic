@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { number } from 'prop-types';
+import { bool, number } from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
 import Problem from './Problem';
@@ -39,7 +39,6 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
     const result = await fetch(
       `${API_BASE_URL}/api/problemsets/${problemsetId}/problems`
     ).then(res => res.json());
-    // console.log('RESULT', result);
     setProblems(result);
   };
 
@@ -48,6 +47,13 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
       `${API_BASE_URL}/api/problemsets/${problemsetId}/score`
     ).then(res => res.text());
     setBestScore(result);
+  };
+
+  const onReset = () => {
+    setProblemsetResponses({});
+    setCurrentScore(null);
+    setIncorrectProblems({});
+    setHasSubmitted(false);
   };
 
   useEffect(() => {
@@ -62,31 +68,18 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
     fetchBestScore();
   }, [problemsetId]);
 
-  // useEffect(() => {
-  //   onReset();
-  // }, [problemsetId]);
-
-  // useEffect(() => {
-  //   // console.log('problemsetResponses', problemsetResponses);
-  // }, [problemsetResponses]);
+  useEffect(() => {
+    onReset();
+  }, [problemsetId]);
 
   const setProblemResponse = (problemId, response) => {
-    // console.log('setProblemResponse', problemsetResponses, problemId, response);
     setProblemsetResponses(problemsetResponses => ({
       ...problemsetResponses,
       [problemId]: response
     }));
   };
 
-  const onReset = () => {
-    setProblemsetResponses({});
-    setCurrentScore(null);
-    setIncorrectProblems({});
-    setHasSubmitted(false);
-  };
-
   const onSubmit = async () => {
-    // console.log(JSON.stringify(problemsetResponses));
     const response = await authFetch(
       `${API_BASE_URL}/api/problemsets/${problemsetId}`,
       'POST',
@@ -96,7 +89,6 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
       incorrectProblems: incorrectProblemsResponse,
       score
     } = await response.json();
-    // console.log('incorrectProblemsResponse', incorrectProblemsResponse);
     setCurrentScore(score);
     setIncorrectProblems(
       incorrectProblemsResponse.reduce(
@@ -112,19 +104,14 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
     const result = await authFetch(
       `${API_BASE_URL}/api/problemsets/${problemsetId}/responses`
     ).then(res => res.json());
-    // console.log('RESULT RESULT:', result);
-    setProblemsetResponses(result.responses);
+    setProblemsetResponses(result.responses || {});
   };
 
   const dueDateMoment =
     problemset && problemset.due_date ? moment(problemset.due_date) : null;
 
-  // console.log('dueDateMoment', dueDateMoment);
-
   const styledDueDate =
     dueDateMoment && dueDateMoment.format('MMMM Do YYYY, h:mm');
-
-  // console.log('styledDueDate', styledDueDate, moment());
 
   const isPastDueDate = dueDateMoment && dueDateMoment.isBefore(moment());
 
@@ -133,18 +120,13 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
       {problemset && <h1>{`Problemset #${problemset.default_order}`}</h1>}
       {styledDueDate && <h2>{`Due date: ${styledDueDate}`}</h2>}
       {isPastDueDate && <h2>NOTE: Due date has passed</h2>}
-      {!isUserAuth && (
-        <h2>Please log in to interact with the problemsets.</h2>
-      )}
-      {problems.map(problem => console.log('problem', problem) || (
+      {!isUserAuth && <h2>Please log in to interact with the problemsets.</h2>}
+      {problems.map(problem => (
         <Problem
           key={problem.id}
           isIncorrectResponse={
             !!incorrectProblems[problem.id] ||
             (hasSubmitted && problemsetResponses[problem.id] === undefined)
-          }
-          responseData={
-            problem
           }
           value={problemsetResponses[problem.id]}
           problem={problem}
@@ -160,12 +142,22 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
               not be recorded.
             </div>
           )}
-          <StyledButton intent="success" large onClick={onSubmit} disabled={!isUserAuth}>
+          <StyledButton
+            intent="success"
+            large
+            onClick={onSubmit}
+            disabled={!isUserAuth}
+          >
             SUBMIT
           </StyledButton>
         </div>
         <div>
-          <StyledResetButton intent="success" large onClick={onReset} disabled={!isUserAuth}>
+          <StyledResetButton
+            intent="success"
+            large
+            onClick={onReset}
+            disabled={!isUserAuth}
+          >
             RESET RESPONSES
           </StyledResetButton>
         </div>
@@ -173,8 +165,8 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
           <StyledResetButton
             intent="success"
             large
-            onClick={onRestoreBestResponses}
             disabled={!isUserAuth}
+            onClick={onRestoreBestResponses}
           >
             RESTORE BEST RESPONSES
           </StyledResetButton>
@@ -191,7 +183,12 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
 };
 
 ProblemsetContainer.propTypes = {
+  isUserAuth: bool.isRequired,
   problemsetId: number
+};
+
+ProblemsetContainer.defaultProps = {
+  isUserAuth: false
 };
 
 export default ProblemsetContainer;

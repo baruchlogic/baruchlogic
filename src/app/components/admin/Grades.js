@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Elevation } from '@blueprintjs/core';
 import StyledCard from 'app-styled/StyledCard';
 import { useInstructorSections } from 'hooks/admin';
+import { authFetch } from 'helpers/auth';
 
 const StyledTd = styled.td`
   min-width: 50px;
@@ -10,6 +11,17 @@ const StyledTd = styled.td`
 
 const StyledTh = styled.th`
   padding: 0 12px;
+  max-width: 50px;
+`;
+
+const StyledInput = styled.input`
+  border: 0;
+  font-size: 24px;
+  text-align: center;
+  max-width: 50px;
+  :focus {
+    outline: none;
+  }
 `;
 
 const Grades = () => {
@@ -19,6 +31,8 @@ const Grades = () => {
   const [currentGrades, setCurrentGrades] = useState({});
   const [currentProblemsets, setCurrentProblemsets] = useState([]);
   const [studentNames, setStudentNames] = useState({});
+  const [cellIsBeingEdited, setCellIsBeingEdited] = useState([]);
+  const [tempVal, setTempVal] = useState();
 
   let localStorageNames = {};
   try {
@@ -29,7 +43,6 @@ const Grades = () => {
   } catch (e) {}
 
   const onSectionChange = ({ target: { value } }) => {
-    // console.log('value', value);
     setCurrentSectionId(Number(value));
   };
 
@@ -37,7 +50,7 @@ const Grades = () => {
     const grades = await fetch(
       `${API_BASE_URL}/api/sections/${currentSectionId}/grades`
     ).then(res => res.json());
-    // console.log('Grades!!', grades);
+    console.log('GRADEs', grades);
     setCurrentGrades(grades);
   };
 
@@ -45,11 +58,15 @@ const Grades = () => {
     const problemsets = await fetch(
       `${API_BASE_URL}/api/sections/${currentSectionId}/problemsets`
     ).then(res => res.json());
-    // console.log('setCurrentProblemsetsHelper', problemsets);
-    setCurrentProblemsets(problemsets.sort(
-      (a, b) => a.default_order < b.default_order ? -1 :
-                a.default_order > b.default_order ? 1 : 0
-    ));
+    setCurrentProblemsets(
+      problemsets.sort((a, b) =>
+        a.default_order < b.default_order
+          ? -1
+          : a.default_order > b.default_order
+          ? 1
+          : 0
+      )
+    );
   };
 
   useEffect(() => {
@@ -71,22 +88,12 @@ const Grades = () => {
     const newStudentNames = {};
     Object.keys(currentGrades).forEach(studentId => {
       const name = localStorageNames[studentId];
-      // console.log('studentId', studentId, 'name', name);
       newStudentNames[studentId] = name;
     });
     setStudentNames(newStudentNames);
   }, [currentGrades]);
 
-  useEffect(() => {
-    // console.log('instructorSections', instructorSections);
-    // console.log('currentGrades', currentGrades);
-    // console.log('currentProblemsets', currentProblemsets);
-    // console.log('studentNames', studentNames);
-    // console.log('currentSection', currentSection);
-  });
-
   const onDownloadCSV = () => {
-    // console.log('onDownloadCSV');
     try {
       const row1 = ` ,${currentProblemsets
         .map(problemset => problemset.order)
@@ -114,6 +121,30 @@ const Grades = () => {
     }
   };
 
+  const setUpdatedScoreVal = async (userId, problemsetId, score) => {
+    console.log('setUpdatedScoreVal', userId, problemsetId, score);
+    await authFetch(
+      `${API_BASE_URL}/api/sections/
+      ${currentSectionId}/grades/${problemsetId}/${userId}`,
+      'POST',
+      {
+        body: JSON.stringify({ score })
+      }
+    );
+  };
+
+  const updateTempVal = e => {
+    const val = Number(e.target.value);
+    if (!Number.isInteger(val) || val < 0 || val > 100) {
+      return;
+    }
+    setTempVal(val);
+  };
+
+  console.log('currentGrades', currentGrades);
+  console.log('cellIsBeingEdited', cellIsBeingEdited);
+  console.log('tempVal', tempVal);
+
   return (
     <div>
       <StyledCard elevation={Elevation.THREE}>
@@ -136,22 +167,57 @@ const Grades = () => {
             <tr>
               <StyledTh />
               {currentProblemsets.map(problemset => (
-                <StyledTh key={problemset.id}>HW {problemset.order}</StyledTh>
+                <StyledTh key={problemset.id}>
+                  HW {problemset.default_order}
+                </StyledTh>
               ))}
             </tr>
           </thead>
           <tbody>
             <tr />
-            {Object.keys(currentGrades).map(userId => (
+            {Object.keys(currentGrades).map((userId, row) => (
               <tr key={userId}>
                 <StyledTd>
                   <pre>{studentNames[userId] || userId}</pre>
                 </StyledTd>
-                {currentProblemsets.map(problemset => (
-                  <StyledTd key={problemset.id}>
-                    {currentGrades[userId][problemset.id] || 0}
-                  </StyledTd>
-                ))}
+                {currentProblemsets.map((problemset, col) => {
+                  const isEditing =
+                    row === cellIsBeingEdited[0] &&
+                    col === cellIsBeingEdited[1];
+                  if (isEditing) {
+                    console.log('isEditing', row, col);
+                  }
+                  return (
+                    <td
+                      key={problemset.id}
+                      onDoubleClick={() => {
+                        setTempVal(currentGrades[userId][problemset.id] || 0);
+                        setCellIsBeingEdited([row, col]);
+                      }}
+                    >
+                      <StyledInput
+                        defaultValue={currentGrades[userId][problemset.id] || 0}
+                        value={
+                          isEditing
+                            ? tempVal
+                            : currentGrades[userId][problemset.id] || 0
+                        }
+                        onChange={updateTempVal}
+                        readOnly={!isEditing}
+                        onBlur={async e => {
+                          await setUpdatedScoreVal(
+                            userId,
+                            problemset.id,
+                            e.target.value
+                          );
+                          await setCurrentSectionGrades();
+                          setCellIsBeingEdited([]);
+                          setTempVal();
+                        }}
+                      />
+                    </td>
+                  );
+                })}
               </tr>
             ))}
           </tbody>

@@ -13,9 +13,9 @@ const Textbook = () => (
       <br />
     </p>
     <p>
-      {`If you wish to contribute to the text, or if you notice any mistakes or
+      If you wish to contribute to the text, or if you notice any mistakes or
       errors, feel free to file an Issue or Pull Request on GitHub or, if you
-      don't have a GitHub account, you may email `}
+      don%apost have a GitHub account, you may email
       <a href={`mailto:${ADMIN_EMAIL}`}>{`${ADMIN_EMAIL}`}</a>.
     </p>
   </StyledCard>

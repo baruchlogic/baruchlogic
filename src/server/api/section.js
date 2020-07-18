@@ -1,79 +1,120 @@
 const {
+  addProblemsetToSection,
+  addStudentGrade,
   getInstructorSections,
   getSectionGrades,
   // getSectionProblemsetIds,
   getSectionProblemsets,
   getStudentsInSection,
+  getUserIdFromKey,
   removeUserFromSection,
-  upsertProblemsetDueDate
+  updateProblemsetDueDate,
+  deleteProblemsetFromSection,
+  updateStudentGrade
 } = require('../db/data-access-layer/section');
 
 const configSectionRoutes = app => {
+  // Get all sections for an instructor.
   app.get('/api/sections', async (req, res) => {
-    console.log('/api/sections');
     const { id: instructorId } = req.user;
-    console.log('ID', instructorId);
     const sections = await getInstructorSections(instructorId);
-    console.log('SECTIONS', sections);
     res.send(sections);
   });
 
+  // Get all students in a section.
   app.get('/api/sections/:sectionId/users', async (req, res) => {
-    console.log('/api/sections/:sectionId/users');
     const { sectionId } = req.params;
     const students = await getStudentsInSection(sectionId);
-    console.log('STUDENTS', students);
     res.send(students);
   });
 
+  // Remove a user from a section.
   app.delete('/api/sections/:sectionId/users/:userId', async (req, res) => {
-    console.log('/api/sections/:sectionId/users/:userId');
     const { sectionId, userId } = req.params;
     await removeUserFromSection(userId, sectionId);
     res.status(200).send(userId);
   });
 
+  // Get students' grades for a section.
   app.get('/api/sections/:sectionId/grades', async (req, res) => {
     const { sectionId } = req.params;
-    console.log('/api/sections/:sectionId/grades', sectionId);
     const grades = await getSectionGrades(Number(sectionId));
-    console.log('GOT THE GRADES', grades);
     res.send(grades);
   });
 
+  // Set student's grade for a problemset.
+  app.post(
+    '/api/sections/:sectionId/grades/:problemsetId/:studentId',
+    async (req, res) => {
+      const {
+        params: { problemsetId, sectionId, studentId },
+        body: { score }
+      } = req;
+      console.log(problemsetId, sectionId, studentId, score);
+      // const { problemsetId, sectionId } = req.params;
+      // const { id: studentId } = req.user;
+      // const { body: score } = request;
+      const grades = await getSectionGrades(Number(sectionId));
+      const studentHasGradeForProblemset =
+        grades[studentId][problemsetId] !== undefined;
+      const id = await getUserIdFromKey(studentId);
+      if (studentHasGradeForProblemset) {
+        await updateStudentGrade(id, problemsetId, score);
+      } else {
+        await addStudentGrade(id, problemsetId, score);
+      }
+      res.sendStatus(200);
+    }
+  );
+
+  // Get the problemsets for a section.
   app.get('/api/sections/:sectionId/problemsets', async (req, res) => {
     const { sectionId } = req.params;
-    console.log('/api/sections/:sectionId/problemsets', sectionId);
     const problemsets = await getSectionProblemsets(Number(sectionId));
-    console.log('GOT THE PROBLEMSETS', problemsets);
     res.send(problemsets);
   });
 
-  app.post(
+  // Gets the due-dates for a section.
+  // TODO: FIX
+  app.get(
     '/api/sections/:sectionId/problemsets/due-dates',
     async (req, res) => {
-      const { sectionId } = req.params;
-      console.log('/api/sections/:sectionId/problemsets/due-dates', sectionId);
+      // const { sectionId } = req.params;
       const dates = req.body;
-      console.log('dates !@#&!@#&@(#&@!(#&!@))', dates);
       res.setHeader('Content-Type', 'application/json');
       res.send(dates);
     }
   );
 
+  // Sets the due dates for a problemset.
   app.post(
     '/api/sections/:sectionId/problemsets/due-dates/:problemsetId',
     async (req, res) => {
       const { problemsetId, sectionId } = req.params;
-      console.log(
-        '/api/sections/:sectionId/problemsets/due-dates/:problemsetId',
-        sectionId
-      );
       const { date } = req.body;
-      console.log('date !@#&!@#&@(#&@!(#&!@))', date);
-      await upsertProblemsetDueDate(problemsetId, sectionId, date);
+      await updateProblemsetDueDate({ problemsetId, sectionId, date });
       res.setHeader('Content-Type', 'application/json');
       res.send(date);
+    }
+  );
+
+  // Delete a problemset from a section
+  app.delete(
+    '/api/sections/:sectionId/problemsets/:problemsetId',
+    async (req, res) => {
+      const { problemsetId, sectionId } = req.params;
+      await deleteProblemsetFromSection(problemsetId, sectionId);
+      res.sendStatus(200);
+    }
+  );
+
+  // Add a problemset to a section
+  app.post(
+    '/api/sections/:sectionId/problemsets/:problemsetId',
+    async (req, res) => {
+      const { problemsetId, sectionId } = req.params;
+      await addProblemsetToSection(problemsetId, sectionId);
+      res.sendStatus(200);
     }
   );
 };
