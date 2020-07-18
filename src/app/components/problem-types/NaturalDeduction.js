@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Formula } from 'logically';
 import { Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { DEDUCTION_RULES } from 'logically';
+import { CITED_LINES_COUNT, DEDUCTION_RULES } from 'logically-local';
 
 const ProofContainer = styled.div`
   display: flex;
@@ -90,6 +90,16 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
 
   const addNewLine = () => {
     const { citedLines, proposition, rule } = newProposition;
+    if (!Formula.isWFFString(proposition)) {
+      alert('Proposition is not a well-formed formula.');
+      return;
+    }
+    if (citedLines.count !== CITED_LINES_COUNT[rule]) {
+      alert(
+        `Incorrect number of cited lines: expecting ${CITED_LINES_COUNT[rule]}`
+      );
+      return;
+    }
     const nextLines = (citedLines && citedLines.split(', ').map(Number)) || [];
     const newLine = {
       citedLines: nextLines,
