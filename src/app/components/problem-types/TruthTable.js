@@ -93,7 +93,7 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
   };
 
   const handleKeyDown = (e, j, k) => {
-    e.preventDefault()
+    e.preventDefault();
     const { key } = e;
     switch (key) {
       case 't':
@@ -132,36 +132,38 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
   };
 
   return (
-    <table>
-      <thead>
-        <tr>
-          {columns.map((row, i) => (
-            <StyledHeaderTD key={`col-${i}-${problem.id}`}>
-              {row}
-            </StyledHeaderTD>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {new Array(nRows).fill(0).map((row, j) => (
-          <tr key={`row-${j}-${problem.id}`}>
-            {columns.map((row, k) => (
-              <td key={`cell-${k}-${problem.id}`}>
-                <StyledInput
-                  onKeyDown={e => {
-                    handleKeyDown(e, j, k);
-                  }}
-                  onChange={emptyFn}
-                  value={(value && value[j][k]) || ''}
-                  tabIndex={`${k * 1000 + j + 1}-${problem.id}`}
-                  disabled={k < atomicVariables.length || !isUserAuth}
-                />
-              </td>
+    <div style={{ overflow: 'scroll', width: '100%' }}>
+      <table style={{ margin: 'auto' }}>
+        <thead>
+          <tr>
+            {columns.map((row, i) => (
+              <StyledHeaderTD key={`col-${i}-${problem.id}`} style={{ borderRight: i === columns.length -1 ? 'none' : '2px solid black' }} >
+                {row}
+              </StyledHeaderTD>
             ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {new Array(nRows).fill(0).map((row, j) => (
+            <tr key={`row-${j}-${problem.id}`}>
+              {columns.map((row, k) => (
+                <td key={`cell-${k}-${problem.id}`}>
+                  <StyledInput
+                    onKeyDown={e => {
+                      handleKeyDown(e, j, k);
+                    }}
+                    onChange={emptyFn}
+                    value={(value && value[j][k]) || ''}
+                    tabIndex={`${k * 1000 + j + 1}-${problem.id}`}
+                    disabled={k < atomicVariables.length || !isUserAuth}
+                  />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
