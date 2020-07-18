@@ -35,9 +35,9 @@ const Problemsets = () => {
     );
   };
   const fetchAllProblemSets = async () => {
-    const problemsets = await fetch(`${API_BASE_URL}/api/problemsets`).then(
-      res => res.json()
-    );
+    const problemsets = await fetch(
+      `${API_BASE_URL}/api/problemsets`
+    ).then(res => res.json());
     setAllProblemsets(problemsets);
   };
   useEffect(() => {
