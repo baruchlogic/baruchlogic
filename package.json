@@ -12,9 +12,15 @@
     "start": "npm run start:server && npm run start:frontend"
   },
   "workspaces": ["src/server", "src/app"],
+  "lint-staged": {
+    "./**/*.{js,jsx}": [
+      "npm run lint",
+      "git add"
+    ]
+  },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint"
+      "pre-commit": "lint-staged"
     }
   },
   "keywords": [
