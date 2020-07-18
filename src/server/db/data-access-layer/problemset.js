@@ -15,7 +15,7 @@ const getProblemSetById = async id => {
     const response = await query('SELECT * FROM problemset WHERE id = ?', [id]);
     return { ...response[0] };
   } catch (e) {
-    console.log(e)
+    console.log(e);
   }
 };
 
