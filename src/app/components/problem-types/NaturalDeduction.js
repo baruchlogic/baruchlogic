@@ -94,7 +94,7 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
       alert('Proposition is not a well-formed formula.');
       return;
     }
-    if (citedLines.count !== CITED_LINES_COUNT[rule]) {
+    if (citedLines.length !== CITED_LINES_COUNT[rule]) {
       alert(
         `Incorrect number of cited lines: expecting ${CITED_LINES_COUNT[rule]}`
       );
