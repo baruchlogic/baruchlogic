@@ -79,13 +79,15 @@ const Problem = ({
         {problem.problem_type === 'truth_table' &&
           'Complete the truth table for the following proposition:'}
         <div>{renderNewLines(problem.prompt || '')}</div>
-        <ProblemType
-          problem={problem}
-          setProblemResponse={setProblemResponse}
-          responseData={responseData}
-          value={value}
-          isUserAuth={isUserAuth}
-        />
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <ProblemType
+            problem={problem}
+            setProblemResponse={setProblemResponse}
+            responseData={responseData}
+            value={value}
+            isUserAuth={isUserAuth}
+          />
+        </div>
       </StyledDiv>
     </PossiblyIncorrectStyledCard>
   );

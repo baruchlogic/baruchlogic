@@ -2,7 +2,7 @@ import React from 'react';
 import { bool, func, object, string } from 'prop-types';
 
 const TrueFalse = ({ isUserAuth, problem, setProblemResponse, value }) => (
-  <div>
+  <>
     <label>
       <input
         type="radio"
@@ -27,7 +27,7 @@ const TrueFalse = ({ isUserAuth, problem, setProblemResponse, value }) => (
       />
       False
     </label>
-  </div>
+  </>
 );
 
 TrueFalse.propTypes = {

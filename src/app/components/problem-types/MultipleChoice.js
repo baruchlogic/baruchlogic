@@ -4,7 +4,7 @@ import { bool, func, object, string } from 'prop-types';
 const MultipleChoice = ({ isUserAuth, problem, setProblemResponse, value }) => {
   const { choices } = problem;
   return (
-    <div>
+    <>
       {Object.keys(choices)
         .sort()
         .map(key => (
@@ -21,7 +21,7 @@ const MultipleChoice = ({ isUserAuth, problem, setProblemResponse, value }) => {
             {choices[key]}
           </label>
         ))}
-    </div>
+    </>
   );
 };
 

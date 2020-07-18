@@ -8,6 +8,7 @@ import { Button, Elevation } from '@blueprintjs/core';
 import { authFetch } from '../helpers/auth';
 
 const StyledContainer = styled.div`
+  text-align: center;
   width: 80%;
 `;
 

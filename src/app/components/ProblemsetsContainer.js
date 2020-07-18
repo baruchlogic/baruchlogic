@@ -23,8 +23,6 @@ const ProblemsetsContainer = ({
   const [groupedProblemsets, setGroupedProblemsets] = useState([]);
   const [fetchIsLoading, setFetchIsLoading] = useState(true);
 
-  // console.log(defaultOrder, allProblemsets);
-
   const fetchProblemSets = async () => {
     if (isUserAuth && user) {
       console.log('IS AUTH', isUserAuth, user);
@@ -32,7 +30,6 @@ const ProblemsetsContainer = ({
         `${API_BASE_URL}/api/sections/${user.section_id}/problemsets`
       ).then(res => res.json());
       setFetchIsLoading(false);
-      // console.log('problemsetss  !  !! ! ', response);
       const problemsets = response;
       setAllProblemsets(problemsets);
       const groupedProblemsets = groupProblemSetsByUnit(problemsets);
@@ -42,7 +39,6 @@ const ProblemsetsContainer = ({
       const response = await fetch(
         `${API_BASE_URL}/api/problemsets`
       ).then(res => res.json());
-      // console.log('response', response);
       setFetchIsLoading(false);
       const problemsets = response;
       setAllProblemsets(problemsets);
@@ -52,7 +48,6 @@ const ProblemsetsContainer = ({
   };
 
   const groupProblemSetsByUnit = problemsets => {
-    // console.log('groupProblemSetsByUnit', problemsets);
     let maxUnit = 0;
     for (const problemset of problemsets) {
       maxUnit = Math.max(maxUnit, problemset.unit);
@@ -68,14 +63,8 @@ const ProblemsetsContainer = ({
   };
 
   useEffect(() => {
-    // console.log('IS USER AUTH CHANGED', isUserAuth);
     fetchProblemSets();
   }, [user]);
-
-  useEffect(() => {
-    // console.log('isUserAuth', isUserAuth);
-    // console.log('user', user);
-  });
 
   const getCurrentProblemsetFromDefaultOrder = defaultOrder =>
     allProblemsets.find(
