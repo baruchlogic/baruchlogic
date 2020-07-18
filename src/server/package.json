@@ -10,9 +10,15 @@
     "lint": "eslint --fix './**/*.{js,jsx}'",
     "start": "node ./index.js"
   },
+  "lint-staged": {
+    "./**/*.{js,jsx}": [
+      "npm run lint",
+      "git add"
+    ]
+  },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint"
+      "pre-commit": "lint-staged"
     }
   },
   "dependencies": {
