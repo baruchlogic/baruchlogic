@@ -11,7 +11,7 @@
     "start": "node ./index.js"
   },
   "lint-staged": {
-    "./**/*.{js,jsx}": [
+    "*.js": [
       "npm run lint"
     ]
   },
