@@ -11,6 +11,7 @@
     "start:server": "node ./src/server/index.js",
     "start": "npm run start:server && npm run start:frontend"
   },
+  "workspaces": ["src/server", "src/app"],
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint"

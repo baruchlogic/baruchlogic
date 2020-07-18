@@ -1,5 +1,5 @@
 {
-  "name": "baruchlogic-frontend",
+  "name": "app",
   "version": "0.0.1",
   "description": "Frontend server for the baruchlogic website",
   "main": "index.js",
