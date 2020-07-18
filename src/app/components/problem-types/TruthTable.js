@@ -93,6 +93,7 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
   };
 
   const handleKeyDown = (e, j, k) => {
+    e.preventDefault()
     const { key } = e;
     switch (key) {
       case 't':
@@ -116,6 +117,7 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
         focusPrevElement(j, k);
         break;
       case 'ArrowDown':
+      case 'Tab':
         focusNextElement(j, k);
         break;
       case 'ArrowLeft':
