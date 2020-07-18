@@ -13,7 +13,7 @@
   },
   "workspaces": ["src/server", "src/app"],
   "lint-staged": {
-    "./**/*.{js,jsx}": [
+    "*.js": [
       "npm run lint",
       "git add"
     ]
