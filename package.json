@@ -7,9 +7,9 @@
   "scripts": {
     "build": "webpack --mode production",
     "lint": "eslint --fix './**/*.{js,jsx}'",
-    "start:frontend": "webpack-dev-server --mode development",
-    "start:server": "node ./src/server/index.js",
-    "start": "npm run start:server && npm run start:frontend"
+    "start:frontend": "cd ./src/app && yarn start",
+    "start:server": "cd ./src/server && yarn start",
+    "start": "npm run start:server & npm run start:frontend"
   },
   "workspaces": ["src/server", "src/app"],
   "lint-staged": {
