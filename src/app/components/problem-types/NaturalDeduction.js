@@ -107,27 +107,18 @@ const NaturalDeduction = ({
 
   const submitUpdateCitedLines = index => {
     const response = Object.assign({}, value);
-    const citedLinesArray = cleanCitedLinesString(tempCitedLines[index])
-      .split(/[\s,]+/)
-      .map(Number);
+    const clean = cleanCitedLinesString(tempCitedLines[index]);
+    const citedLinesArray = clean.split(/[\s,]+/).map(Number);
     const rule = value.linesOfProof[index].rule;
     if (citedLinesArray.length !== CITED_LINES_COUNT[rule]) {
       alert(
         `Incorrect number of cited lines: expected ${CITED_LINES_COUNT[rule]}`
       );
+      return;
     }
     response.linesOfProof[index].citedLines = citedLinesArray;
     setProblemResponse(problem.id, response);
-    // if (Formula.isWFFString(tempPropositionStrings[index])) {
-    //   const proposition = new Formula(tempPropositionStrings[index]);
-    //   response.linesOfProof[index].proposition = proposition;
-    //   setProblemResponse(problem.id, response);
-    // } else {
-    //   alert('Not a well-formed proposition.');
-    //   const copy = tempPropositionStrings.slice();
-    //   copy[index] = value.linesOfProof[index].proposition.formulaString;
-    //   setTempPropositionStrings(copy);
-    // }
+    setTempCitedLines(lines => ({ ...lines, [index]: clean }));
   };
 
   const handleUpdateRule = ({ target: { value: val } }, index) => {
