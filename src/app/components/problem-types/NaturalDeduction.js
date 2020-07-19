@@ -307,7 +307,11 @@ const NaturalDeduction = ({
                   }}
                 >
                   <div
-                    style={{ height: '100%', width: '25%' }}
+                    style={{
+                      height: '100%',
+                      width: '25%',
+                      opacity: index < premises.length ? '0.5' : '1'
+                    }}
                     onClick={() => {
                       deleteLine(index);
                     }}
@@ -322,13 +326,18 @@ const NaturalDeduction = ({
                       style={{
                         width: 'auto',
                         height: '25px',
-                        cursor: 'pointer'
+                        cursor:
+                          index < premises.length ? 'not-allowed' : 'pointer'
                       }}
                       alt="Trash icon"
                     />
                   </div>
                   <div
-                    style={{ height: '100%', width: '25%' }}
+                    style={{
+                      height: '100%',
+                      width: '25%',
+                      opacity: index < premises.length ? '0.5' : '1'
+                    }}
                     onClick={() => {
                       addNewLine(index);
                     }}
@@ -343,7 +352,8 @@ const NaturalDeduction = ({
                       style={{
                         width: 'auto',
                         height: '25px',
-                        cursor: 'pointer'
+                        cursor:
+                          index < premises.length ? 'not-allowed' : 'pointer'
                       }}
                       alt="Add line above icon"
                     />
