@@ -46,7 +46,7 @@ const NaturalDeduction = ({
 
   const [newProposition, setNewProposition] = useState(initialProposition);
   const [tempPropositionStrings, setTempPropositionStrings] = useState('');
-  const [tempCitedLines, setTempCitedLines] = useState([]);
+  const [tempCitedLines, setTempCitedLines] = useState({});
 
   // Populate initial lines on reset or on start
   useEffect(() => {
@@ -107,7 +107,11 @@ const NaturalDeduction = ({
 
   const submitUpdateCitedLines = index => {
     const response = Object.assign({}, value);
-    response.linesOfProof[index].citedLines = tempCitedLines;
+    response.linesOfProof[index].citedLines = cleanCitedLinesString(
+      tempCitedLines[index]
+    )
+      .split(/[\s,]+/)
+      .map(Number);
     setProblemResponse(problem.id, response);
     // if (Formula.isWFFString(tempPropositionStrings[index])) {
     //   const proposition = new Formula(tempPropositionStrings[index]);
@@ -128,21 +132,11 @@ const NaturalDeduction = ({
   };
 
   const handleUpdateCitedLines = ({ target: { value: val } }, index) => {
-    console.log(val, val === ',');
-    if (isNaN(Number(val)) && val.slice(-1) !== ',' && val.slice(-1) !== ' ') {
+    const lastVal = val.slice(-1);
+    if (!/[\d\s,]/.test(lastVal)) {
       return;
     }
-    let arr;
-    if (val.includes(',')) {
-      arr = val.split(',').map(x => Number(x));
-    } else {
-      arr = [Number(val)];
-    }
-    // console.log('handleUpdateCitedLines', val, index, arr);
-    // const copy = tempCitedLines.slice()
-    // copy[index] = arr;
-    setTempCitedLines(arr);
-    console.log('tempCitedLines', tempCitedLines);
+    setTempCitedLines(prev => ({ ...prev, [index]: val }));
   };
 
   const deleteLine = index => {
@@ -154,14 +148,23 @@ const NaturalDeduction = ({
     });
   };
 
-  const addNewLine = () => {
-    const { citedLines, proposition, rule } = newProposition;
-    const lines = citedLines
+  const cleanCitedLinesString = line =>
+    line
       .replace(/,\s+,/g, ',')
-      .replace(/,\s*$/, '')
-      .split(/[\s,]+/)
-      .map(Number);
-    console.log('LINES', lines);
+      .replace(/[\s,]+$/, '')
+      .replace(/,+/g, ',')
+      .replace(/\s+/g, ' ')
+      .replace(/^[\s,]+/, '')
+      .replace(/,[^\d]+/, ', ');
+
+  const addNewLine = index => {
+    index = index || value.linesOfProof.length;
+    console.log('INDEX', index);
+    const { citedLines, proposition, rule } = newProposition;
+    const clean = cleanCitedLinesString(citedLines);
+
+    const lines = clean.split(/[\s,]+/).map(Number);
+    console.log('LINES', lines, clean);
     if (!Formula.isWFFString(proposition)) {
       alert('Proposition is not a well-formed formula.');
       return;
@@ -181,7 +184,7 @@ const NaturalDeduction = ({
       linesOfProof: value.linesOfProof.concat(newLine)
     });
     setNewProposition(initialProposition);
-    setTempCitedLines(lines);
+    setTempCitedLines(prev => ({ ...prev, [index]: clean }));
   };
 
   console.log('TEMPCITEDLINES', tempCitedLines);
@@ -262,7 +265,7 @@ const NaturalDeduction = ({
                     <input value={''} />
                   ) : (
                     <input
-                      value={value.linesOfProof[index].citedLines.join(', ')}
+                      value={tempCitedLines[index]}
                       onChange={e => {
                         handleUpdateCitedLines(e, index);
                       }}
@@ -279,7 +282,9 @@ const NaturalDeduction = ({
                       deleteLine(index);
                     }}
                     role="button"
-                    onKeyDown={addNewLine}
+                    onKeyDown={() => {
+                      addNewLine(index);
+                    }}
                     tabIndex="0"
                   >
                     <img
@@ -346,7 +351,9 @@ const NaturalDeduction = ({
         <StyledIcon
           icon={IconNames.ADD}
           iconSize={32}
-          onClick={addNewLine}
+          onClick={() => {
+            addNewLine();
+          }}
           role="button"
           tabIndex="0"
           onKeyDown={e => {
