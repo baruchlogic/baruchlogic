@@ -8,6 +8,7 @@ import { CITED_LINES_COUNT, DEDUCTION_RULES } from 'logically-local';
 import EditIcon from "../../assets/edit-icon.png"
 import UpArrow from "../../assets/up-arrow.png"
 import DownArrow from "../../assets/down-arrow.png"
+import TrashIcon from "../../assets/trash-icon.png"
 
 const ProofContainer = styled.div`
   display: flex;
@@ -136,6 +137,7 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
         <table>
           <thead>
             <tr>
+              <th>Line #</th>
               <th>Propositions</th>
               <th>Justifications</th>
               <th>Cited Lines</th>
@@ -145,9 +147,10 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
           <tbody>
             {value.linesOfProof.map((line, index) => (
               <tr>
+                <td>{index}</td>
                 <td><input value={line.proposition.prettifiedFormula} /></td>
                 {line.rule === DEDUCTION_RULES.PREMISE ? (
-                  <td><input value={line.rule} /></td>
+                  <td><input value={line.rule} readonly /></td>
                 ) : (
                   <td>
                     <select
@@ -166,13 +169,16 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
                 )}
                 <td><input value={line.citedLines.join(', ')} /></td>
                 <td style={{ display: 'flex', height: '25px' }}>
-                  <div style={{ height: '100%', width: '33%' }}>
+                  <div style={{ height: '100%', width: '25%' }}>
+                    <img src={TrashIcon} style={{ width: 'auto', height: '25px' }} />
+                  </div>
+                  <div style={{ height: '100%', width: '25%' }}>
                     <img src={EditIcon} style={{ width: 'auto', height: '25px' }} />
                   </div>
-                  <div style={{ height: '100%', width: '33%' }}>
+                  <div style={{ height: '100%', width: '25%' }}>
                     <img src={UpArrow} style={{ width: 'auto', height: '25px' }} />
                   </div>
-                  <div style={{ height: '100%', width: '33%' }}>
+                  <div style={{ height: '100%', width: '25%' }}>
                     <img src={DownArrow} style={{ width: 'auto', height: '25px' }} />
                   </div>
                 </td>
@@ -183,7 +189,7 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
       </ProofContainer>
 
       <div>
-        Add New Line:
+        New Line:
         <br />
         <div>
           Proposition:{' '}
