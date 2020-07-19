@@ -41,12 +41,14 @@ const NaturalDeduction = ({
   const initialProposition = {
     proposition: '',
     rule: Object.values(DEDUCTION_RULES)[0],
-    citedLines: []
+    citedLines: ''
   };
 
   const [newProposition, setNewProposition] = useState(initialProposition);
   const [tempPropositionStrings, setTempPropositionStrings] = useState('');
-  const [tempCitedLines, setTempCitedLines] = useState({});
+  const [tempCitedLines, setTempCitedLines] = useState(
+    new Array(premises.length)
+  );
 
   // Populate initial lines on reset or on start
   useEffect(() => {
@@ -118,7 +120,10 @@ const NaturalDeduction = ({
     }
     response.linesOfProof[index].citedLines = citedLinesArray;
     setProblemResponse(problem.id, response);
-    setTempCitedLines(lines => ({ ...lines, [index]: clean }));
+    setTempCitedLines(lines => {
+      lines[index] = clean;
+      return lines;
+    });
   };
 
   const handleUpdateRule = ({ target: { value: val } }, index) => {
@@ -132,7 +137,10 @@ const NaturalDeduction = ({
     if (!/[\d\s,]/.test(lastVal)) {
       return;
     }
-    setTempCitedLines(prev => ({ ...prev, [index]: val }));
+    setTempCitedLines(lines => {
+      lines[index] = val;
+      return lines;
+    });
   };
 
   const deleteLine = index => {
@@ -141,6 +149,10 @@ const NaturalDeduction = ({
         ...value.linesOfProof.slice(0, index),
         ...value.linesOfProof.slice(index + 1)
       ]
+    });
+    setTempCitedLines(lines => {
+      lines.splice(index, 1);
+      return lines;
     });
   };
 
@@ -153,8 +165,7 @@ const NaturalDeduction = ({
       .replace(/^[\s,]+/, '')
       .replace(/,[^\d]+/, ', ');
 
-  const addNewLine = index => {
-    index = index || value.linesOfProof.length;
+  const addNewLine = (index = value.linesOfProof.length) => {
     console.log('INDEX', index);
     const { citedLines, proposition, rule } = newProposition;
     const clean = cleanCitedLinesString(citedLines);
@@ -176,11 +187,16 @@ const NaturalDeduction = ({
       proposition: new Formula(proposition),
       rule
     };
+    const copy = value.linesOfProof.slice();
+    copy.splice(index, 0, newLine);
     setProblemResponse(problem.id, {
-      linesOfProof: value.linesOfProof.concat(newLine)
+      linesOfProof: copy
     });
     setNewProposition(initialProposition);
-    setTempCitedLines(prev => ({ ...prev, [index]: clean }));
+    setTempCitedLines(lines => {
+      lines.splice(index, 0, clean);
+      return lines;
+    });
   };
 
   console.log('TEMPCITEDLINES', tempCitedLines);
@@ -271,45 +287,74 @@ const NaturalDeduction = ({
                     />
                   )}
                 </td>
-                <td style={{ display: 'flex', height: '25px' }}>
+                <td
+                  style={{
+                    display: 'flex',
+                    height: '25px',
+                    justifyContent: 'space-around',
+                    minWidth: '100px'
+                  }}
+                >
                   <div
                     style={{ height: '100%', width: '25%' }}
                     onClick={() => {
                       deleteLine(index);
                     }}
                     role="button"
-                    onKeyDown={() => {
+                    onKeyDown={e => {
                       if (e.keyCode === 13) deleteLine(index);
                     }}
                     tabIndex="0"
                   >
                     <img
                       src={TrashIcon}
-                      style={{ width: 'auto', height: '25px' }}
+                      style={{
+                        width: 'auto',
+                        height: '25px',
+                        cursor: 'pointer'
+                      }}
                       alt="Trash icon"
                     />
                   </div>
-                  <div style={{ height: '100%', width: '25%' }}>
+                  <div
+                    style={{ height: '100%', width: '25%' }}
+                    onClick={() => {
+                      addNewLine(index);
+                    }}
+                    onKeyDown={e => {
+                      if (e.keyCode === 13) addNewLine(index);
+                    }}
+                    role="button"
+                    tabIndex="0"
+                  >
                     <img
                       src={UpArrow}
-                      style={{ width: 'auto', height: '25px' }}
+                      style={{
+                        width: 'auto',
+                        height: '25px',
+                        cursor: 'pointer'
+                      }}
                       alt="Add line above icon"
                     />
                   </div>
                   <div
                     style={{ height: '100%', width: '25%' }}
                     onClick={() => {
-                      addNewLine();
+                      addNewLine(index + 1);
                     }}
                     onKeyDown={e => {
-                      if (e.keyCode === 13) addNewLine();
+                      if (e.keyCode === 13) addNewLine(index + 1);
                     }}
                     role="button"
                     tabIndex="0"
                   >
                     <img
                       src={DownArrow}
-                      style={{ width: 'auto', height: '25px' }}
+                      style={{
+                        width: 'auto',
+                        height: '25px',
+                        cursor: 'pointer'
+                      }}
                       alt="Add line below icon"
                     />
                   </div>
