@@ -144,6 +144,9 @@ const NaturalDeduction = ({
   };
 
   const deleteLine = index => {
+    if (index < premises.length) {
+      return;
+    }
     setProblemResponse(problem.id, {
       linesOfProof: [
         ...value.linesOfProof.slice(0, index),
@@ -166,6 +169,9 @@ const NaturalDeduction = ({
       .replace(/,[^\d]+/, ', ');
 
   const addNewLine = (index = value.linesOfProof.length) => {
+    if (index < premises.length) {
+      return;
+    }
     console.log('INDEX', index);
     const { citedLines, proposition, rule } = newProposition;
     const clean = cleanCitedLinesString(citedLines);
