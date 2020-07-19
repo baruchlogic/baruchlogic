@@ -279,7 +279,7 @@ const NaturalDeduction = ({
                     }}
                     role="button"
                     onKeyDown={() => {
-                      addNewLine(index);
+                      deleteLine(index);
                     }}
                     tabIndex="0"
                   >
