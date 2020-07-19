@@ -238,10 +238,10 @@ const NaturalDeduction = ({
           <tbody>
             {value.linesOfProof.map((line, index) => (
               <tr
-                key={index}
+                key={index + 1}
                 style={{ color: incorrectMoves[index] ? 'red' : 'black' }}
               >
-                <td>{index}</td>
+                <td>{index + 1}</td>
                 <td>
                   <input
                     value={tempPropositionStrings[index]}
