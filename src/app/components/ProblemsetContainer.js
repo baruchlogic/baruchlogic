@@ -133,6 +133,7 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
           problem={problem}
           setProblemResponse={setProblemResponse}
           isUserAuth={isUserAuth}
+          incorrectResponses={incorrectProblems[problem.id]}
         />
       ))}
       <StyledCard elevation={Elevation.THREE}>

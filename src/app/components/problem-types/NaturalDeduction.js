@@ -22,8 +22,15 @@ const StyledIcon = styled(Icon)`
   cursor: pointer;
 `;
 
-const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
+const NaturalDeduction = ({
+  incorrectResponses,
+  problem,
+  setProblemResponse,
+  value
+}) => {
   const { premises, conclusion } = problem.deduction_prompt;
+
+  const incorrectMoves = incorrectResponses?.responseData?.incorrectMoves || [];
 
   const initialLines = premises.map((premise, index) => ({
     proposition: new Formula(premise),
@@ -238,7 +245,7 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
           </thead>
           <tbody>
             {value.linesOfProof.map((line, index) => (
-              <tr key={index}>
+              <tr key={index} style={{ color: incorrectMoves[index] ? 'red' : 'black' }}>
                 <td>{index}</td>
                 <td><input value={tempPropositionStrings[index]} onChange={e => {handleUpdateProposition(e, index);}} onBlur={() => {submitUpdateProposition(index);}} /></td>
                 {line.rule === DEDUCTION_RULES.PREMISE ? (
