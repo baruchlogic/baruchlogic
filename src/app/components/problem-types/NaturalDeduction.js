@@ -5,6 +5,9 @@ import { Formula } from 'logically';
 import { Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { CITED_LINES_COUNT, DEDUCTION_RULES } from 'logically-local';
+import EditIcon from "../../assets/edit-icon.png"
+import UpArrow from "../../assets/up-arrow.png"
+import DownArrow from "../../assets/down-arrow.png"
 
 const ProofContainer = styled.div`
   display: flex;
@@ -142,7 +145,7 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
           <tbody>
             {value.linesOfProof.map((line, index) => (
               <tr>
-                <input value={line.proposition.prettifiedFormula} />
+                <td><input value={line.proposition.prettifiedFormula} /></td>
                 {line.rule === DEDUCTION_RULES.PREMISE ? (
                   <td><input value={line.rule} /></td>
                 ) : (
@@ -161,8 +164,18 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
                     </select>
                   </td>
                 )}
-                <input value={line.citedLines.join(', ')} />
-                <td>EDIT | ADD ABOVE | ADD BELOW</td>
+                <td><input value={line.citedLines.join(', ')} /></td>
+                <td style={{ display: 'flex', height: '25px' }}>
+                  <div style={{ height: '100%', width: '33%' }}>
+                    <img src={EditIcon} style={{ width: 'auto', height: '25px' }} />
+                  </div>
+                  <div style={{ height: '100%', width: '33%' }}>
+                    <img src={UpArrow} style={{ width: 'auto', height: '25px' }} />
+                  </div>
+                  <div style={{ height: '100%', width: '33%' }}>
+                    <img src={DownArrow} style={{ width: 'auto', height: '25px' }} />
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
