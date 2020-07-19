@@ -96,6 +96,7 @@ const Problem = ({
 };
 
 Problem.propTypes = {
+  incorrectResponses: object,
   isUserAuth: bool.isRequired,
   isIncorrectResponse: bool.isRequired,
   problem: object.isRequired,

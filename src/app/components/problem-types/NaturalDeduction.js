@@ -5,9 +5,9 @@ import { Formula } from 'logically';
 import { Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { CITED_LINES_COUNT, DEDUCTION_RULES } from 'logically-local';
-import UpArrow from "../../assets/up-arrow.png"
-import DownArrow from "../../assets/down-arrow.png"
-import TrashIcon from "../../assets/trash-icon.png"
+import UpArrow from '../../assets/up-arrow.png';
+import DownArrow from '../../assets/down-arrow.png';
+import TrashIcon from '../../assets/trash-icon.png';
 
 const ProofContainer = styled.div`
   display: flex;
@@ -72,13 +72,15 @@ const NaturalDeduction = ({
 
   const handleNewLineCitedLinesChange = ({ target: { value: val } }) => {
     const lastValue = val.slice(-1);
-    if (!(!isNaN(Number(lastValue)) || lastValue === ',' || lastValue === ' ')) {
+    if (
+      !(!isNaN(Number(lastValue)) || lastValue === ',' || lastValue === ' ')
+    ) {
       return;
     }
     setNewProposition({ ...newProposition, citedLines: val });
   };
 
-  console.log("newProposition", newProposition);
+  console.log('newProposition', newProposition);
 
   const handleUpdateProposition = ({ target: { value: val } }, index) => {
     if (index < problem.deduction_prompt.premises.length) {
@@ -86,7 +88,7 @@ const NaturalDeduction = ({
     }
     const copy = tempPropositionStrings.slice();
     copy[index] = val;
-    setTempPropositionStrings(copy)
+    setTempPropositionStrings(copy);
   };
 
   const submitUpdateProposition = index => {
@@ -126,7 +128,7 @@ const NaturalDeduction = ({
   };
 
   const handleUpdateCitedLines = ({ target: { value: val } }, index) => {
-    console.log(val, val === ',')
+    console.log(val, val === ',');
     if (isNaN(Number(val)) && val.slice(-1) !== ',' && val.slice(-1) !== ' ') {
       return;
     }
@@ -134,13 +136,13 @@ const NaturalDeduction = ({
     if (val.includes(',')) {
       arr = val.split(',').map(x => Number(x));
     } else {
-      arr = [Number(val)]
+      arr = [Number(val)];
     }
     // console.log('handleUpdateCitedLines', val, index, arr);
     // const copy = tempCitedLines.slice()
     // copy[index] = arr;
     setTempCitedLines(arr);
-    console.log("tempCitedLines", tempCitedLines);
+    console.log('tempCitedLines', tempCitedLines);
   };
 
   const deleteLine = index => {
@@ -152,27 +154,14 @@ const NaturalDeduction = ({
     });
   };
 
-  const handleNewLineCitedLinesKeyDown = ({ key }) => {
-    // let nextLines = newProposition.citedLines;
-    // if (key === 'Backspace') {
-    //   if (
-    //     newProposition.citedLines[newProposition.citedLines.length - 1] === ' '
-    //   ) {
-    //     nextLines = nextLines.slice(0, nextLines.length - 3);
-    //   } else {
-    //     nextLines = nextLines.slice(0, nextLines.length - 1);
-    //   }
-    // }
-    // setNewProposition({ ...newProposition, citedLines: nextLines });
-  };
-
   const addNewLine = () => {
     const { citedLines, proposition, rule } = newProposition;
     const lines = citedLines
       .replace(/,\s+,/g, ',')
       .replace(/,\s*$/, '')
-      .split(/[\s,]+/).map(Number);
-    console.log("LINES", lines);
+      .split(/[\s,]+/)
+      .map(Number);
+    console.log('LINES', lines);
     if (!Formula.isWFFString(proposition)) {
       alert('Proposition is not a well-formed formula.');
       return;
@@ -195,7 +184,7 @@ const NaturalDeduction = ({
     setTempCitedLines(lines);
   };
 
-  console.log("TEMPCITEDLINES", tempCitedLines)
+  console.log('TEMPCITEDLINES', tempCitedLines);
 
   return (
     <div style={{ width: '100%' }}>
@@ -227,16 +216,35 @@ const NaturalDeduction = ({
           </thead>
           <tbody>
             {value.linesOfProof.map((line, index) => (
-              <tr key={index} style={{ color: incorrectMoves[index] ? 'red' : 'black' }}>
+              <tr
+                key={index}
+                style={{ color: incorrectMoves[index] ? 'red' : 'black' }}
+              >
                 <td>{index}</td>
-                <td><input value={tempPropositionStrings[index]} onChange={e => {handleUpdateProposition(e, index);}} onBlur={() => {submitUpdateProposition(index);}} /></td>
+                <td>
+                  <input
+                    value={tempPropositionStrings[index]}
+                    onChange={e => {
+                      handleUpdateProposition(e, index);
+                    }}
+                    onBlur={() => {
+                      submitUpdateProposition(index);
+                    }}
+                  />
+                </td>
                 {line.rule === DEDUCTION_RULES.PREMISE ? (
-                  <td><input value={line.rule} readOnly /></td>
+                  <td>
+                    <input value={line.rule} readOnly />
+                  </td>
                 ) : (
                   <td>
                     <select
-                      onChange={e => {handleUpdateRule(e, index);}}
-                      onBlur={e => {handleUpdateRule(e, index);}}
+                      onChange={e => {
+                        handleUpdateRule(e, index);
+                      }}
+                      onBlur={e => {
+                        handleUpdateRule(e, index);
+                      }}
                       value={line.rule}
                     >
                       {Object.values(DEDUCTION_RULES)
@@ -245,30 +253,54 @@ const NaturalDeduction = ({
                           <option key={rule} value={rule}>
                             {rule}
                           </option>
-                        ))
-                      }
+                        ))}
                     </select>
                   </td>
                 )}
                 <td>
                   {line.rule === DEDUCTION_RULES.PREMISE ? (
-                    <input value={''}/>
+                    <input value={''} />
                   ) : (
-                    <input value={value.linesOfProof[index].citedLines.join(', ')} onChange={e => {handleUpdateCitedLines(e, index);}} onBlur={e => {submitUpdateCitedLines(index);}} />
+                    <input
+                      value={value.linesOfProof[index].citedLines.join(', ')}
+                      onChange={e => {
+                        handleUpdateCitedLines(e, index);
+                      }}
+                      onBlur={e => {
+                        submitUpdateCitedLines(index);
+                      }}
+                    />
                   )}
                 </td>
                 <td style={{ display: 'flex', height: '25px' }}>
                   <div
                     style={{ height: '100%', width: '25%' }}
-                    onClick={() => {deleteLine(index);}}
+                    onClick={() => {
+                      deleteLine(index);
+                    }}
+                    role="button"
+                    onKeyDown={addNewLine}
+                    tabIndex="0"
                   >
-                    <img src={TrashIcon} style={{ width: 'auto', height: '25px' }} alt="Trash icon" />
+                    <img
+                      src={TrashIcon}
+                      style={{ width: 'auto', height: '25px' }}
+                      alt="Trash icon"
+                    />
                   </div>
                   <div style={{ height: '100%', width: '25%' }}>
-                    <img src={UpArrow} style={{ width: 'auto', height: '25px' }} alt="Add line above icon"/>
+                    <img
+                      src={UpArrow}
+                      style={{ width: 'auto', height: '25px' }}
+                      alt="Add line above icon"
+                    />
                   </div>
                   <div style={{ height: '100%', width: '25%' }}>
-                    <img src={DownArrow} style={{ width: 'auto', height: '25px' }} alt="Add line below icon"/>
+                    <img
+                      src={DownArrow}
+                      style={{ width: 'auto', height: '25px' }}
+                      alt="Add line below icon"
+                    />
                   </div>
                 </td>
               </tr>
@@ -311,13 +343,21 @@ const NaturalDeduction = ({
             onChange={handleNewLineCitedLinesChange}
           />
         </div>
-        <StyledIcon icon={IconNames.ADD} iconSize={32} onClick={addNewLine} />
+        <StyledIcon
+          icon={IconNames.ADD}
+          iconSize={32}
+          onClick={addNewLine}
+          role="button"
+          tabIndex="0"
+          onKeyDown={addNewLine}
+        />
       </div>
     </div>
   );
 };
 
 NaturalDeduction.propTypes = {
+  incorrectResponses: object,
   problem: object.isRequired,
   setProblemResponse: func,
   value: object.isRequired
