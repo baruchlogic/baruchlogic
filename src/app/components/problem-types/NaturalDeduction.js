@@ -138,8 +138,9 @@ const NaturalDeduction = ({
       return;
     }
     setTempCitedLines(lines => {
-      lines[index] = val;
-      return lines;
+      const copy = lines.slice();
+      copy[index] = val;
+      return copy;
     });
   };
 
@@ -242,6 +243,7 @@ const NaturalDeduction = ({
                 style={{ color: incorrectMoves[index] ? 'red' : 'black' }}
               >
                 <td>{index + 1}</td>
+
                 <td>
                   <input
                     value={tempPropositionStrings[index]}
@@ -253,6 +255,7 @@ const NaturalDeduction = ({
                     }}
                   />
                 </td>
+
                 {line.rule === DEDUCTION_RULES.PREMISE ? (
                   <td>
                     <input value={line.rule} readOnly />
@@ -278,6 +281,7 @@ const NaturalDeduction = ({
                     </select>
                   </td>
                 )}
+
                 <td>
                   {line.rule === DEDUCTION_RULES.PREMISE ? (
                     <input value={''} />
@@ -293,6 +297,7 @@ const NaturalDeduction = ({
                     />
                   )}
                 </td>
+
                 <td
                   style={{
                     display: 'flex',
