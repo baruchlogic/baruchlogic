@@ -100,12 +100,10 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
       response.linesOfProof[index].proposition = proposition;
       setProblemResponse(problem.id, response);
     } else {
-      alert('Not a well-formed proposition.')
-      setTempPropositionStrings(
-        tempPropositionStrings.slice().splice(
-          index, 1, value.linesOfProof[index].proposition.formulaString
-        )
-      )
+      alert('Not a well-formed proposition.');
+      const copy = tempPropositionStrings.slice();
+      copy[index] = value.linesOfProof[index].proposition.formulaString;
+      setTempPropositionStrings(copy);
     }
   }
 
