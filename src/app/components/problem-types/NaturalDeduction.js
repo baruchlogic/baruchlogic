@@ -170,7 +170,7 @@ const NaturalDeduction = ({
     const { citedLines, proposition, rule } = newProposition;
     const lines = citedLines
       .replace(/,\s+,/g, ',')
-      .replace(/,\s?$/, '')
+      .replace(/,\s*$/, '')
       .split(/[\s,]+/).map(Number);
     console.log("LINES", lines);
     if (!Formula.isWFFString(proposition)) {
