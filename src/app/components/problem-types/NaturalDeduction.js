@@ -62,14 +62,6 @@ const NaturalDeduction = ({
     );
   }, [value.linesOfProof]);
 
-  // useEffect(() => {
-  //   for (const string of tempPropositionStrings) {
-  //     if (string.length) {
-  //       const formula = new Formula(string);
-  //     }
-  //   }
-  // }, [tempPropositionStrings])
-
   const handleNewLinePropositionChange = ({ target: { value } }) => {
     setNewProposition({ ...newProposition, proposition: value });
   };
@@ -79,27 +71,11 @@ const NaturalDeduction = ({
   };
 
   const handleNewLineCitedLinesChange = ({ target: { value: val } }) => {
-    console.log("VALUE", val, typeof val)
     const lastValue = val.slice(-1);
     if (!(!isNaN(Number(lastValue)) || lastValue === ',' || lastValue === ' ')) {
       return;
     }
-    // const arr = val.split(/[\W,]/g).map(x => [(x === '' ? NaN : Number(x))])
-    // console.log("arr", arr)
-    // if (arr.some(el => isNaN(el))) {
-    //   return;
-    // }
-    // if (val.length < newProposition.citedLines.length) {
-    //   return;
-    // }
     setNewProposition({ ...newProposition, citedLines: val });
-    // const lastValue = value[value.length - 1];
-    // if (!isNaN(Number(lastValue))) {
-    //   setNewProposition({ ...newProposition, citedLines: value });
-    // }
-    // if (lastValue === ',') {
-    //   setNewProposition({ ...newProposition, citedLines: value + ' ' });
-    // }
   };
 
   console.log("newProposition", newProposition);
@@ -192,7 +168,10 @@ const NaturalDeduction = ({
 
   const addNewLine = () => {
     const { citedLines, proposition, rule } = newProposition;
-    const lines = citedLines.replace(/,\s+,/g, ',').split(/[\s,]+/).map(Number);
+    const lines = citedLines
+      .replace(/,\s+,/g, ',')
+      .replace(/,\s?$/, '')
+      .split(/[\s,]+/).map(Number);
     console.log("LINES", lines);
     if (!Formula.isWFFString(proposition)) {
       alert('Proposition is not a well-formed formula.');
