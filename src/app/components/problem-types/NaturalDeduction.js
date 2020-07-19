@@ -80,18 +80,19 @@ const NaturalDeduction = ({
 
   const handleNewLineCitedLinesChange = ({ target: { value: val } }) => {
     console.log("VALUE", val, typeof val)
-    // if (isNaN(Number(val))) {
-    //   return;
-    // }
-    const arr = val.split(/[\W,]/g).map(x => [(x === '' ? NaN : Number(x))])
-    console.log("arr", arr)
-    if (arr.some(el => isNaN(el))) {
+    const lastValue = val.slice(-1);
+    if (!(!isNaN(Number(lastValue)) || lastValue === ',' || lastValue === ' ')) {
       return;
     }
+    // const arr = val.split(/[\W,]/g).map(x => [(x === '' ? NaN : Number(x))])
+    // console.log("arr", arr)
+    // if (arr.some(el => isNaN(el))) {
+    //   return;
+    // }
     // if (val.length < newProposition.citedLines.length) {
     //   return;
     // }
-    setNewProposition({ ...newProposition, citedLines: arr });
+    setNewProposition({ ...newProposition, citedLines: val });
     // const lastValue = value[value.length - 1];
     // if (!isNaN(Number(lastValue))) {
     //   setNewProposition({ ...newProposition, citedLines: value });
@@ -176,33 +177,35 @@ const NaturalDeduction = ({
   };
 
   const handleNewLineCitedLinesKeyDown = ({ key }) => {
-    let nextLines = newProposition.citedLines;
-    if (key === 'Backspace') {
-      if (
-        newProposition.citedLines[newProposition.citedLines.length - 1] === ' '
-      ) {
-        nextLines = nextLines.slice(0, nextLines.length - 3);
-      } else {
-        nextLines = nextLines.slice(0, nextLines.length - 1);
-      }
-    }
-    setNewProposition({ ...newProposition, citedLines: nextLines });
+    // let nextLines = newProposition.citedLines;
+    // if (key === 'Backspace') {
+    //   if (
+    //     newProposition.citedLines[newProposition.citedLines.length - 1] === ' '
+    //   ) {
+    //     nextLines = nextLines.slice(0, nextLines.length - 3);
+    //   } else {
+    //     nextLines = nextLines.slice(0, nextLines.length - 1);
+    //   }
+    // }
+    // setNewProposition({ ...newProposition, citedLines: nextLines });
   };
 
   const addNewLine = () => {
     const { citedLines, proposition, rule } = newProposition;
+    const lines = citedLines.replace(/,\s+,/g, ',').split(/[\s,]+/).map(Number);
+    console.log("LINES", lines);
     if (!Formula.isWFFString(proposition)) {
       alert('Proposition is not a well-formed formula.');
       return;
     }
-    if (citedLines.length !== CITED_LINES_COUNT[rule]) {
+    if (lines.length !== CITED_LINES_COUNT[rule]) {
       alert(
         `Incorrect number of cited lines: expecting ${CITED_LINES_COUNT[rule]}`
       );
       return;
     }
     const newLine = {
-      citedLines,
+      citedLines: lines,
       proposition: new Formula(proposition),
       rule
     };
@@ -210,7 +213,7 @@ const NaturalDeduction = ({
       linesOfProof: value.linesOfProof.concat(newLine)
     });
     setNewProposition(initialProposition);
-    setTempCitedLines(citedLines);
+    setTempCitedLines(lines);
   };
 
   console.log("TEMPCITEDLINES", tempCitedLines)
@@ -272,7 +275,7 @@ const NaturalDeduction = ({
                   {line.rule === DEDUCTION_RULES.PREMISE ? (
                     <input value={''}/>
                   ) : (
-                    <input value={tempCitedLines.join(',')} onChange={e => {handleUpdateCitedLines(e, index);}} onBlur={e => {submitUpdateCitedLines(index);}} />
+                    <input value={value.linesOfProof[index].citedLines.join(', ')} onChange={e => {handleUpdateCitedLines(e, index);}} onBlur={e => {submitUpdateCitedLines(index);}} />
                   )}
                 </td>
                 <td style={{ display: 'flex', height: '25px' }}>
@@ -325,8 +328,8 @@ const NaturalDeduction = ({
         <div>
           Cited Lines:
           <input
+            value={newProposition.citedLines}
             onChange={handleNewLineCitedLinesChange}
-            onKeyDown={handleNewLineCitedLinesKeyDown}
           />
         </div>
         <StyledIcon icon={IconNames.ADD} iconSize={32} onClick={addNewLine} />
