@@ -34,11 +34,12 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
   const initialProposition = {
     proposition: '',
     rule: Object.values(DEDUCTION_RULES)[0],
-    citedLines: ''
+    citedLines: []
   };
 
   const [newProposition, setNewProposition] = useState(initialProposition);
   const [tempPropositionStrings, setTempPropositionStrings] = useState('');
+  const [tempCitedLines, setTempCitedLines] = useState([]);
 
   // Populate initial lines on reset or on start
   useEffect(() => {
@@ -70,18 +71,30 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
     setNewProposition({ ...newProposition, rule: value });
   };
 
-  const handleNewLineCitedLinesChange = ({ target: { value } }) => {
-    if (value.length < newProposition.citedLines.length) {
+  const handleNewLineCitedLinesChange = ({ target: { value: val } }) => {
+    console.log("VALUE", val, typeof val)
+    // if (isNaN(Number(val))) {
+    //   return;
+    // }
+    const arr = val.split(/[\W,]/g).map(x => [(x === '' ? NaN : Number(x))])
+    console.log("arr", arr)
+    if (arr.some(el => isNaN(el))) {
       return;
     }
-    const lastValue = value[value.length - 1];
-    if (!isNaN(Number(lastValue))) {
-      setNewProposition({ ...newProposition, citedLines: value });
-    }
-    if (lastValue === ',') {
-      setNewProposition({ ...newProposition, citedLines: value + ' ' });
-    }
+    // if (val.length < newProposition.citedLines.length) {
+    //   return;
+    // }
+    setNewProposition({ ...newProposition, citedLines: arr });
+    // const lastValue = value[value.length - 1];
+    // if (!isNaN(Number(lastValue))) {
+    //   setNewProposition({ ...newProposition, citedLines: value });
+    // }
+    // if (lastValue === ',') {
+    //   setNewProposition({ ...newProposition, citedLines: value + ' ' });
+    // }
   };
+
+  console.log("newProposition", newProposition);
 
   const handleUpdateProposition = ({ target: { value: val } }, index) => {
     if (index < problem.deduction_prompt.premises.length) {
@@ -104,12 +117,37 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
       copy[index] = value.linesOfProof[index].proposition.formulaString;
       setTempPropositionStrings(copy);
     }
-  }
+  };
+
+  const submitUpdateCitedLines = citedLines => {
+    const response = Object.assign({}, value);
+    response.linesOfProof[index].citedLines = citedLines;
+    setProblemResponse(problem.id, response);
+    // if (Formula.isWFFString(tempPropositionStrings[index])) {
+    //   const proposition = new Formula(tempPropositionStrings[index]);
+    //   response.linesOfProof[index].proposition = proposition;
+    //   setProblemResponse(problem.id, response);
+    // } else {
+    //   alert('Not a well-formed proposition.');
+    //   const copy = tempPropositionStrings.slice();
+    //   copy[index] = value.linesOfProof[index].proposition.formulaString;
+    //   setTempPropositionStrings(copy);
+    // }
+  };
 
   const handleUpdateRule = ({ target: { value: val } }, index) => {
     const newProblemResponse = Object.assign({}, value);
     newProblemResponse.linesOfProof[index].rule = val;
     setProblemResponse(problem.id, newProblemResponse);
+  };
+
+  const handleUpdateCitedLines = ({ target: { value: val } }, index) => {
+    const arr = val.split(', ');
+    console.log('handleUpdateCitedLines', val, index, arr);
+    const copy = tempCitedLines.slice()
+    copy[index] = arr;
+    setTempCitedLines(copy);
+    console.log("tempCitedLines", tempCitedLines);
   };
 
   const deleteLine = index => {
@@ -147,9 +185,8 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
       );
       return;
     }
-    const nextLines = (citedLines && citedLines.split(', ').map(Number)) || [];
     const newLine = {
-      citedLines: nextLines,
+      citedLines,
       proposition: new Formula(proposition),
       rule
     };
@@ -157,6 +194,7 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
       linesOfProof: value.linesOfProof.concat(newLine)
     });
     setNewProposition(initialProposition);
+    setTempCitedLines(citedLines);
   };
 
   return (
@@ -212,7 +250,13 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
                     </select>
                   </td>
                 )}
-                <td><input value={line.citedLines.join(', ')} /></td>
+                <td>
+                  {line.rule === DEDUCTION_RULES.PREMISE ? (
+                    <input value={''}/>
+                  ) : (
+                    <input value={tempCitedLines.join(', ')} onChange={e => {handleUpdateCitedLines(e, index);}} onBlur={e => {submitUpdateCitedLines(index);}} />
+                  )}
+                </td>
                 <td style={{ display: 'flex', height: '25px' }}>
                   <div
                     style={{ height: '100%', width: '25%' }}
@@ -264,7 +308,6 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
           Cited Lines:
           <input
             onChange={handleNewLineCitedLinesChange}
-            value={newProposition.citedLines}
             onKeyDown={handleNewLineCitedLinesKeyDown}
           />
         </div>
