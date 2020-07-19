@@ -5,7 +5,6 @@ import { Formula } from 'logically';
 import { Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { CITED_LINES_COUNT, DEDUCTION_RULES } from 'logically-local';
-import EditIcon from "../../assets/edit-icon.png"
 import UpArrow from "../../assets/up-arrow.png"
 import DownArrow from "../../assets/down-arrow.png"
 import TrashIcon from "../../assets/trash-icon.png"
@@ -190,15 +189,16 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
           </thead>
           <tbody>
             {value.linesOfProof.map((line, index) => (
-              <tr>
+              <tr key={index}>
                 <td>{index}</td>
                 <td><input value={tempPropositionStrings[index]} onChange={e => {handleUpdateProposition(e, index);}} onBlur={() => {submitUpdateProposition(index);}} /></td>
                 {line.rule === DEDUCTION_RULES.PREMISE ? (
-                  <td><input value={line.rule} readonly /></td>
+                  <td><input value={line.rule} readOnly /></td>
                 ) : (
                   <td>
                     <select
                       onChange={e => {handleUpdateRule(e, index);}}
+                      onBlur={e => {handleUpdateRule(e, index);}}
                       value={line.rule}
                     >
                       {Object.values(DEDUCTION_RULES)
@@ -218,13 +218,13 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
                     style={{ height: '100%', width: '25%' }}
                     onClick={() => {deleteLine(index);}}
                   >
-                    <img src={TrashIcon} style={{ width: 'auto', height: '25px' }} />
+                    <img src={TrashIcon} style={{ width: 'auto', height: '25px' }} alt="Trash icon" />
                   </div>
                   <div style={{ height: '100%', width: '25%' }}>
-                    <img src={UpArrow} style={{ width: 'auto', height: '25px' }} />
+                    <img src={UpArrow} style={{ width: 'auto', height: '25px' }} alt="Add line above icon"/>
                   </div>
                   <div style={{ height: '100%', width: '25%' }}>
-                    <img src={DownArrow} style={{ width: 'auto', height: '25px' }} />
+                    <img src={DownArrow} style={{ width: 'auto', height: '25px' }} alt="Add line below icon"/>
                   </div>
                 </td>
               </tr>
@@ -240,6 +240,7 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
           Proposition:{' '}
           <input
             onChange={handleNewLinePropositionChange}
+            onBlur={handleNewLinePropositionChange}
             value={newProposition.proposition}
           />
         </div>
