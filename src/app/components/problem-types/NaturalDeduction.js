@@ -130,43 +130,43 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
       </div>
 
       <ProofContainer>
-        <div>
-          Propositions:
-          {value.linesOfProof.map((line, index) => (
-            <div key={line.proposition.prettifiedFormula}>
-              <span style={{ marginRight: '8px' }}>({index + 1})</span>
-              {line.proposition.prettifiedFormula}
-            </div>
-          ))}
-        </div>
-        <div>
-          Justifications:
-          {value.linesOfProof.map((line, index) => (
-            <div key={`${line.rule}-${index}`} style={{ display: 'flex' }}>
-              {line.rule}
-              {line.citedLines.length > 0 && `(${line.citedLines.join(', ')})`}
-              <span
-                style={{
-                  alignItems: 'center',
-                  display: 'flex',
-                  marginLeft: '8px',
-                  width: '24px'
-                }}
-              >
-                {line.rule !== DEDUCTION_RULES.PREMISE && (
-                  <Icon
-                    icon={IconNames.CROSS}
-                    size={24}
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => {
-                      deleteLine(index);
-                    }}
-                  />
+        <table>
+          <thead>
+            <tr>
+              <th>Propositions</th>
+              <th>Justifications</th>
+              <th>Cited Lines</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {value.linesOfProof.map((line, index) => (
+              <tr>
+                <input value={line.proposition.prettifiedFormula} />
+                {line.rule === DEDUCTION_RULES.PREMISE ? (
+                  <td><input value={line.rule} /></td>
+                ) : (
+                  <td>
+                    <select
+                      value={line.rule}
+                    >
+                      {Object.values(DEDUCTION_RULES)
+                        .filter(rule => rule !== DEDUCTION_RULES.PREMISE)
+                        .map(rule => (
+                          <option key={rule} value={rule}>
+                            {rule}
+                          </option>
+                        ))
+                      }
+                    </select>
+                  </td>
                 )}
-              </span>
-            </div>
-          ))}
-        </div>
+                <input value={line.citedLines.join(', ')} />
+                <td>EDIT | ADD ABOVE | ADD BELOW</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </ProofContainer>
 
       <div>
