@@ -296,7 +296,17 @@ const NaturalDeduction = ({
                       alt="Add line above icon"
                     />
                   </div>
-                  <div style={{ height: '100%', width: '25%' }}>
+                  <div
+                    style={{ height: '100%', width: '25%' }}
+                    onClick={() => {
+                      addNewLine();
+                    }}
+                    onKeyDown={e => {
+                      if (e.keyCode === 13) addNewLine();
+                    }}
+                    role="button"
+                    tabIndex="0"
+                  >
                     <img
                       src={DownArrow}
                       style={{ width: 'auto', height: '25px' }}
