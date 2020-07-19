@@ -39,6 +39,7 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
   };
 
   const [newProposition, setNewProposition] = useState(initialProposition);
+  const [tempPropositionStrings, setTempPropositionStrings] = useState('');
 
   // Populate initial lines on reset or on start
   useEffect(() => {
@@ -47,6 +48,20 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
       setNewProposition(initialProposition);
     }
   });
+
+  useEffect(() => {
+    setTempPropositionStrings(
+      value.linesOfProof.map(p => p.proposition.prettifiedFormula)
+    );
+  }, [value.linesOfProof]);
+
+  // useEffect(() => {
+  //   for (const string of tempPropositionStrings) {
+  //     if (string.length) {
+  //       const formula = new Formula(string);
+  //     }
+  //   }
+  // }, [tempPropositionStrings])
 
   const handleNewLinePropositionChange = ({ target: { value } }) => {
     setNewProposition({ ...newProposition, proposition: value });
@@ -67,6 +82,37 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
     if (lastValue === ',') {
       setNewProposition({ ...newProposition, citedLines: value + ' ' });
     }
+  };
+
+  const handleUpdateProposition = ({ target: { value: val } }, index) => {
+    if (index < problem.deduction_prompt.premises.length) {
+      return;
+    }
+    const copy = tempPropositionStrings.slice();
+    copy[index] = val;
+    setTempPropositionStrings(copy)
+  };
+
+  const submitUpdateProposition = index => {
+    const response = Object.assign({}, value);
+    if (Formula.isWFFString(tempPropositionStrings[index])) {
+      const proposition = new Formula(tempPropositionStrings[index]);
+      response.linesOfProof[index].proposition = proposition;
+      setProblemResponse(problem.id, response);
+    } else {
+      alert('Not a well-formed proposition.')
+      setTempPropositionStrings(
+        tempPropositionStrings.slice().splice(
+          index, 1, value.linesOfProof[index].proposition.formulaString
+        )
+      )
+    }
+  }
+
+  const handleUpdateRule = ({ target: { value: val } }, index) => {
+    const newProblemResponse = Object.assign({}, value);
+    newProblemResponse.linesOfProof[index].rule = val;
+    setProblemResponse(problem.id, newProblemResponse);
   };
 
   const deleteLine = index => {
@@ -148,12 +194,13 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
             {value.linesOfProof.map((line, index) => (
               <tr>
                 <td>{index}</td>
-                <td><input value={line.proposition.prettifiedFormula} /></td>
+                <td><input value={tempPropositionStrings[index]} onChange={e => {handleUpdateProposition(e, index);}} onBlur={() => {submitUpdateProposition(index);}} /></td>
                 {line.rule === DEDUCTION_RULES.PREMISE ? (
                   <td><input value={line.rule} readonly /></td>
                 ) : (
                   <td>
                     <select
+                      onChange={e => {handleUpdateRule(e, index);}}
                       value={line.rule}
                     >
                       {Object.values(DEDUCTION_RULES)
@@ -169,11 +216,11 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
                 )}
                 <td><input value={line.citedLines.join(', ')} /></td>
                 <td style={{ display: 'flex', height: '25px' }}>
-                  <div style={{ height: '100%', width: '25%' }}>
+                  <div
+                    style={{ height: '100%', width: '25%' }}
+                    onClick={() => {deleteLine(index);}}
+                  >
                     <img src={TrashIcon} style={{ width: 'auto', height: '25px' }} />
-                  </div>
-                  <div style={{ height: '100%', width: '25%' }}>
-                    <img src={EditIcon} style={{ width: 'auto', height: '25px' }} />
                   </div>
                   <div style={{ height: '100%', width: '25%' }}>
                     <img src={UpArrow} style={{ width: 'auto', height: '25px' }} />
