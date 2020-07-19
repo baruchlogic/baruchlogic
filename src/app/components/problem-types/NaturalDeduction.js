@@ -119,9 +119,9 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
     }
   };
 
-  const submitUpdateCitedLines = citedLines => {
+  const submitUpdateCitedLines = index => {
     const response = Object.assign({}, value);
-    response.linesOfProof[index].citedLines = citedLines;
+    response.linesOfProof[index].citedLines = tempCitedLines;
     setProblemResponse(problem.id, response);
     // if (Formula.isWFFString(tempPropositionStrings[index])) {
     //   const proposition = new Formula(tempPropositionStrings[index]);
@@ -142,11 +142,20 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
   };
 
   const handleUpdateCitedLines = ({ target: { value: val } }, index) => {
-    const arr = val.split(', ');
-    console.log('handleUpdateCitedLines', val, index, arr);
-    const copy = tempCitedLines.slice()
-    copy[index] = arr;
-    setTempCitedLines(copy);
+    console.log(val, val === ',')
+    if (isNaN(Number(val)) && val.slice(-1) !== ',' && val.slice(-1) !== ' ') {
+      return;
+    }
+    let arr;
+    if (val.includes(',')) {
+      arr = val.split(',').map(x => Number(x));
+    } else {
+      arr = [Number(val)]
+    }
+    // console.log('handleUpdateCitedLines', val, index, arr);
+    // const copy = tempCitedLines.slice()
+    // copy[index] = arr;
+    setTempCitedLines(arr);
     console.log("tempCitedLines", tempCitedLines);
   };
 
@@ -196,6 +205,8 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
     setNewProposition(initialProposition);
     setTempCitedLines(citedLines);
   };
+
+  console.log("TEMPCITEDLINES", tempCitedLines)
 
   return (
     <div style={{ width: '100%' }}>
@@ -254,7 +265,7 @@ const NaturalDeduction = ({ problem, setProblemResponse, value }) => {
                   {line.rule === DEDUCTION_RULES.PREMISE ? (
                     <input value={''}/>
                   ) : (
-                    <input value={tempCitedLines.join(', ')} onChange={e => {handleUpdateCitedLines(e, index);}} onBlur={e => {submitUpdateCitedLines(index);}} />
+                    <input value={tempCitedLines.join(',')} onChange={e => {handleUpdateCitedLines(e, index);}} onBlur={e => {submitUpdateCitedLines(index);}} />
                   )}
                 </td>
                 <td style={{ display: 'flex', height: '25px' }}>
