@@ -349,7 +349,9 @@ const NaturalDeduction = ({
           onClick={addNewLine}
           role="button"
           tabIndex="0"
-          onKeyDown={addNewLine}
+          onKeyDown={e => {
+            if (e.keyCode === 13) addNewLine();
+          }}
         />
       </div>
     </div>
