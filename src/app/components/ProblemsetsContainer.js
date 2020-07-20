@@ -72,7 +72,7 @@ const ProblemsetsContainer = ({
       }
     });
 
-    return () => window.removeEventListener(listener);
+    return () => window.removeEventListener('resize', listener);
   }, [setFlexColumn]);
 
   useEffect(() => {
