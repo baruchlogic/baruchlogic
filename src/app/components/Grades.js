@@ -41,56 +41,62 @@ const Grades = () => {
 
   return (
     <StyledCard elevation={Elevation.THREE}>
-      <h1>Your grades for this section:</h1>
-      <table
-        style={{
-          border: '1px solid black',
-          borderCollapse: 'collapse',
-          margin: 'auto'
-        }}
-      >
-        <thead>
-          <tr>
-            <th>Problemset #</th>
-            {(sectionProblemsets || []).map(pset => (
-              <th
-                key={pset.id}
-                style={{
-                  border: '1px solid black',
-                  borderCollapse: 'collapse'
-                }}
-              >
-                {pset.problemset_order}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Score</td>
-            {(sectionProblemsets || []).map(pset => {
-              const grade = (grades || []).find(
-                x => x.problemset_id === pset.id
-              );
-              return (
-                <td
-                  key={pset.id}
-                  style={{
-                    border: '1px solid black',
-                    borderCollapse: 'collapse'
-                  }}
-                >
-                  {grade ? grade.score : 0}
-                </td>
-              );
-            })}
-          </tr>
-        </tbody>
-      </table>
-      <div>
-        <h2>Average:</h2>
-        <h3>{average}</h3>
-      </div>
+      {isAuth ? (
+        <>
+          <h1>Your grades for this section:</h1>
+          <table
+            style={{
+              border: '1px solid black',
+              borderCollapse: 'collapse',
+              margin: 'auto'
+            }}
+          >
+            <thead>
+              <tr>
+                <th>Problemset #</th>
+                {(sectionProblemsets || []).map(pset => (
+                  <th
+                    key={pset.id}
+                    style={{
+                      border: '1px solid black',
+                      borderCollapse: 'collapse'
+                    }}
+                  >
+                    {pset.problemset_order}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Score</td>
+                {(sectionProblemsets || []).map(pset => {
+                  const grade = (grades || []).find(
+                    x => x.problemset_id === pset.id
+                  );
+                  return (
+                    <td
+                      key={pset.id}
+                      style={{
+                        border: '1px solid black',
+                        borderCollapse: 'collapse'
+                      }}
+                    >
+                      {grade ? grade.score : 0}
+                    </td>
+                  );
+                })}
+              </tr>
+            </tbody>
+          </table>
+          <div>
+            <h2>Average:</h2>
+            <h3>{average}</h3>
+          </div>
+        </>
+      ) : (
+        <h2>Please log in to view grades.</h2>
+      )}
     </StyledCard>
   );
 };
