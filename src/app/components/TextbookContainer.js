@@ -16,11 +16,11 @@ const renderSidebarItems = setCurrentText => {
     const unit = e && e[1];
     if (unit !== currentUnit && unit > 0) {
       currentUnit = unit;
-      const H1 = () => <h1 key={k}>Unit #{unit}</h1>;
-      result.push(<H1 />);
+      const H1 = () => <h1>Unit #{unit}</h1>;
+      result.push(<H1 key={`h1-${k}`} />);
     }
     const Li = () => (
-      <li key={k}>
+      <li>
         <button
           style={{
             backgroundColor: 'white',
@@ -40,7 +40,7 @@ const renderSidebarItems = setCurrentText => {
         </button>
       </li>
     );
-    result.push(<Li />);
+    result.push(<Li key={k} />);
   });
   return result;
 };
