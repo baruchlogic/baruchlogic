@@ -285,7 +285,7 @@ const NaturalDeduction = ({
 
                 <td>
                   {line.rule === DEDUCTION_RULES.PREMISE ? (
-                    <input value={''} />
+                    <input value={''} readOnly />
                   ) : (
                     <input
                       value={tempCitedLines[index]}
