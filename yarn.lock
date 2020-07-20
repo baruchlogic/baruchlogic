@@ -1535,6 +1535,11 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
 
+baruchlogic-textbook@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/baruchlogic-textbook/-/baruchlogic-textbook-1.0.2.tgz#b7c4e1b66f761c8e97777aa85232a683935f5cf3"
+  integrity sha512-edwb2HoE6MoKO/OOte8DRmxO9OIabqoTY6fT1wd8dqvWUKnteBeJAZQX2k7OiRBEP9r/TRNFcLc7ymLMbn4g4Q==
+
 base64-js@^1.0.2:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.3.1.tgz#58ece8cb75dd07e71ed08c736abc5fac4dbf8df1"
