@@ -74,6 +74,14 @@ const configSectionRoutes = app => {
     res.send(problemsets);
   });
 
+  // Get the problemsets for a section with logged in user.
+  app.get('/api/user/sections/problemsets', async (req, res) => {
+    const { section_id: sectionId } = req.user;
+    console.log('SECTIONID!!!', sectionId);
+    const problemsets = await getSectionProblemsets(Number(sectionId));
+    res.send(problemsets);
+  });
+
   // Gets the due-dates for a section.
   // TODO: FIX
   app.get(

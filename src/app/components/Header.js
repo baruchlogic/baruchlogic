@@ -71,6 +71,7 @@ const Header = () => {
       <StyledLink to="/videos">videos</StyledLink>
       {/** <StyledLink to="/exercises">exercises</StyledLink> */}
       <StyledLink to="/problemsets">problemsets</StyledLink>
+      <StyledLink to="/grades">grades</StyledLink>
       {isAdmin && <StyledLink to="/admin">admin</StyledLink>}
       <StyledDivider />
       <Navbar.Group>

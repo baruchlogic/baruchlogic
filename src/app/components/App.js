@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import LoadingGear from './LoadingGear';
 const About = lazy(() => import('./About'));
 const AdminContainer = lazy(() => import('./admin/AdminContainer'));
+const Grades = lazy(() => import('./Grades'));
 const Header = lazy(() => import('./Header'));
 const Home = lazy(() => import('./Home'));
 const Login = lazy(() => import('./Login'));
@@ -22,6 +23,7 @@ const App = () => (
         <Route exact path="/" component={Home} />
         <Route exact path="/about" component={About} />
         <Route exact path="/text" component={Textbook} />
+        <Route exact path="/grades" component={Grades} />
         <Route exact path="/videos/:short_title?" component={VideosContainer} />
         <Route exact path="/exercises/:id?" component={ExercisesContainer} />
         <Route
