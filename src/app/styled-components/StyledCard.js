@@ -5,7 +5,7 @@ const StyledCard = styled(Card)`
   font-size: 1.5rem;
   margin: 1rem auto;
   text-align: center;
-  max-width: 80%;
+  max-width: 100%;
   overflow: ${props => (props.scroll ? 'auto' : 'visible')};
 `;
 
