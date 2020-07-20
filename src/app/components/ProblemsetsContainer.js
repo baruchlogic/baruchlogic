@@ -17,6 +17,7 @@ const ProblemsetsContainer = ({
   const [isUserAuth, user] = useIsUserAuth();
   const [groupedProblemsets, setGroupedProblemsets] = useState([]);
   const [fetchIsLoading, setFetchIsLoading] = useState(true);
+  const [flexColumn, setFlexColumn] = useState(false);
 
   const fetchProblemSets = async () => {
     if (isUserAuth && user) {
@@ -61,6 +62,28 @@ const ProblemsetsContainer = ({
     fetchProblemSets();
   }, [user]);
 
+  useEffect(() => {
+    const listener = window.addEventListener('resize', () => {
+      const width = window.innerWidth;
+      if (width < 1100) {
+        setFlexColumn(true);
+      } else {
+        setFlexColumn(false);
+      }
+    });
+
+    return () => window.removeEventListener(listener);
+  }, [setFlexColumn]);
+
+  useEffect(() => {
+    const width = window.innerWidth;
+    if (width < 1100) {
+      setFlexColumn(true);
+    } else {
+      setFlexColumn(false);
+    }
+  }, []);
+
   const getCurrentProblemsetFromDefaultOrder = defaultOrder =>
     allProblemsets.find(
       problemset => problemset.default_order === Number(defaultOrder)
@@ -80,8 +103,13 @@ const ProblemsetsContainer = ({
 
   return fetchIsLoading ? null : (
     <>
-      <div style={{ display: 'flex' }}>
-        <StyledSidebar>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: flexColumn ? 'column' : 'row'
+        }}
+      >
+        <StyledSidebar column={flexColumn}>
           <H1>problemsets</H1>
           <ul>
             {groupedProblemsets.map((unit, unitIndex) => (
@@ -96,6 +124,7 @@ const ProblemsetsContainer = ({
           <ProblemsetContainer
             problemsetId={getCurrentProblemsetFromDefaultOrder(defaultOrder).id}
             isUserAuth={isUserAuth}
+            column={flexColumn}
           />
         )}
       </div>

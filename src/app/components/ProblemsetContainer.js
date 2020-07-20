@@ -10,7 +10,7 @@ import { authFetch } from '../helpers/auth';
 const StyledContainer = styled.div`
   margin: auto;
   text-align: center;
-  width: 60%;
+  width: ${props => (props.column ? '80%' : '60%')};
 `;
 
 const StyledButton = styled(Button)`
@@ -21,7 +21,7 @@ const StyledResetButton = styled(StyledButton)`
   background-color: #2e0f4c !important;
 `;
 
-const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
+const ProblemsetContainer = ({ column, isUserAuth, problemsetId }) => {
   const [problemset, setProblemset] = useState(null);
   const [problems, setProblems] = useState([]);
   const [problemsetResponses, setProblemsetResponses] = useState({});
@@ -118,7 +118,7 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
   const isPastDueDate = dueDateMoment && dueDateMoment.isBefore(moment());
 
   return (
-    <StyledContainer>
+    <StyledContainer column={column}>
       {problemset && <h1>{`Problemset #${problemset.default_order}`}</h1>}
       {styledDueDate && <h2>{`Due date: ${styledDueDate}`}</h2>}
       {isPastDueDate && <h2>NOTE: Due date has passed</h2>}
@@ -186,11 +186,13 @@ const ProblemsetContainer = ({ isUserAuth, problemsetId }) => {
 };
 
 ProblemsetContainer.propTypes = {
+  column: bool.isRequired,
   isUserAuth: bool.isRequired,
   problemsetId: number
 };
 
 ProblemsetContainer.defaultProps = {
+  column: false,
   isUserAuth: false
 };
 
