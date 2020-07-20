@@ -227,7 +227,7 @@ const NaturalDeduction = ({
       </div>
 
       <ProofContainer>
-        <table>
+        <table style={{ margin: 'auto' }}>
           <thead>
             <tr>
               <th>Line #</th>
