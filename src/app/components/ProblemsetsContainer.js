@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import { object } from 'prop-types';
 import { Link } from 'react-router-dom';
 import { H1 } from '@blueprintjs/core';
@@ -8,10 +7,6 @@ import { useIsUserAuth } from 'hooks';
 
 import ProblemsetContainer from './ProblemsetContainer';
 import StyledSidebar from 'app-styled/StyledSidebar';
-
-const StyledContainer = styled.div`
-  display: flex;
-`;
 
 const ProblemsetsContainer = ({
   match: {
@@ -85,7 +80,7 @@ const ProblemsetsContainer = ({
 
   return fetchIsLoading ? null : (
     <>
-      <StyledContainer>
+      <div style={{ display: 'flex' }}>
         <StyledSidebar>
           <H1>problemsets</H1>
           <ul>
@@ -103,7 +98,7 @@ const ProblemsetsContainer = ({
             isUserAuth={isUserAuth}
           />
         )}
-      </StyledContainer>
+      </div>
     </>
   );
 };
