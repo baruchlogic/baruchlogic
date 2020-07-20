@@ -1,13 +1,20 @@
 import React from 'react';
 import Markdown from 'react-markdown';
 import { Elevation } from '@blueprintjs/core';
-import Chapter1 from '../chapter-1.md';
+import styled from 'styled-components';
+import { Card } from '@blueprintjs/core';
 
-import StyledCard from '../styled-components/StyledCard';
+const StyledCard = styled(Card)`
+  font-size: 1.5rem;
+  margin: auto;
+  text-align: center;
+  max-width: 80%;
+  overflow: ${props => (props.scroll ? 'auto' : 'visible')};
+`;
 
 import { ADMIN_EMAIL, TEXTBOOK_URL } from 'constants';
 
-const Textbook = () => (
+const Textbook = (text = '') => (
   <StyledCard elevation={Elevation.THREE}>
     <p>
       The textbook for this course can be found&nbsp;
@@ -17,10 +24,10 @@ const Textbook = () => (
     <p>
       If you wish to contribute to the text, or if you notice any mistakes or
       errors, feel free to file an Issue or Pull Request on GitHub or, if you
-      don%apost have a GitHub account, you may email
+      don&apost; have a GitHub account, you may email
       <a href={`mailto:${ADMIN_EMAIL}`}>{`${ADMIN_EMAIL}`}</a>.
     </p>
-    <Markdown source={Chapter1} />
+    <Markdown source={text.text} />
   </StyledCard>
 );
 

@@ -11,7 +11,10 @@
     "start:server": "cd ./src/server && yarn start",
     "start": "npm run start:server & npm run start:frontend"
   },
-  "workspaces": ["src/server", "src/app"],
+  "workspaces": [
+    "src/server",
+    "src/app"
+  ],
   "lint-staged": {
     "*.js": [
       "npm run lint"
