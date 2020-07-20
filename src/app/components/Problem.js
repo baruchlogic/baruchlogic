@@ -80,7 +80,9 @@ const Problem = ({
         {problem.problem_type === 'truth_table' &&
           'Complete the truth table for the following proposition:'}
         <div>{renderNewLines(problem.prompt || '')}</div>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div
+          style={{ display: 'flex', flexDirection: 'column', width: '100%' }}
+        >
           <ProblemType
             problem={problem}
             setProblemResponse={setProblemResponse}

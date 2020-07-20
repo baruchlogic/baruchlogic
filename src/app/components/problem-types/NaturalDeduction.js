@@ -12,6 +12,7 @@ import TrashIcon from '../../assets/trash-icon.png';
 const ProofContainer = styled.div`
   display: flex;
   width: 100%;
+  overflow: scroll;
   & > div {
     text-align: center;
     width: 50%;
