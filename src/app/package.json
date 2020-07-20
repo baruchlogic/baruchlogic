@@ -1,12 +1,11 @@
 {
-  "name": "@baruchlogic/app",
+  "name": "app",
   "version": "0.0.1",
   "description": "Frontend server for the baruchlogic website",
   "main": "index.js",
   "author": "JDR",
   "license": "MIT",
   "private": true,
-  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
   "scripts": {
     "build": "webpack --mode production",
     "lint": "eslint --fix './**/*.{js,jsx}'",
