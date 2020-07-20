@@ -155,14 +155,12 @@ const CourseForm = () => {
   );
 };
 
-const AdminCreate = () => {
-  return (
-    <StyledCard elevation={Elevation.THREE}>
-      <h3>Use this interface to create a new course section.</h3>
-      <br />
-      <CourseForm />
-    </StyledCard>
-  );
-};
+const AdminCreate = () => (
+  <StyledCard elevation={Elevation.THREE}>
+    <h3>Use this interface to create a new course section.</h3>
+    <br />
+    <CourseForm />
+  </StyledCard>
+);
 
 export default AdminCreate;

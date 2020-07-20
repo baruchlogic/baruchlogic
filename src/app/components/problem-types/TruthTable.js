@@ -53,12 +53,8 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
       return `${k * 1000 + j}-${problem.id}`;
     }
   };
-  const getRightIndex = (j, k) => {
-    return `${(k + 1) * 1000 + j + 1}-${problem.id}`;
-  };
-  const getLeftIndex = (j, k) => {
-    return `${(k - 1) * 1000 + j + 1}-${problem.id}`;
-  };
+  const getRightIndex = (j, k) => `${(k + 1) * 1000 + j + 1}-${problem.id}`;
+  const getLeftIndex = (j, k) => `${(k - 1) * 1000 + j + 1}-${problem.id}`;
 
   // Functions used to move focus around
   const focusNextElement = (j, k) => {

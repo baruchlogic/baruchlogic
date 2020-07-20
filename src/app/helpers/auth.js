@@ -11,11 +11,10 @@ const authFetchHeaders = {
  * @param  {object}  restParams - Other params for the `fetch` method
  * @return {Promise}        - The result of the fetch request;
  */
-export const authFetch = async (url, method = 'GET', restParams) => {
-  return await fetch(url, {
+export const authFetch = async (url, method = 'GET', restParams) =>
+  await fetch(url, {
     method,
     headers: authFetchHeaders,
     credentials: 'include',
     ...restParams
   });
-};

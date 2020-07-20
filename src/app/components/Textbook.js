@@ -1,5 +1,7 @@
 import React from 'react';
+import Markdown from 'react-markdown';
 import { Elevation } from '@blueprintjs/core';
+import Chapter1 from '../chapter-1.md';
 
 import StyledCard from '../styled-components/StyledCard';
 
@@ -18,6 +20,7 @@ const Textbook = () => (
       don%apost have a GitHub account, you may email
       <a href={`mailto:${ADMIN_EMAIL}`}>{`${ADMIN_EMAIL}`}</a>.
     </p>
+    <Markdown source={Chapter1} />
   </StyledCard>
 );
 

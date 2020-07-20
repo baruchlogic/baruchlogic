@@ -19,8 +19,8 @@ const StyledStyledCard = styled(StyledCard)`
   min-width: 600px;
 `;
 
-const VideosCard = ({ video }) => {
-  return video.id !== undefined ? (
+const VideosCard = ({ video }) =>
+  video.id !== undefined ? (
     <StyledContainer>
       <StyledStyledCard elevation={Elevation.THREE}>
         <StyledH1>{video.title}</StyledH1>
@@ -37,7 +37,6 @@ const VideosCard = ({ video }) => {
       </StyledStyledCard>
     </StyledContainer>
   ) : null;
-};
 
 VideosCard.propTypes = {
   video: shape({

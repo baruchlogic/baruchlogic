@@ -21,7 +21,8 @@
       "no-invalid-this": 0,
       "require-jsdoc": 0,
       "react-hooks/rules-of-hooks": 2,
-      "react-hooks/exhaustive-deps": 0
+      "react-hooks/exhaustive-deps": 0,
+      "arrow-body-style": 2
     },
     "settings": {
       "react": {
