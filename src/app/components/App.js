@@ -7,7 +7,7 @@ const Header = lazy(() => import('./Header'));
 const Home = lazy(() => import('./Home'));
 const Login = lazy(() => import('./Login'));
 const ProblemsetsContainer = lazy(() => import('./ProblemsetsContainer'));
-const Textbook = lazy(() => import('./Textbook'));
+const Textbook = lazy(() => import('./TextbookContainer'));
 const VideosContainer = lazy(() => import('./VideosContainer'));
 const ExercisesContainer = () => <div>Exercises</div>;
 
