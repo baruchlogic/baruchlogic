@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { func, object } from 'prop-types';
+import { array, bool, func, object } from 'prop-types';
 import styled from 'styled-components';
 import { Formula } from 'logically';
 
@@ -170,10 +170,10 @@ const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
 };
 
 TruthTable.propTypes = {
-  isUserAuth: object.isRequired,
+  isUserAuth: bool.isRequired,
   problem: object.isRequired,
   setProblemResponse: func,
-  value: object
+  value: array
 };
 
 TruthTable.defaultProps = {
