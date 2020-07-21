@@ -8,6 +8,7 @@ const StyledInput = styled.input`
   font-size: 1rem;
   text-align: center;
   width: 50px;
+  color: ${props => (props.incorrect ? 'red' : 'black' )};
 `;
 
 const StyledHeaderTD = styled.td`
@@ -19,6 +20,8 @@ const TruthTable = ({ setProblemResponse, value }) => {
   const emptyFn = () => {};
   const [prompt, setPrompt] = useState(Formula.generateRandomFormulaString());
   const [correct, setCorrect] = useState(true);
+  const [solution, setSolution] = useState();
+  const [showErrors, setShowErrors] = useState(false);
 
   // Create initial response matrix
   const columns = Formula.generateTruthTableHeaders(prompt);
@@ -35,8 +38,17 @@ const TruthTable = ({ setProblemResponse, value }) => {
   }, [value]);
 
   const generateNewPrompt = () => {
-    setPrompt(Formula.generateRandomFormulaString())
+    setPrompt(Formula.generateRandomFormulaString());
+    setShowErrors(false);
   };
+
+  useEffect(() => {
+    const initialValue = Formula.generateTruthTable(
+      prompt,
+      true
+    ).map(row => row.map(el => (el === true ? 'T' : el === false ? 'F' : '')));
+    setProblemResponse(initialValue);
+  }, [prompt]);
 
   const submitResponse = async () => {
     const response = await authFetch(
@@ -46,11 +58,12 @@ const TruthTable = ({ setProblemResponse, value }) => {
         value,
         prompt
       }) }
-    );
+    ).then(res => res.json());
     const {
       solution,
       score
-    } = await response.json();
+    } = response;
+    setSolution(solution.map(a => a.map(el => el ? 'T' : 'F' )));
     console.log('HERE!!!!', solution, score);
     if (!score) {
       setCorrect(false);
@@ -155,6 +168,8 @@ const TruthTable = ({ setProblemResponse, value }) => {
     }
   };
 
+  console.log(solution, value);
+
   return (
     <div style={{ overflow: 'scroll', width: '100%' }}>
       <div>Complete the truth table for the following proposition</div>
@@ -176,30 +191,44 @@ const TruthTable = ({ setProblemResponse, value }) => {
           </tr>
         </thead>
         <tbody>
-          {new Array(nRows).fill(0).map((row, j) => (
-            <tr key={`row-${j}`}>
-              {columns.map((row, k) => (
-                <td key={`cell-${k}`}>
-                  <StyledInput
-                    onKeyDown={e => {
-                      handleKeyDown(e, j, k);
-                    }}
-                    onChange={emptyFn}
-                    value={(value && value[j][k]) || ''}
-                    tabIndex={`${k * 1000 + j + 1}`}
-                    disabled={k < atomicVariables.length}
-                  />
-                </td>
-              ))}
-            </tr>
-          ))}
+          {new Array(nRows).fill(0).map((row, j) => {
+            return (
+              <tr key={`row-${j}`}>
+                {columns.map((row, k) => {
+                  const s = solution && solution[j] && solution[j][k];
+                  const v = value && value[j] && value[j][k];
+                  const incorrect = s !== v;
+                  return (
+                    <td key={`cell-${k}`}>
+                      <StyledInput
+                        incorrect={showErrors && incorrect}
+                        onKeyDown={e => {
+                          handleKeyDown(e, j, k);
+                        }}
+                        onChange={emptyFn}
+                        value={(value && value[j][k]) || ''}
+                        tabIndex={`${k * 1000 + j + 1}`}
+                        disabled={k < atomicVariables.length}
+                      />
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
       <div style={{ textAlign: 'center' }}>
         <button onClick={submitResponse}>SUBMIT</button>
       </div>
+      <div>
+        RESULT: {correct ? 'CORRECT' : 'INCORRECT'}
+      </div>
       <div style={{ textAlign: 'center' }}>
         <button onClick={generateNewPrompt}>GENERATE NEW PROPOSITION</button>
+      </div>
+      <div onClick={() => {setShowErrors(true);}} style={{ textAlign: 'center' }}>
+        <button>SHOW INCORRECT CELLS</button>
       </div>
     </div>
   );
