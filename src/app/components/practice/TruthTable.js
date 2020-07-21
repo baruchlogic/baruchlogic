@@ -19,7 +19,7 @@ const TruthTable = ({ setProblemResponse, value }) => {
   // Used for `onChange` to prevent React warning;
   const emptyFn = () => {};
   const [prompt, setPrompt] = useState(Formula.generateRandomFormulaString());
-  const [correct, setCorrect] = useState(true);
+  const [correct, setCorrect] = useState();
   const [solution, setSolution] = useState();
   const [showErrors, setShowErrors] = useState(false);
 
@@ -39,6 +39,7 @@ const TruthTable = ({ setProblemResponse, value }) => {
   const generateNewPrompt = () => {
     setPrompt(Formula.generateRandomFormulaString());
     setShowErrors(false);
+    setCorrect();
   };
 
   useEffect(() => {
@@ -216,7 +217,10 @@ const TruthTable = ({ setProblemResponse, value }) => {
       <div style={{ textAlign: 'center' }}>
         <button onClick={submitResponse}>SUBMIT</button>
       </div>
-      <div>RESULT: {correct ? 'CORRECT' : 'INCORRECT'}</div>
+      <div>
+        RESULT:{' '}
+        {correct === undefined ? 'N/A' : correct ? 'CORRECT' : 'INCORRECT'}
+      </div>
       <div style={{ textAlign: 'center' }}>
         <button onClick={generateNewPrompt}>GENERATE NEW PROPOSITION</button>
       </div>
