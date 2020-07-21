@@ -31,7 +31,7 @@ export const useIsUserAuth = () => {
       })
       .catch(e => {
         setIsAuth(false);
-        setUser({});
+        setUser();
       });
   };
 
