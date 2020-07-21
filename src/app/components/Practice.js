@@ -1,4 +1,5 @@
 import React, { lazy, useState } from 'react';
+import { string } from 'prop-types';
 const TruthTable = lazy(() => import('./practice/TruthTable'));
 
 const Practice = ({ problemType = 'truth-table' }) => {
@@ -14,6 +15,10 @@ const Practice = ({ problemType = 'truth-table' }) => {
       break;
   }
   return <ProblemType value={response} setProblemResponse={setResponse} />;
+};
+
+Practice.propTypes = {
+  problemType: string.required
 };
 
 export default Practice;

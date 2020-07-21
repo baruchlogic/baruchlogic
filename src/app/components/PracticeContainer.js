@@ -1,4 +1,5 @@
 import React from 'react';
+import { shape, string } from 'prop-types';
 import { Link } from 'react-router-dom';
 import { H1 } from '@blueprintjs/core';
 import { useColumnView } from 'hooks';
@@ -32,6 +33,14 @@ const PracticeContainer = ({
       </div>
     </>
   );
+};
+
+PracticeContainer.propTypes = {
+  match: shape({
+    params: shape({
+      problem_type: string
+    })
+  })
 };
 
 export default PracticeContainer;

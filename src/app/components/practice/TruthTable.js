@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { array, bool, func, object } from 'prop-types';
+import { array, func, object } from 'prop-types';
 import styled from 'styled-components';
 import { Formula } from 'logically';
 import { authFetch } from 'helpers/auth';
@@ -8,7 +8,7 @@ const StyledInput = styled.input`
   font-size: 1rem;
   text-align: center;
   width: 50px;
-  color: ${props => (props.incorrect ? 'red' : 'black' )};
+  color: ${props => (props.incorrect ? 'red' : 'black')};
 `;
 
 const StyledHeaderTD = styled.td`
@@ -28,10 +28,9 @@ const TruthTable = ({ setProblemResponse, value }) => {
   const atomicVariables = Formula.getAtomicVariables(prompt);
   const nRows = Math.pow(2, atomicVariables.length);
   useEffect(() => {
-    const initialValue = Formula.generateTruthTable(
-      prompt,
-      true
-    ).map(row => row.map(el => (el === true ? 'T' : el === false ? 'F' : '')));
+    const initialValue = Formula.generateTruthTable(prompt, true).map(row =>
+      row.map(el => (el === true ? 'T' : el === false ? 'F' : ''))
+    );
     if (Object.values(value || {}).length === 0) {
       setProblemResponse(initialValue);
     }
@@ -43,10 +42,9 @@ const TruthTable = ({ setProblemResponse, value }) => {
   };
 
   useEffect(() => {
-    const initialValue = Formula.generateTruthTable(
-      prompt,
-      true
-    ).map(row => row.map(el => (el === true ? 'T' : el === false ? 'F' : '')));
+    const initialValue = Formula.generateTruthTable(prompt, true).map(row =>
+      row.map(el => (el === true ? 'T' : el === false ? 'F' : ''))
+    );
     setProblemResponse(initialValue);
   }, [prompt]);
 
@@ -54,16 +52,15 @@ const TruthTable = ({ setProblemResponse, value }) => {
     const response = await authFetch(
       `${API_BASE_URL}/api/practice/truth-table`,
       'POST',
-      { body: JSON.stringify({
-        value,
-        prompt
-      }) }
+      {
+        body: JSON.stringify({
+          value,
+          prompt
+        })
+      }
     ).then(res => res.json());
-    const {
-      solution,
-      score
-    } = response;
-    setSolution(solution.map(a => a.map(el => el ? 'T' : 'F' )));
+    const { solution, score } = response;
+    setSolution(solution.map(a => a.map(el => (el ? 'T' : 'F'))));
     console.log('HERE!!!!', solution, score);
     if (!score) {
       setCorrect(false);
@@ -191,43 +188,49 @@ const TruthTable = ({ setProblemResponse, value }) => {
           </tr>
         </thead>
         <tbody>
-          {new Array(nRows).fill(0).map((row, j) => {
-            return (
-              <tr key={`row-${j}`}>
-                {columns.map((row, k) => {
-                  const s = solution && solution[j] && solution[j][k];
-                  const v = value && value[j] && value[j][k];
-                  const incorrect = s !== v;
-                  return (
-                    <td key={`cell-${k}`}>
-                      <StyledInput
-                        incorrect={showErrors && incorrect}
-                        onKeyDown={e => {
-                          handleKeyDown(e, j, k);
-                        }}
-                        onChange={emptyFn}
-                        value={(value && value[j][k]) || ''}
-                        tabIndex={`${k * 1000 + j + 1}`}
-                        disabled={k < atomicVariables.length}
-                      />
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
+          {new Array(nRows).fill(0).map((row, j) => (
+            <tr key={`row-${j}`}>
+              {columns.map((row, k) => {
+                const s = solution && solution[j] && solution[j][k];
+                const v = value && value[j] && value[j][k];
+                const incorrect = s !== v;
+                return (
+                  <td key={`cell-${k}`}>
+                    <StyledInput
+                      incorrect={showErrors && incorrect}
+                      onKeyDown={e => {
+                        handleKeyDown(e, j, k);
+                      }}
+                      onChange={emptyFn}
+                      value={(value && value[j][k]) || ''}
+                      tabIndex={`${k * 1000 + j + 1}`}
+                      disabled={k < atomicVariables.length}
+                    />
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
         </tbody>
       </table>
       <div style={{ textAlign: 'center' }}>
         <button onClick={submitResponse}>SUBMIT</button>
       </div>
-      <div>
-        RESULT: {correct ? 'CORRECT' : 'INCORRECT'}
-      </div>
+      <div>RESULT: {correct ? 'CORRECT' : 'INCORRECT'}</div>
       <div style={{ textAlign: 'center' }}>
         <button onClick={generateNewPrompt}>GENERATE NEW PROPOSITION</button>
       </div>
-      <div onClick={() => {setShowErrors(true);}} style={{ textAlign: 'center' }}>
+      <div
+        onClick={() => {
+          setShowErrors(true);
+        }}
+        onKeyDown={e => {
+          if (e.keyCode === 13) setShowErrors(true);
+        }}
+        role="button"
+        tabIndex="0"
+        style={{ textAlign: 'center' }}
+      >
         <button>SHOW INCORRECT CELLS</button>
       </div>
     </div>
