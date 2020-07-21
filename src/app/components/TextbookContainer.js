@@ -3,9 +3,11 @@ import styled from 'styled-components';
 import StyledSidebar from 'app-styled/StyledSidebar';
 import Textbook from './Textbook';
 import textbook from 'baruchlogic-textbook';
+import { useColumnView } from 'hooks';
 
 const StyledContainer = styled.div`
   display: flex;
+  flex-direction: ${props => (props.column ? 'column' : 'row')};
 `;
 
 const renderSidebarItems = setCurrentText => {
@@ -47,9 +49,10 @@ const renderSidebarItems = setCurrentText => {
 
 const TextbookContainer = () => {
   const [currentText, setCurrentText] = useState(textbook.introduction);
+  const isColumnView = useColumnView();
   return (
-    <StyledContainer>
-      <StyledSidebar>
+    <StyledContainer column={isColumnView}>
+      <StyledSidebar column={isColumnView}>
         <h1>Chapters</h1>
         <ul>{renderSidebarItems(setCurrentText)}</ul>
       </StyledSidebar>
