@@ -300,6 +300,7 @@ const addProblemsetScore = async (studentId, problemsetId, score) => {
 
 module.exports = {
   addProblemsetScore,
+  compareMatrices,
   getBestResponses,
   getAllProblemsets,
   getProblemsByProblemsetId,

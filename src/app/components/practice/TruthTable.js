@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { array, bool, func, object } from 'prop-types';
 import styled from 'styled-components';
 import { Formula } from 'logically';
+import { authFetch } from 'helpers/auth';
 
 const StyledInput = styled.input`
   font-size: 1rem;
@@ -17,6 +18,7 @@ const TruthTable = ({ setProblemResponse, value }) => {
   // Used for `onChange` to prevent React warning;
   const emptyFn = () => {};
   const [prompt, setPrompt] = useState(Formula.generateRandomFormulaString());
+  const [correct, setCorrect] = useState(true);
 
   // Create initial response matrix
   const columns = Formula.generateTruthTableHeaders(prompt);
@@ -34,6 +36,27 @@ const TruthTable = ({ setProblemResponse, value }) => {
 
   const generateNewPrompt = () => {
     setPrompt(Formula.generateRandomFormulaString())
+  };
+
+  const submitResponse = async () => {
+    const response = await authFetch(
+      `${API_BASE_URL}/api/practice/truth-table`,
+      'POST',
+      { body: JSON.stringify({
+        value,
+        prompt
+      }) }
+    );
+    const {
+      solution,
+      score
+    } = await response.json();
+    console.log('HERE!!!!', solution, score);
+    if (!score) {
+      setCorrect(false);
+    } else {
+      setCorrect(true);
+    }
   };
 
   // Set a value in the response matrix
@@ -173,7 +196,7 @@ const TruthTable = ({ setProblemResponse, value }) => {
         </tbody>
       </table>
       <div style={{ textAlign: 'center' }}>
-        <button>SUBMIT</button>
+        <button onClick={submitResponse}>SUBMIT</button>
       </div>
       <div style={{ textAlign: 'center' }}>
         <button onClick={generateNewPrompt}>GENERATE NEW PROPOSITION</button>
