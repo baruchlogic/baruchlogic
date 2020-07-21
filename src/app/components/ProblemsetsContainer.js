@@ -3,7 +3,7 @@ import { object } from 'prop-types';
 import { Link } from 'react-router-dom';
 import { H1 } from '@blueprintjs/core';
 import { authFetch } from '../helpers/auth';
-import { useIsUserAuth } from 'hooks';
+import { useColumnView, useIsUserAuth } from 'hooks';
 
 import ProblemsetContainer from './ProblemsetContainer';
 import StyledSidebar from 'app-styled/StyledSidebar';
@@ -17,7 +17,7 @@ const ProblemsetsContainer = ({
   const [isUserAuth, user] = useIsUserAuth();
   const [groupedProblemsets, setGroupedProblemsets] = useState([]);
   const [fetchIsLoading, setFetchIsLoading] = useState(true);
-  const [flexColumn, setFlexColumn] = useState(false);
+  const isColumnView = useColumnView();
 
   const fetchProblemSets = async () => {
     if (isUserAuth && user) {
@@ -62,28 +62,6 @@ const ProblemsetsContainer = ({
     fetchProblemSets();
   }, [user]);
 
-  useEffect(() => {
-    const listener = window.addEventListener('resize', () => {
-      const width = window.innerWidth;
-      if (width < 1100) {
-        setFlexColumn(true);
-      } else {
-        setFlexColumn(false);
-      }
-    });
-
-    return () => window.removeEventListener('resize', listener);
-  }, [setFlexColumn]);
-
-  useEffect(() => {
-    const width = window.innerWidth;
-    if (width < 1100) {
-      setFlexColumn(true);
-    } else {
-      setFlexColumn(false);
-    }
-  }, []);
-
   const getCurrentProblemsetFromDefaultOrder = defaultOrder =>
     allProblemsets.find(
       problemset => problemset.default_order === Number(defaultOrder)
@@ -106,10 +84,10 @@ const ProblemsetsContainer = ({
       <div
         style={{
           display: 'flex',
-          flexDirection: flexColumn ? 'column' : 'row'
+          flexDirection: isColumnView ? 'column' : 'row'
         }}
       >
-        <StyledSidebar column={flexColumn}>
+        <StyledSidebar column={isColumnView}>
           <H1>problemsets</H1>
           <ul>
             {groupedProblemsets.map((unit, unitIndex) => (
@@ -124,7 +102,7 @@ const ProblemsetsContainer = ({
           <ProblemsetContainer
             problemsetId={getCurrentProblemsetFromDefaultOrder(defaultOrder).id}
             isUserAuth={isUserAuth}
-            column={flexColumn}
+            column={isColumnView}
           />
         )}
       </div>
