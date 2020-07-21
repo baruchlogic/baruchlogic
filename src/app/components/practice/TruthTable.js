@@ -32,6 +32,10 @@ const TruthTable = ({ setProblemResponse, value }) => {
     }
   }, [value]);
 
+  const generateNewPrompt = () => {
+    setPrompt(Formula.generateRandomFormulaString())
+  };
+
   // Set a value in the response matrix
   const setCellValueCopy = (matrix, i, j, value) => {
     const copy = matrix.map(row => [...row]);
@@ -170,6 +174,9 @@ const TruthTable = ({ setProblemResponse, value }) => {
       </table>
       <div style={{ textAlign: 'center' }}>
         <button>SUBMIT</button>
+      </div>
+      <div style={{ textAlign: 'center' }}>
+        <button onClick={generateNewPrompt}>GENERATE NEW PROPOSITION</button>
       </div>
     </div>
   );
