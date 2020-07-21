@@ -28,7 +28,6 @@ const Problem = ({
   isIncorrectResponse,
   isUserAuth,
   problem,
-  responseData,
   setProblemResponse,
   value
 }) => {
@@ -86,7 +85,6 @@ const Problem = ({
           <ProblemType
             problem={problem}
             setProblemResponse={setProblemResponse}
-            responseData={responseData}
             value={value}
             isUserAuth={isUserAuth}
             incorrectResponses={incorrectResponses}
@@ -102,7 +100,6 @@ Problem.propTypes = {
   isUserAuth: bool.isRequired,
   isIncorrectResponse: bool.isRequired,
   problem: object.isRequired,
-  responseData: object,
   setProblemResponse: func,
   value: any
 };
