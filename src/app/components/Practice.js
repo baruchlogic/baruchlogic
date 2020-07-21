@@ -1,6 +1,5 @@
 import React from 'react';
 
-const Practice = () =>
-  <div>PRACTICE!</div>;
+const Practice = () => <div>PRACTICE!</div>;
 
 export default Practice;
