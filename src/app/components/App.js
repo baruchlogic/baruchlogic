@@ -8,7 +8,7 @@ const Header = lazy(() => import('./Header'));
 const Home = lazy(() => import('./Home'));
 const Login = lazy(() => import('./Login'));
 const ProblemsetsContainer = lazy(() => import('./ProblemsetsContainer'));
-const Textbook = lazy(() => import('./TextbookContainer'));
+const TextbookContainer = lazy(() => import('./TextbookContainer'));
 const VideosContainer = lazy(() => import('./VideosContainer'));
 const PracticeContainer = lazy(() => import('./PracticeContainer'));
 const ExercisesContainer = () => <div>Exercises</div>;
@@ -23,7 +23,7 @@ const App = () => (
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/about" component={About} />
-        <Route exact path="/text" component={Textbook} />
+        <Route exact path="/textbook/:chapter?" component={TextbookContainer} />
         <Route exact path="/grades" component={Grades} />
         <Route exact path="/practice" component={PracticeContainer} />
         <Route exact path="/videos/:short_title?" component={VideosContainer} />

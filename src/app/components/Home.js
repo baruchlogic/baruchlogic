@@ -104,7 +104,7 @@ const Home = ({ history }) => (
         order={2}
         elevation={Elevation.THREE}
         interactive={true}
-        onClick={() => history.push('/text')}
+        onClick={() => history.push('/textbook')}
       >
         <StyledBookIcon className="fas fa-book-reader" />
         <div>Clear, easy to understand text</div>

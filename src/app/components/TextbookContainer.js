@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { number, shape } from 'prop-types';
 import StyledSidebar from 'app-styled/StyledSidebar';
 import Textbook from './Textbook';
 import textbook from 'baruchlogic-textbook';
@@ -22,8 +24,8 @@ const renderSidebarItems = setCurrentText => {
       result.push(<H1 key={`h1-${k}`} />);
     }
     const Li = () => (
-      <li>
-        <button
+      <Link to={`/textbook/${index}`}>
+        <div
           style={{
             backgroundColor: 'white',
             border: 'none',
@@ -31,24 +33,27 @@ const renderSidebarItems = setCurrentText => {
             fontSize: '18px',
             textAlign: 'left'
           }}
-          onClick={() => {
-            setCurrentText(v);
-          }}
-          onKeyDown={e => {
-            if (e.keyCode === 13) setCurrentText(v);
-          }}
         >
           Chapter {index} - {v.title}
-        </button>
-      </li>
+        </div>
+      </Link>
     );
     result.push(<Li key={k} />);
   });
   return result;
 };
 
-const TextbookContainer = () => {
+const TextbookContainer = ({
+  match: {
+    params: { chapter = 0 }
+  }
+}) => {
   const [currentText, setCurrentText] = useState(textbook.introduction);
+
+  useEffect(() => {
+    setCurrentText(Object.values(textbook)[chapter]);
+  }, [chapter]);
+
   const isColumnView = useColumnView();
   return (
     <StyledContainer column={isColumnView}>
@@ -59,6 +64,14 @@ const TextbookContainer = () => {
       <Textbook text={currentText.text} />
     </StyledContainer>
   );
+};
+
+TextbookContainer.propTypes = {
+  match: shape({
+    params: shape({
+      chapter: number
+    })
+  })
 };
 
 export default TextbookContainer;
