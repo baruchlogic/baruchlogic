@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { object } from 'prop-types';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { H1 } from '@blueprintjs/core';
 import { useColumnView } from 'hooks';
@@ -20,18 +19,15 @@ const PracticeContainer = () => {
         <StyledSidebar column={isColumnView}>
           <H1>practice</H1>
           <ul>
-            <li>Translations</li>
-            <li>Truth Tables</li>
-            <li>Natural Deduction</li>
+            <Link to="/practice/translations">Translations</Link>
+            <Link to="/practice/truth-tables">Truth Tables</Link>
+            <Link to="/practice/natural-deduction">Natural Deduction</Link>
           </ul>
         </StyledSidebar>
         <Practice />
       </div>
     </>
   );
-};
-
-PracticeContainer.propTypes = {
 };
 
 export default PracticeContainer;

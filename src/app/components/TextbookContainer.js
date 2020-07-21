@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { number, shape } from 'prop-types';
+import { shape, string } from 'prop-types';
 import StyledSidebar from 'app-styled/StyledSidebar';
 import Textbook from './Textbook';
 import textbook from 'baruchlogic-textbook';
@@ -45,13 +45,13 @@ const renderSidebarItems = setCurrentText => {
 
 const TextbookContainer = ({
   match: {
-    params: { chapter = 0 }
+    params: { chapter = '0' }
   }
 }) => {
   const [currentText, setCurrentText] = useState(textbook.introduction);
 
   useEffect(() => {
-    setCurrentText(Object.values(textbook)[chapter]);
+    setCurrentText(Object.values(textbook)[Number(chapter)]);
   }, [chapter]);
 
   const isColumnView = useColumnView();
@@ -69,7 +69,7 @@ const TextbookContainer = ({
 TextbookContainer.propTypes = {
   match: shape({
     params: shape({
-      chapter: number
+      chapter: string
     })
   })
 };

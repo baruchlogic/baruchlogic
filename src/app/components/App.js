@@ -25,7 +25,11 @@ const App = () => (
         <Route exact path="/about" component={About} />
         <Route exact path="/textbook/:chapter?" component={TextbookContainer} />
         <Route exact path="/grades" component={Grades} />
-        <Route exact path="/practice" component={PracticeContainer} />
+        <Route
+          exact
+          path="/practice/:problemType?"
+          component={PracticeContainer}
+        />
         <Route exact path="/videos/:short_title?" component={VideosContainer} />
         <Route exact path="/exercises/:id?" component={ExercisesContainer} />
         <Route
