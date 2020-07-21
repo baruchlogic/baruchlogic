@@ -50,8 +50,7 @@ const StyledDivider = styled(Navbar.Divider)`
 `;
 
 const Header = () => {
-  const [x, user] = useIsUserAuth();
-  console.log('!', x, user);
+  const [, user] = useIsUserAuth();
   return (
     <StyledNavbar>
       <StyledLink to="/">home</StyledLink>
