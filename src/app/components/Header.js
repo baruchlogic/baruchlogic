@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Navbar } from '@blueprintjs/core';
 import { Icon } from '@blueprintjs/core';
-import { authFetch } from '../helpers/auth';
+import { useIsUserAuth } from '../hooks';
 
 const StyledNavbar = styled(Navbar)`
   &&& {
@@ -50,19 +50,7 @@ const StyledDivider = styled(Navbar.Divider)`
 `;
 
 const Header = () => {
-  const [isAdmin, setIsAdmin] = useState(false);
-  const getIsAdmin = async () => {
-    const response = await authFetch(`${API_BASE_URL}/api/auth`);
-    if (response.status !== 200) {
-      setIsAdmin(false);
-      return;
-    }
-    const admin = await response.json();
-    setIsAdmin(admin.admin);
-  };
-  useEffect(() => {
-    getIsAdmin();
-  });
+  const [, user] = useIsUserAuth();
   return (
     <StyledNavbar>
       <StyledLink to="/">home</StyledLink>
@@ -72,7 +60,7 @@ const Header = () => {
       {/** <StyledLink to="/exercises">exercises</StyledLink> */}
       <StyledLink to="/problemsets">problemsets</StyledLink>
       <StyledLink to="/grades">grades</StyledLink>
-      {isAdmin && <StyledLink to="/admin">admin</StyledLink>}
+      {user && user.admin && <StyledLink to="/admin">admin</StyledLink>}
       <StyledDivider />
       <Navbar.Group>
         <Link to="/login">
