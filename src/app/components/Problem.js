@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import { any, bool, func, object } from 'prop-types';
 import StyledCard from 'app-styled/StyledCard';
 import { Elevation } from '@blueprintjs/core';
 import styled from 'styled-components';
-import MultipleChoice from './problem-types/MultipleChoice';
-import NaturalDeduction from './problem-types/NaturalDeduction';
-import TrueFalse from './problem-types/TrueFalse';
-import TruthTable from './problem-types/TruthTable';
+const MultipleChoice = lazy(() => import('./problem-types/MultipleChoice'));
+const NaturalDeduction = lazy(() => import('./problem-types/NaturalDeduction'));
+const TrueFalse = lazy(() => import('./problem-types/TrueFalse'));
+const TruthTable = lazy(() => import('./problem-types/TruthTable'));
 
 const StyledDiv = styled.div`
   align-items: center;
