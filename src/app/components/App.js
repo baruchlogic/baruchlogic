@@ -10,6 +10,7 @@ const Login = lazy(() => import('./Login'));
 const ProblemsetsContainer = lazy(() => import('./ProblemsetsContainer'));
 const Textbook = lazy(() => import('./TextbookContainer'));
 const VideosContainer = lazy(() => import('./VideosContainer'));
+const PracticeContainer = lazy(() => import('./PracticeContainer'));
 const ExercisesContainer = () => <div>Exercises</div>;
 
 const App = () => (
@@ -24,6 +25,7 @@ const App = () => (
         <Route exact path="/about" component={About} />
         <Route exact path="/text" component={Textbook} />
         <Route exact path="/grades" component={Grades} />
+        <Route exact path="/practice" component={PracticeContainer} />
         <Route exact path="/videos/:short_title?" component={VideosContainer} />
         <Route exact path="/exercises/:id?" component={ExercisesContainer} />
         <Route

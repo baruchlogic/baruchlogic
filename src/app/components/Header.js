@@ -61,6 +61,7 @@ const Header = () => {
       <StyledLink to="/problemsets">problemsets</StyledLink>
       {user && !user.admin && <StyledLink to="/grades">grades</StyledLink>}
       {user && user.admin && <StyledLink to="/admin">admin</StyledLink>}
+      <StyledLink to="/practice">practice</StyledLink>
       <StyledDivider />
       <Navbar.Group>
         <Link to="/login">
