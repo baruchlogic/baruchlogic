@@ -6,7 +6,11 @@ import { useColumnView } from 'hooks';
 import Practice from './Practice';
 import StyledSidebar from 'app-styled/StyledSidebar';
 
-const PracticeContainer = () => {
+const PracticeContainer = ({
+  match: {
+    params: { problem_type: problemType }
+  }
+}) => {
   const isColumnView = useColumnView();
   return (
     <>
@@ -20,11 +24,11 @@ const PracticeContainer = () => {
           <H1>practice</H1>
           <ul>
             <Link to="/practice/translations">Translations</Link>
-            <Link to="/practice/truth-tables">Truth Tables</Link>
+            <Link to="/practice/truth-table">Truth Tables</Link>
             <Link to="/practice/natural-deduction">Natural Deduction</Link>
           </ul>
         </StyledSidebar>
-        <Practice />
+        <Practice problemType={problemType} />
       </div>
     </>
   );

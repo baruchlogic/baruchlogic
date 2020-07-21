@@ -27,7 +27,7 @@ const App = () => (
         <Route exact path="/grades" component={Grades} />
         <Route
           exact
-          path="/practice/:problemType?"
+          path="/practice/:problem_type?"
           component={PracticeContainer}
         />
         <Route exact path="/videos/:short_title?" component={VideosContainer} />
