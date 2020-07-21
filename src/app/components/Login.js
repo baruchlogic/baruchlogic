@@ -51,8 +51,10 @@ const Login = ({ history }) => {
     if (status === 200) {
       if (admin) {
         history.push('/admin');
+        window.location.reload(false);
       } else {
         history.push('/');
+        window.location.reload(false);
       }
     }
   };
@@ -61,6 +63,7 @@ const Login = ({ history }) => {
     const { status } = await authFetch(`${API_BASE_URL}/api/logout`, 'GET');
     if (status === 200) {
       history.push('/');
+      window.location.reload(false);
     }
   };
 

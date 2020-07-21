@@ -73,6 +73,7 @@ const AdminHeader = () => (
       <StyledLink to="/admin">admin dashboard</StyledLink>
     </StyledFlexDiv>
     <StyledDivider />
+    <StyledLink to="/">home</StyledLink>
     <StyledLink to="/admin/how-to">how-to</StyledLink>
     <StyledLink to="/admin/roster">roster</StyledLink>
     <StyledLink to="/admin/create">create section</StyledLink>

@@ -28,6 +28,10 @@ export const useIsUserAuth = () => {
         // console.log('RESPONSE', res);
         setIsAuth(true);
         setUser(res.user);
+      })
+      .catch(e => {
+        setIsAuth(false);
+        setUser();
       });
   };
 
