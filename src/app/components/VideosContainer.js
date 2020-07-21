@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import { object } from 'prop-types';
 import { Link } from 'react-router-dom';
 import { H1 } from '@blueprintjs/core';
+import { useColumnView } from 'hooks';
 
 import StyledSidebar from 'app-styled/StyledSidebar';
 import VideosCard from './VideosCard';
-
-const StyledContainer = styled.div`
-  display: flex;
-`;
 
 const VideosContainer = ({
   match: {
@@ -20,6 +16,7 @@ const VideosContainer = ({
   const [groupedVideos, setGroupdVideos] = useState([]);
   const [currentVideo, setCurrentVideo] = useState(null);
   const [fetchIsLoading, setFetchIsLoading] = useState(true);
+  const isColumnView = useColumnView();
 
   const groupVideos = videos => {
     const result = [];
@@ -77,34 +74,43 @@ const VideosContainer = ({
   }, [currentShortTitle, videos]);
 
   return fetchIsLoading ? null : (
-    <>
-      <StyledContainer>
-        <StyledSidebar>
-          <H1>videos</H1>
-          <ul>
-            {groupedVideos.map((unit, unitIndex) => (
-              <div key={unitIndex}>
-                <h2>Unit {unitIndex + 1}</h2>
-                <>
-                  {unit.map((section, sectionIndex) => (
-                    <div key={sectionIndex}>
-                      <h3>Section {sectionIndex + 1}</h3>
-                      <>{section.map(mapVideoToJSX)}</>
-                    </div>
-                  ))}
-                </>
-              </div>
-            ))}
-          </ul>
-        </StyledSidebar>
-        {currentVideo && <VideosCard video={currentVideo} />}
-      </StyledContainer>
-    </>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: isColumnView ? 'column' : 'row'
+      }}
+    >
+      <StyledSidebar column={isColumnView}>
+        <H1>videos</H1>
+        <ul>
+          {groupedVideos.map((unit, unitIndex) => (
+            <div key={unitIndex}>
+              <h2>Unit {unitIndex + 1}</h2>
+              <>
+                {unit.map((section, sectionIndex) => (
+                  <div key={sectionIndex}>
+                    <h3>Section {sectionIndex + 1}</h3>
+                    <>{section.map(mapVideoToJSX)}</>
+                  </div>
+                ))}
+              </>
+            </div>
+          ))}
+        </ul>
+      </StyledSidebar>
+      {currentVideo && (
+        <VideosCard video={currentVideo} column={isColumnView} />
+      )}
+    </div>
   );
 };
 
 VideosContainer.propTypes = {
   match: object.isRequired
+};
+
+VideosContainer.defaultProps = {
+  match: { params: { short_title: '' } }
 };
 
 export default VideosContainer;
