@@ -51,8 +51,10 @@ const Login = ({ history }) => {
     if (status === 200) {
       if (admin) {
         history.push('/admin');
+        window.location.reload(false);
       } else {
         history.push('/');
+        window.location.reload(false);
       }
     }
   };

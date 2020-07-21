@@ -50,7 +50,8 @@ const StyledDivider = styled(Navbar.Divider)`
 `;
 
 const Header = () => {
-  const [, user] = useIsUserAuth();
+  const [x, user] = useIsUserAuth();
+  console.log('!', x, user);
   return (
     <StyledNavbar>
       <StyledLink to="/">home</StyledLink>
@@ -59,7 +60,7 @@ const Header = () => {
       <StyledLink to="/videos">videos</StyledLink>
       {/** <StyledLink to="/exercises">exercises</StyledLink> */}
       <StyledLink to="/problemsets">problemsets</StyledLink>
-      <StyledLink to="/grades">grades</StyledLink>
+      {user && !user.admin && <StyledLink to="/grades">grades</StyledLink>}
       {user && user.admin && <StyledLink to="/admin">admin</StyledLink>}
       <StyledDivider />
       <Navbar.Group>
