@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Formula } from 'logically';
 import { Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { CITED_LINES_COUNT, DEDUCTION_RULES } from 'logically-local';
+import { CITED_LINES_COUNT, DEDUCTION_RULES } from 'logically';
 import UpArrow from '../../assets/up-arrow.png';
 import DownArrow from '../../assets/down-arrow.png';
 import TrashIcon from '../../assets/trash-icon.png';
