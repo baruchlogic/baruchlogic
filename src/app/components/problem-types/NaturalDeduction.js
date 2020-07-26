@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { func, object } from 'prop-types';
 import styled from 'styled-components';
-import { Formula } from 'logically-new';
+import { Formula } from 'logically-new-2';
 import { Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { CITED_LINES_COUNT, DEDUCTION_RULES } from 'logically-new';
+import { CITED_LINES_COUNT, DEDUCTION_RULES } from 'logically-new-2';
 import UpArrow from '../../assets/up-arrow.png';
 import DownArrow from '../../assets/down-arrow.png';
 import TrashIcon from '../../assets/trash-icon.png';
