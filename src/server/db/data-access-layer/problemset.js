@@ -1,5 +1,5 @@
 const { query } = require('../index');
-const { Formula, LineOfProof, Proof } = require('logically');
+const { Formula, LineOfProof, Proof } = require('logically-new');
 
 const getAllProblemsets = async () => {
   try {
