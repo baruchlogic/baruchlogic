@@ -6,7 +6,6 @@ import Problem from './Problem';
 import StyledCard from 'app-styled/StyledCard';
 import { Button, Elevation } from '@blueprintjs/core';
 import { authFetch } from '../helpers/auth';
-import { Formula } from 'logically-new-2';
 
 const StyledContainer = styled.div`
   margin: auto;
@@ -23,7 +22,6 @@ const StyledResetButton = styled(StyledButton)`
 `;
 
 const ProblemsetContainer = ({ column, isUserAuth, problemsetId }) => {
-  console.log('HI', Formula);
   const [problemset, setProblemset] = useState(null);
   const [problems, setProblems] = useState([]);
   const [problemsetResponses, setProblemsetResponses] = useState({});

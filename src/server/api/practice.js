@@ -1,5 +1,5 @@
 const { scoreTruthTableResponse } = require('../db/data-access-layer/practice');
-const { Formula } = require('logically-new-2');
+const { Formula } = require('logically');
 
 const configPracticeRoutes = app => {
   // Submits a user's responses to a problemset.

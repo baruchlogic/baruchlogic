@@ -4813,6 +4813,11 @@ log-update@^4.0.0:
     slice-ansi "^4.0.0"
     wrap-ansi "^6.2.0"
 
+logically@^0.1.24:
+  version "0.1.24"
+  resolved "https://registry.yarnpkg.com/logically/-/logically-0.1.24.tgz#4e6c30606bb2361302a1f11040e8736720d3f180"
+  integrity sha512-0cjN9tJhRCYk+Jrii/m+5j98MfrnIiUPoBEMa96FbklQXgmQS36PPGkDBykJmHPmd9grIXKmpxP7rDhP2hwOIQ==
+
 loglevel@^1.6.8:
   version "1.6.8"
   resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.6.8.tgz#8a25fb75d092230ecd4457270d80b54e28011171"

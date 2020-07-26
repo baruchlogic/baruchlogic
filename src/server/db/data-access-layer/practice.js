@@ -1,5 +1,5 @@
 const { compareMatrices } = require('./problemset');
-const { Formula } = require('logically-new-2');
+const { Formula } = require('logically');
 
 const scoreTruthTableResponse = body => {
   response = body.value.map(row =>

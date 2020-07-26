@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { array, func, object } from 'prop-types';
 import styled from 'styled-components';
-import { Formula } from 'logically-new-2';
+import { Formula } from 'logically';
 import { authFetch } from 'helpers/auth';
 
 const StyledInput = styled.input`
