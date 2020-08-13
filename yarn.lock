@@ -4818,6 +4818,11 @@ logically@^0.2.0:
   resolved "https://registry.yarnpkg.com/logically/-/logically-0.2.0.tgz#1f73847a7f8fb14897f76df83199b1bdc64ca3ce"
   integrity sha512-xEYS2bUS43QD/tDC5boP1ul/MHrxVEq4XbBxZm1wP/MfinOTLlPOoQkTV+HjMfJmNv1SOIRMTCQPU79JtUhKeg==
 
+logically@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/logically/-/logically-0.2.1.tgz#fdccb6330e56566dde825554348c23b57fdc60f8"
+  integrity sha512-zq2BoavVbTKtsnUWcpvaiW7JKpRieKYHyyzTWmhfw3bDkVEKTAOI+hU1Ej2OyHV3uCrr5qf4da9ezI3QRT9/mA==
+
 loglevel@^1.6.8:
   version "1.6.8"
   resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.6.8.tgz#8a25fb75d092230ecd4457270d80b54e28011171"
