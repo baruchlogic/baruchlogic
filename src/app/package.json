@@ -11,16 +11,6 @@
     "lint": "eslint --fix './**/*.{js,jsx}'",
     "start": "webpack-dev-server --mode development"
   },
-  "lint-staged": {
-    "./js": [
-      "npm run lint"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "dependencies": {
     "@babel/preset-react": "^7.0.0",
     "@blueprintjs/core": "^3.15.1",
