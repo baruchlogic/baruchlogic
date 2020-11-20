@@ -111,7 +111,10 @@ const NaturalDeduction = ({
   const submitUpdateCitedLines = index => {
     const response = Object.assign({}, value);
     const clean = cleanCitedLinesString(tempCitedLines[index]);
-    const citedLinesArray = clean.split(/[\s,]+/).map(Number);
+    const citedLinesArray = clean
+      .split(/[\s,]+/)
+      .filter(x => x !== '')
+      .map(Number);
     const rule = value.linesOfProof[index].rule;
     if (citedLinesArray.length !== CITED_LINES_COUNT[rule]) {
       alert(
