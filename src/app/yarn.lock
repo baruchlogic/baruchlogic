@@ -1584,10 +1584,10 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
 
-baruchlogic-textbook@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/baruchlogic-textbook/-/baruchlogic-textbook-1.0.7.tgz#d0ce11f6c0536d44ab9242d1daa1f69151abc297"
-  integrity sha512-/e6MtA3uYYuqaOzgUnm71h1cmBBrUjgQLuWrGxoeVCj4h1BSKScaUhgsQHqeQJRhGYm2XoO+BwFcV0uftrt86Q==
+baruchlogic-textbook@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/baruchlogic-textbook/-/baruchlogic-textbook-1.0.9.tgz#0e8c19a624b6ff556367e618fcc443bbc6550454"
+  integrity sha512-yYQeeDfAfFA322jOSc7/yOXqQ2sRPgLcuztt/sSMGTb4SCuxtfISr/MZnSLPnYnS2r0dtd3JyhfK9ucRuMcZgQ==
   dependencies:
     raw-loader "^4.0.1"
 
