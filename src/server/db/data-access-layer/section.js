@@ -87,11 +87,11 @@ const getInstructorSections = async instructorId => {
 const getDueDate = async (problemsetId, sectionId) => {
   try {
     const response = await query(
-      `SELECT due_date from due_date
+      `SELECT unix_due_date from due_date
       WHERE problemset_id = ? AND section_id = ?`,
       [problemsetId, sectionId]
     );
-    return response[0] ? response[0].due_date : null;
+    return response[0] ? response[0].unix_due_date : null;
   } catch (e) {
     console.log(e);
   }
@@ -208,8 +208,9 @@ const createNewSection = async ({ sectionNumber, term, year }) => {
     }
     for (const problemset of problemsets) {
       await query(
-        `INSERT INTO due_date (section_id, problemset_id, due_date)
-        VALUES (?, ?, NOW())`,
+        `INSERT INTO due_date
+        (section_id, problemset_id, due_date, unix_due_date)
+        VALUES (?, ?, NOW(), UNIX_TIMESTAMP())`,
         [newSectionId, problemset.id]
       );
     }
@@ -322,6 +323,7 @@ const getSectionProblemsets = async sectionId => {
     problemset.unit,
     problemset.index_in_unit,
     due_date,
+    unix_due_date,
     problemset.default_order,
     problemset.name
     FROM section_problemset
@@ -344,11 +346,16 @@ const removeUserFromSection = async (userId, sectionId) => {
   return;
 };
 
-const updateProblemsetDueDate = async ({ problemsetId, sectionId, date }) => {
+const updateProblemsetDueDate = async ({
+  problemsetId,
+  sectionId,
+  date,
+  unixDate
+}) => {
   await query(
-    `UPDATE due_date SET due_date = ?
+    `UPDATE due_date SET unix_due_date = ?
     WHERE problemset_id = ? AND section_id = ?;`,
-    [date, problemsetId, sectionId]
+    [unixDate, problemsetId, sectionId]
   );
 };
 

@@ -28,7 +28,7 @@ const Problemsets = () => {
       problemsets.reduce(
         (acc, problemset) => ({
           ...acc,
-          [problemset.id]: new Date(problemset.due_date)
+          [problemset.id]: new Date(Number(problemset.unix_due_date))
         }),
         {}
       )
@@ -98,10 +98,10 @@ const Problemsets = () => {
     setLoading(true);
     await Promise.all(
       problemsets.map(async problemset => {
-        if (
-          new Date(dates[problemset.id]).toISOString() !==
-          new Date(problemset.due_date).toISOString()
-        ) {
+        // if (
+        //   new Date(dates[problemset.id]).toISOString() !==
+        //   new Date(problemset.unix_due_date).toISOString()
+        // ) {
           await authFetch(
             `${API_BASE_URL}/api/sections/
             ${currentSection.id}/problemsets/due-dates/
@@ -109,11 +109,14 @@ const Problemsets = () => {
             'POST',
             {
               body: JSON.stringify({
-                date: moment(dates[problemset.id]).format('YYYY-MM-DD hh:mm:ss')
+                date: moment(dates[problemset.id]).format(
+                  'YYYY-MM-DD hh:mm:ss'
+                ),
+                unixDate: Math.floor(dates[problemset.id].getTime() / 1)
               })
             }
           );
-        }
+        // }
       })
     );
 
@@ -159,8 +162,8 @@ const Problemsets = () => {
                 </div>
                 <div key={problemset.id + 'date'}>
                   <span>
-                    {problemset.due_date
-                      ? moment(problemset.due_date).format(MOMENT_FORMAT)
+                    {problemset.unix_due_date
+                      ? new Date(Number(problemset.unix_due_date)).toString()
                       : 'N/A'}
                   </span>
                 </div>

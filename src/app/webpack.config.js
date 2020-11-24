@@ -8,7 +8,7 @@ module.exports = {
     contentBase: path.join(__dirname, 'dist'),
     compress: true,
     historyApiFallback: true,
-    port: 9000
+    port: 8080
   },
   entry: ['babel-polyfill', './components/index.js'],
   module: {
