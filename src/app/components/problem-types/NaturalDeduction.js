@@ -181,7 +181,10 @@ const NaturalDeduction = ({
     const { citedLines, proposition, rule } = newProposition;
     const clean = cleanCitedLinesString(citedLines);
 
-    const lines = clean.split(/[\s,]+/).map(Number);
+    const lines = clean
+      .split(/[\s,]+/)
+      .filter(x => x !== '')
+      .map(Number);
     console.log('LINES', lines, clean);
     if (!Formula.isWFFString(proposition)) {
       alert('Proposition is not a well-formed formula.');
