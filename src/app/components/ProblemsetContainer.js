@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { bool, number } from 'prop-types';
 import styled from 'styled-components';
-import moment from 'moment';
+// import moment from 'moment';
 import Problem from './Problem';
 import StyledCard from 'app-styled/StyledCard';
 import { Button, Elevation } from '@blueprintjs/core';
@@ -109,18 +109,28 @@ const ProblemsetContainer = ({ column, isUserAuth, problemsetId }) => {
     setProblemsetResponses(result.responses || {});
   };
 
-  const dueDateMoment =
-    problemset && problemset.due_date ? moment(problemset.due_date) : null;
+  // const dueDateMoment =
+  //   problemset && problemset.due_date ? moment(problemset.due_date) : null;
+  //
+  // const styledDueDate =
+  //   dueDateMoment && dueDateMoment.format('MMMM Do YYYY, h:mm');
+  //
+  // const isPastDueDate = dueDateMoment && dueDateMoment.isBefore(moment());
 
-  const styledDueDate =
-    dueDateMoment && dueDateMoment.format('MMMM Do YYYY, h:mm');
-
-  const isPastDueDate = dueDateMoment && dueDateMoment.isBefore(moment());
+  const isPastDueDate =
+    !!problemset &&
+    !!problemset.unix_due_date &&
+    Date.now() > problemset.unix_due_date * 1000;
 
   return (
     <StyledContainer column={column}>
       {problemset && <h1>{`Problemset #${problemset.default_order}`}</h1>}
-      {styledDueDate && <h2>{`Due date: ${styledDueDate}`}</h2>}
+      {// styledDueDate && <h2>{`Due date: ${styledDueDate}`}</h2>
+      problemset && problemset.unix_due_date && (
+        <h2>{`Due date: ${new Date(
+          problemset.unix_due_date * 1000
+        ).toString()}`}</h2>
+      )}
       {isPastDueDate && <h2>NOTE: Due date has passed</h2>}
       {!isUserAuth && <h2>Please log in to interact with the problemsets.</h2>}
       {problems.map(problem => (

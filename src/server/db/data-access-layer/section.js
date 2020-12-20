@@ -210,7 +210,7 @@ const createNewSection = async ({ sectionNumber, term, year }) => {
       await query(
         `INSERT INTO due_date
         (section_id, problemset_id, due_date, unix_due_date)
-        VALUES (?, ?, NOW(), UNIX_TIMESTAMP())`,
+        VALUES (?, ?, NOW(), UNIX_TIMESTAMP())`, // TODO: Just use default??
         [newSectionId, problemset.id]
       );
     }

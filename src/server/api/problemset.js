@@ -34,7 +34,7 @@ const configProblemsetRoutes = app => {
 
     const dueDate = await getDueDate(problemset.id, sectionId);
 
-    const problemsetResponse = { ...problemset, due_date: dueDate };
+    const problemsetResponse = { ...problemset, unix_due_date: dueDate };
 
     res.status(200).send(problemsetResponse);
   });
@@ -61,7 +61,9 @@ const configProblemsetRoutes = app => {
 
     await saveResponses(studentId, problemsetId, req.body);
 
-    const isPastDueDate = dueDate && moment(dueDate).isBefore(moment());
+    // const isPastDueDate = dueDate && moment(dueDate).isBefore(moment());
+
+    const isPastDueDate = dueDate && Date.now() > dueDate * 1000;
 
     if (!isPastDueDate) {
       // Only save the best score if it's not after the due date

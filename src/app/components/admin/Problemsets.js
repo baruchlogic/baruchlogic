@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Elevation, Intent } from '@blueprintjs/core';
 import StyledCard from 'app-styled/StyledCard';
 import moment from 'moment';
-import { MOMENT_FORMAT } from 'constants';
+// import { MOMENT_FORMAT } from 'constants';
 import DateTimePicker from 'react-datetime-picker';
 import { authFetch } from 'helpers/auth';
 import { useInstructorSections } from 'hooks';
@@ -28,7 +28,7 @@ const Problemsets = () => {
       problemsets.reduce(
         (acc, problemset) => ({
           ...acc,
-          [problemset.id]: new Date(Number(problemset.unix_due_date))
+          [problemset.id]: new Date(Number(problemset.unix_due_date * 1000))
         }),
         {}
       )
@@ -102,20 +102,18 @@ const Problemsets = () => {
         //   new Date(dates[problemset.id]).toISOString() !==
         //   new Date(problemset.unix_due_date).toISOString()
         // ) {
-          await authFetch(
-            `${API_BASE_URL}/api/sections/
+        await authFetch(
+          `${API_BASE_URL}/api/sections/
             ${currentSection.id}/problemsets/due-dates/
             ${problemset.id}`,
-            'POST',
-            {
-              body: JSON.stringify({
-                date: moment(dates[problemset.id]).format(
-                  'YYYY-MM-DD hh:mm:ss'
-                ),
-                unixDate: Math.floor(dates[problemset.id].getTime() / 1)
-              })
-            }
-          );
+          'POST',
+          {
+            body: JSON.stringify({
+              date: moment(dates[problemset.id]).format('YYYY-MM-DD hh:mm:ss'),
+              unixDate: Math.floor(dates[problemset.id].getTime() / 1000)
+            })
+          }
+        );
         // }
       })
     );
@@ -163,7 +161,9 @@ const Problemsets = () => {
                 <div key={problemset.id + 'date'}>
                   <span>
                     {problemset.unix_due_date
-                      ? new Date(Number(problemset.unix_due_date)).toString()
+                      ? new Date(
+                          Number(problemset.unix_due_date * 1000)
+                        ).toString()
                       : 'N/A'}
                   </span>
                 </div>
