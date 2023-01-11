@@ -43,6 +43,7 @@ const Login = ({ history }) => {
   };
 
   const onLogin = async () => {
+    console.log('here', API_BASE_URL);
     const response = await authFetch(`${API_BASE_URL}/api/login`, 'POST', {
       body: JSON.stringify({ key, username: 'foo' })
     });

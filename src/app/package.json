@@ -9,7 +9,8 @@
   "scripts": {
     "build": "webpack --mode production",
     "lint": "eslint --fix './**/*.{js,jsx}'",
-    "start": "webpack-dev-server --mode development"
+    "start": "webpack-dev-server --mode development",
+    "prod": "webpack-dev-server --mode production"
   },
   "dependencies": {
     "@babel/preset-react": "^7.0.0",
@@ -19,7 +20,6 @@
     "baruchlogic-textbook": "^1.0.9",
     "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.4",
-    "cors": "^2.8.5",
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
     "express-session": "^1.16.1",
