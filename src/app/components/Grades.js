@@ -4,6 +4,7 @@ import { authFetch } from 'helpers/auth';
 import { useIsUserAuth } from '../hooks/admin';
 
 import StyledCard from 'app-styled/StyledCard';
+import { ApiBaseUrl } from '../constants';
 
 const Grades = () => {
   const [grades, setGrades] = useState();
@@ -18,11 +19,11 @@ const Grades = () => {
     if (isAuth) {
       const getGrades = async () => {
         const grades = await authFetch(
-          `${API_BASE_URL}/api/user/grades`
+          `${ApiBaseUrl}/api/user/grades`
         ).then(res => res.json());
         setGrades(grades);
         const problemsets = await authFetch(
-          `${API_BASE_URL}/api/user/sections/problemsets`
+          `${ApiBaseUrl}/api/user/sections/problemsets`
         ).then(res => res.json());
         problemsets.sort((a, b) => a.problemset_order - b.problemset_order);
         setSectionProblemsets(problemsets);

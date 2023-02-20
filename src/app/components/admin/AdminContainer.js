@@ -8,12 +8,13 @@ import HowTo from './HowTo';
 import RosterContainer from './RosterContainer';
 import Grades from './Grades';
 import Settings from './Settings';
+import { ApiBaseUrl } from '../../constants';
 
 const AdminContainer = () => {
   const [isAdmin, setIsAdmin] = useState(null);
   useEffect(() => {
     const getIsAdmin = async () => {
-      const response = await authFetch(`${API_BASE_URL}/api/auth`);
+      const response = await authFetch(`${ApiBaseUrl}/api/auth`);
       if (response.status !== 200) {
         setIsAdmin(false);
         return;

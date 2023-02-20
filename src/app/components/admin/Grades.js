@@ -4,6 +4,7 @@ import { Elevation } from '@blueprintjs/core';
 import StyledCard from 'app-styled/StyledCard';
 import { useInstructorSections } from 'hooks/admin';
 import { authFetch } from 'helpers/auth';
+import { ApiBaseUrl } from '../../constants';
 
 const StyledTd = styled.td`
   min-width: 50px;
@@ -48,7 +49,7 @@ const Grades = () => {
 
   const setCurrentSectionGrades = async () => {
     const grades = await fetch(
-      `${API_BASE_URL}/api/sections/${currentSectionId}/grades`
+      `${ApiBaseUrl}/api/sections/${currentSectionId}/grades`
     ).then(res => res.json());
     console.log('GRADEs', grades);
     setCurrentGrades(grades);
@@ -56,7 +57,7 @@ const Grades = () => {
 
   const setCurrentProblemsetsHelper = async () => {
     const problemsets = await fetch(
-      `${API_BASE_URL}/api/sections/${currentSectionId}/problemsets`
+      `${ApiBaseUrl}/api/sections/${currentSectionId}/problemsets`
     ).then(res => res.json());
     setCurrentProblemsets(
       problemsets.sort((a, b) =>
@@ -124,7 +125,7 @@ const Grades = () => {
   const setUpdatedScoreVal = async (userId, problemsetId, score) => {
     console.log('setUpdatedScoreVal', userId, problemsetId, score);
     await authFetch(
-      `${API_BASE_URL}/api/sections/
+      `${ApiBaseUrl}/api/sections/
       ${currentSectionId}/grades/${problemsetId}/${userId}`,
       'POST',
       {

@@ -8,6 +8,7 @@ import {
   getValueFromLocalStorageByKey,
   saveToLocalStorage
 } from 'helpers/localStorage';
+import { ApiBaseUrl } from '../../constants';
 
 const Roster = ({ sectionId, sectionNumber }) => {
   const [students, setStudents] = useState([]);
@@ -15,7 +16,7 @@ const Roster = ({ sectionId, sectionNumber }) => {
 
   const getStudentsInSection = async sectionId => {
     const users = await fetch(
-      `${API_BASE_URL}/api/sections/${sectionId}/users`
+      `${ApiBaseUrl}/api/sections/${sectionId}/users`
     ).then(res => res.json());
     setStudents(users);
   };
@@ -34,7 +35,7 @@ const Roster = ({ sectionId, sectionNumber }) => {
   }, [studentNames]);
 
   const onAddStudent = async () => {
-    await authFetch(`${API_BASE_URL}/api/users`, 'POST', {
+    await authFetch(`${ApiBaseUrl}/api/users`, 'POST', {
       body: JSON.stringify({ sectionId })
     });
     await getStudentsInSection(sectionId);
@@ -81,7 +82,7 @@ const Roster = ({ sectionId, sectionNumber }) => {
   const onRemoveUser = async userId => {
     // console.log('onRemoveUser', userId);
     const res = await authFetch(
-      `${API_BASE_URL}/api/sections/${sectionId}/users/${userId}`,
+      `${ApiBaseUrl}/api/sections/${sectionId}/users/${userId}`,
       'DELETE'
     );
     // console.log('res', res);

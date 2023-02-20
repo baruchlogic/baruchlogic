@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import StyledCard from 'app-styled/StyledCard';
 import { Button, Elevation } from '@blueprintjs/core';
 import { authFetch } from 'helpers/auth';
+import { ApiBaseUrl } from '../../constants';
 
 const StyledLi = styled.li`
   list-style: none;
@@ -45,7 +46,7 @@ const CourseForm = () => {
 
   const onSubmit = async () => {
     // console.log('FORM VALUES', formValues);
-    const response = await authFetch(`${API_BASE_URL}/api/section`, 'POST', {
+    const response = await authFetch(`${ApiBaseUrl}/api/section`, 'POST', {
       body: JSON.stringify(formValues)
     });
     const { status } = response;

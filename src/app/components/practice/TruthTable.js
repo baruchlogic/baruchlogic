@@ -3,6 +3,7 @@ import { array, func, object } from 'prop-types';
 import styled from 'styled-components';
 import { Formula } from 'logically';
 import { authFetch } from 'helpers/auth';
+import { ApiBaseUrl } from '../../constants';
 
 const StyledInput = styled.input`
   font-size: 1rem;
@@ -51,7 +52,7 @@ const TruthTable = ({ setProblemResponse, value }) => {
 
   const submitResponse = async () => {
     const response = await authFetch(
-      `${API_BASE_URL}/api/practice/truth-table`,
+      `${ApiBaseUrl}/api/practice/truth-table`,
       'POST',
       {
         body: JSON.stringify({

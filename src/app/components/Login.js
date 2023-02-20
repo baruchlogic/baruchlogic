@@ -5,6 +5,7 @@ import { Button, Card, Elevation, InputGroup } from '@blueprintjs/core';
 import { authFetch } from '../helpers/auth';
 import { useIsUserAuth } from '../hooks/admin';
 import { Icon } from '@blueprintjs/core';
+import { ApiBaseUrl } from '../constants';
 
 const FormContainer = styled.div`
   display: flex;
@@ -43,7 +44,7 @@ const Login = ({ history }) => {
   };
 
   const onLogin = async () => {
-    const response = await authFetch(`${API_BASE_URL}/api/login`, 'POST', {
+    const response = await authFetch(`${ApiBaseUrl}/api/login`, 'POST', {
       body: JSON.stringify({ key, username: 'foo' })
     });
     const { admin } = await response.json();
@@ -56,11 +57,11 @@ const Login = ({ history }) => {
         history.push('/');
         window.location.reload(false);
       }
-    }
+    } 
   };
 
   const onLogout = async () => {
-    const { status } = await authFetch(`${API_BASE_URL}/api/logout`, 'GET');
+    const { status } = await authFetch(`${ApiBaseUrl}/api/logout`, 'GET');
     if (status === 200) {
       history.push('/');
       window.location.reload(false);

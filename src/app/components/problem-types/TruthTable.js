@@ -15,7 +15,7 @@ const StyledHeaderTD = styled.td`
 
 const TruthTable = ({ isUserAuth, problem, setProblemResponse, value }) => {
   // Used for `onChange` to prevent React warning;
-  const emptyFn = () => {};
+  const emptyFn = () => { };
 
   // Create initial response matrix
   const columns = Formula.generateTruthTableHeaders(problem.prompt);
