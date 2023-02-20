@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { authFetch } from 'helpers/auth';
+import { ApiBaseUrl } from '../constants';
 
 export const useInstructorSections = () => {
   const [instructorSections, setInstructorSections] = useState([]);
 
   useEffect(() => {
     const getInstructorCourseNumbers = async () => {
-      let sections = await authFetch(`${API_BASE_URL}/api/sections`);
+      let sections = await authFetch(`${ApiBaseUrl}/api/sections`);
       sections = await sections.json();
       setInstructorSections(sections);
     };
@@ -22,7 +23,7 @@ export const useIsUserAuth = () => {
   const [user, setUser] = useState(null);
 
   const fetchIsAuth = async () => {
-    await authFetch(`${API_BASE_URL}/api/auth`, 'GET')
+    await authFetch(`${ApiBaseUrl}/api/auth`, 'GET')
       .then(res => res.json())
       .then(res => {
         // console.log('RESPONSE', res);

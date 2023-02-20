@@ -1,6 +1,8 @@
+import { ApiBaseUrl } from "../constants";
+
 const authFetchHeaders = {
   'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': `${API_BASE_URL}`,
+  'Access-Control-Allow-Origin': `${ApiBaseUrl}`,
   Vary: 'Origin'
 };
 
