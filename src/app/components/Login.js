@@ -38,6 +38,7 @@ const Login = ({ history }) => {
 
   const onKeyDown = ({ key }) => {
     if (key === 'Enter') {
+      console.log("This is in the login component");
       onLogin();
     }
   };
