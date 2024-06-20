@@ -29,6 +29,12 @@ configApp(app);
 
 configEndpoints(app);
 
+app.use(express.static(path.join(__dirname, '../app/dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../app/dist/index.html'));
+});
+
 const port = process.env.API_PORT || 5000;
 app.listen(port);
 

@@ -86,7 +86,7 @@ const Login = ({ history }) => {
               leftIcon={<Icon icon="key" />}
             />
             <StyledButton onClick={onLogin} intent="success">
-              LOGIN-NOW
+              LOGIN
             </StyledButton>
           </>
         )}
