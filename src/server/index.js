@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const configApp = require('./config');
 const configEndpoints = require('./api');
+const path = require('path');
 const config = require('dotenv').config();
 
 // console.log('FOO', FOO);
