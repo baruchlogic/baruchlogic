@@ -6,6 +6,7 @@ import { MOMENT_FORMAT } from 'constants';
 import DateTimePicker from 'react-datetime-picker';
 import { authFetch } from 'helpers/auth';
 import { useInstructorSections } from 'hooks';
+import { ApiBaseUrl } from '../../constants';
 
 const Problemsets = () => {
   const instructorSections = useInstructorSections();
@@ -20,7 +21,7 @@ const Problemsets = () => {
 
   const fetchProblemSets = async () => {
     const response = await fetch(
-      `${API_BASE_URL}/api/sections/${currentSection.id}/problemsets`
+      `${ApiBaseUrl}/api/sections/${currentSection.id}/problemsets`
     ).then(res => res.json());
     const problemsets = response;
     setProblemsets(problemsets);
@@ -36,7 +37,7 @@ const Problemsets = () => {
   };
   const fetchAllProblemSets = async () => {
     const problemsets = await fetch(
-      `${API_BASE_URL}/api/problemsets`
+      `${ApiBaseUrl}/api/problemsets`
     ).then(res => res.json());
     setAllProblemsets(problemsets);
   };
@@ -70,7 +71,7 @@ const Problemsets = () => {
 
   const removeProblemset = async () => {
     await authFetch(
-      `${API_BASE_URL}/api/sections/
+      `${ApiBaseUrl}/api/sections/
       ${currentSection.id}/problemsets/${removeProblemsetId}`,
       'DELETE'
     );
@@ -83,7 +84,7 @@ const Problemsets = () => {
 
   const addProblemset = async () => {
     await authFetch(
-      `${API_BASE_URL}/api/sections/
+      `${ApiBaseUrl}/api/sections/
       ${currentSection.id}/problemsets/${addProblemsetId}`,
       'POST'
     );
@@ -103,7 +104,7 @@ const Problemsets = () => {
           new Date(problemset.due_date).toISOString()
         ) {
           await authFetch(
-            `${API_BASE_URL}/api/sections/
+            `${ApiBaseUrl}/api/sections/
             ${currentSection.id}/problemsets/due-dates/
             ${problemset.id}`,
             'POST',

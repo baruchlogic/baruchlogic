@@ -33,7 +33,7 @@ const NaturalDeduction = ({
 
   const incorrectMoves = incorrectResponses?.responseData?.incorrectMoves || [];
 
-  const initialLines = premises.map((premise, index) => ({
+  const initialLines = premises.map((premise) => ({
     proposition: new Formula(premise),
     rule: 'Premise',
     citedLines: []
@@ -82,8 +82,6 @@ const NaturalDeduction = ({
     }
     setNewProposition({ ...newProposition, citedLines: val });
   };
-
-  console.log('newProposition', newProposition);
 
   const handleUpdateProposition = ({ target: { value: val } }, index) => {
     if (index < problem.deduction_prompt.premises.length) {
@@ -135,7 +133,13 @@ const NaturalDeduction = ({
     newProblemResponse.linesOfProof[index].rule = val;
     setProblemResponse(problem.id, newProblemResponse);
   };
-
+  const onBackspace = (e) => { //this function clears the input on backspace if the input has one character
+    if (e.target.value.length !== 1) return
+    if (e.keyCode === 8) {
+      e.preventDefault();
+      e.target.value = '';
+    }
+  }
   const handleUpdateCitedLines = ({ target: { value: val } }, index) => {
     const lastVal = val.slice(-1);
     if (!/[\d\s,]/.test(lastVal)) {
@@ -213,7 +217,7 @@ const NaturalDeduction = ({
     });
   };
 
-  console.log('TEMPCITEDLINES', tempCitedLines);
+  // console.log('TEMPCITEDLINES', tempCitedLines);
 
   return (
     <div style={{ width: '100%' }}>
@@ -244,7 +248,7 @@ const NaturalDeduction = ({
             </tr>
           </thead>
           <tbody>
-            {value.linesOfProof.map((line, index) => (
+            {value.linesOfProof && value.linesOfProof.map((line, index) => (
               <tr
                 key={index + 1}
                 style={{ color: incorrectMoves[index] ? 'red' : 'black' }}
@@ -253,13 +257,10 @@ const NaturalDeduction = ({
 
                 <td>
                   <input
-                    value={tempPropositionStrings[index]}
-                    onChange={e => {
-                      handleUpdateProposition(e, index);
-                    }}
-                    onBlur={() => {
-                      submitUpdateProposition(index);
-                    }}
+                    value={tempPropositionStrings[index] || line.proposition.formulaString}
+                    onChange={e => handleUpdateProposition(e, index)}
+                    onBlur={() => submitUpdateProposition(index)}
+                    onKeyDown={e => onBackspace(e)}
                   />
                 </td>
 
@@ -270,12 +271,8 @@ const NaturalDeduction = ({
                 ) : (
                   <td>
                     <select
-                      onChange={e => {
-                        handleUpdateRule(e, index);
-                      }}
-                      onBlur={e => {
-                        handleUpdateRule(e, index);
-                      }}
+                      onChange={e => handleUpdateRule(e, index)}
+                      onBlur={e => handleUpdateRule(e, index)}
                       value={line.rule}
                     >
                       {Object.values(DEDUCTION_RULES)
@@ -294,13 +291,10 @@ const NaturalDeduction = ({
                     <input value={''} readOnly />
                   ) : (
                     <input
-                      value={tempCitedLines[index]}
-                      onChange={e => {
-                        handleUpdateCitedLines(e, index);
-                      }}
-                      onBlur={e => {
-                        submitUpdateCitedLines(index);
-                      }}
+                      value={tempCitedLines[index] || line.citedLines}
+                      onChange={e => handleUpdateCitedLines(e, index)}
+                      onBlur={e => submitUpdateCitedLines(index)}
+                      onKeyDown={e => onBackspace(e)}
                     />
                   )}
                 </td>
@@ -319,13 +313,9 @@ const NaturalDeduction = ({
                       width: '25%',
                       opacity: index < premises.length ? '0.5' : '1'
                     }}
-                    onClick={() => {
-                      deleteLine(index);
-                    }}
+                    onClick={() => deleteLine(index)}
                     role="button"
-                    onKeyDown={e => {
-                      if (e.keyCode === 13) deleteLine(index);
-                    }}
+                    onKeyDown={e => { if (e.keyCode === 13) deleteLine(index); }}
                     tabIndex="0"
                   >
                     <img
@@ -345,12 +335,8 @@ const NaturalDeduction = ({
                       width: '25%',
                       opacity: index < premises.length ? '0.5' : '1'
                     }}
-                    onClick={() => {
-                      addNewLine(index);
-                    }}
-                    onKeyDown={e => {
-                      if (e.keyCode === 13) addNewLine(index);
-                    }}
+                    onClick={() => addNewLine(index)}
+                    onKeyDown={e => { if (e.keyCode === 13) addNewLine(index); }}
                     role="button"
                     tabIndex="0"
                   >
@@ -367,12 +353,8 @@ const NaturalDeduction = ({
                   </div>
                   <div
                     style={{ height: '100%', width: '25%' }}
-                    onClick={() => {
-                      addNewLine(index + 1);
-                    }}
-                    onKeyDown={e => {
-                      if (e.keyCode === 13) addNewLine(index + 1);
-                    }}
+                    onClick={() => addNewLine(index + 1)}
+                    onKeyDown={e => { if (e.keyCode === 13) addNewLine(index + 1); }}
                     role="button"
                     tabIndex="0"
                   >
@@ -430,14 +412,10 @@ const NaturalDeduction = ({
         <StyledIcon
           icon={IconNames.ADD}
           iconSize={32}
-          onClick={() => {
-            addNewLine();
-          }}
+          onClick={() => addNewLine()}
           role="button"
           tabIndex="0"
-          onKeyDown={e => {
-            if (e.keyCode === 13) addNewLine();
-          }}
+          onKeyDown={e => { if (e.keyCode === 13) addNewLine(); }}
         />
       </div>
     </div>

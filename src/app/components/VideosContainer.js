@@ -6,6 +6,7 @@ import { useColumnView } from 'hooks';
 
 import StyledSidebar from 'app-styled/StyledSidebar';
 import VideosCard from './VideosCard';
+import { ApiBaseUrl } from '../constants';
 
 const VideosContainer = ({
   match: {
@@ -48,8 +49,8 @@ const VideosContainer = ({
 
   useEffect(() => {
     const fetchVideos = async () => {
-      // console.log('API_BASE_URL', API_BASE_URL);
-      const response = await fetch(`${API_BASE_URL}/api/videos`).then(res =>
+      // console.log('ApiBaseUrl', ApiBaseUrl);
+      const response = await fetch(`${ApiBaseUrl}/api/videos`).then(res =>
         res.json()
       );
       const videos = response;

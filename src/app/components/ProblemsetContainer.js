@@ -6,6 +6,8 @@ import Problem from './Problem';
 import StyledCard from 'app-styled/StyledCard';
 import { Button, Elevation } from '@blueprintjs/core';
 import { authFetch } from '../helpers/auth';
+import { ApiBaseUrl } from '../constants';
+import { saveToLocalStorage } from '../helpers/localStorage';
 
 const StyledContainer = styled.div`
   margin: auto;
@@ -21,10 +23,15 @@ const StyledResetButton = styled(StyledButton)`
   background-color: #2e0f4c !important;
 `;
 
+//Initializing problemsetResponses from local storage (See 'README.md' 2023 February Update for details)
+const key = 'ProblemsetResponses';
+if (!localStorage.getItem(key)) saveToLocalStorage(key, {});
+const fromLocalStorage = JSON.parse(localStorage.getItem(key));
+
 const ProblemsetContainer = ({ column, isUserAuth, problemsetId }) => {
+  const [problemsetResponses, setProblemsetResponses] = useState(fromLocalStorage);
   const [problemset, setProblemset] = useState(null);
   const [problems, setProblems] = useState([]);
-  const [problemsetResponses, setProblemsetResponses] = useState({});
   const [currentScore, setCurrentScore] = useState(null);
   const [bestScore, setBestScore] = useState(null);
   const [incorrectProblems, setIncorrectProblems] = useState({});
@@ -32,30 +39,30 @@ const ProblemsetContainer = ({ column, isUserAuth, problemsetId }) => {
 
   const fetchProblemSet = async () => {
     const result = await authFetch(
-      `${API_BASE_URL}/api/problemsets/${problemsetId}`
+      `${ApiBaseUrl}/api/problemsets/${problemsetId}`
     ).then(res => res.json());
     setProblemset(result);
   };
 
   const fetchProblems = async () => {
     const result = await fetch(
-      `${API_BASE_URL}/api/problemsets/${problemsetId}/problems`
+      `${ApiBaseUrl}/api/problemsets/${problemsetId}/problems`
     ).then(res => res.json());
     setProblems(result);
   };
 
   const fetchBestScore = async () => {
     const result = await authFetch(
-      `${API_BASE_URL}/api/problemsets/${problemsetId}/score`
+      `${ApiBaseUrl}/api/problemsets/${problemsetId}/score`
     ).then(res => res.text());
     setBestScore(result);
   };
 
   const onReset = () => {
-    setProblemsetResponses({});
     setCurrentScore(null);
     setIncorrectProblems({});
     setHasSubmitted(false);
+    setProblemsetResponses({})
   };
 
   useEffect(() => {
@@ -70,9 +77,13 @@ const ProblemsetContainer = ({ column, isUserAuth, problemsetId }) => {
     fetchBestScore();
   }, [problemsetId]);
 
+  // useEffect(() => {
+  //   onReset();
+  // }, [problemsetId]);
+
   useEffect(() => {
-    onReset();
-  }, [problemsetId]);
+    saveToLocalStorage(key, problemsetResponses);
+  }, [problemsetResponses]);
 
   const setProblemResponse = (problemId, response) => {
     setProblemsetResponses(problemsetResponses => ({
@@ -80,10 +91,17 @@ const ProblemsetContainer = ({ column, isUserAuth, problemsetId }) => {
       [problemId]: response
     }));
   };
-
+  function removeOtherProblemsetsResponses() { //removes saved problem responses not related to the current page's problemsetResponses (solves issue of if for e.g. problemset #6 was accidentally clicked instead of problemset #5. When problemset 5 is loaded, problemset #6's saved default (T/F) answers are still saved in problemsetResponses. This function will filter out the unwanted problemResponses)
+    if (problemsetResponses === {}) return;
+    const asArray = Object.entries(problemsetResponses);
+    const filtered = asArray.filter(([id]) => id >= problems[0].id && id <= problems.at(-1).id);
+    const filteredProblemsetResponses = Object.fromEntries(filtered);
+    setProblemsetResponses(filteredProblemsetResponses);
+  }
   const onSubmit = async () => {
+    removeOtherProblemsetsResponses();
     const response = await authFetch(
-      `${API_BASE_URL}/api/problemsets/${problemsetId}`,
+      `${ApiBaseUrl}/api/problemsets/${problemsetId}`,
       'POST',
       { body: JSON.stringify(problemsetResponses) }
     );
@@ -99,12 +117,13 @@ const ProblemsetContainer = ({ column, isUserAuth, problemsetId }) => {
       )
     );
     fetchBestScore();
+    setProblemsetResponses({});
     setHasSubmitted(true);
   };
 
   const onRestoreBestResponses = async () => {
     const result = await authFetch(
-      `${API_BASE_URL}/api/problemsets/${problemsetId}/responses`
+      `${ApiBaseUrl}/api/problemsets/${problemsetId}/responses`
     ).then(res => res.json());
     setProblemsetResponses(result.responses || {});
   };
@@ -116,7 +135,6 @@ const ProblemsetContainer = ({ column, isUserAuth, problemsetId }) => {
     dueDateMoment && dueDateMoment.format('MMMM Do YYYY, h:mm');
 
   const isPastDueDate = dueDateMoment && dueDateMoment.isBefore(moment());
-
   return (
     <StyledContainer column={column}>
       {problemset && <h1>{`Problemset #${problemset.default_order}`}</h1>}

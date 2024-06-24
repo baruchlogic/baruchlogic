@@ -49,26 +49,29 @@ const configProblemsetRoutes = app => {
   // Returns the incorrect problems and the score.
   app.post('/api/problemsets/:id', async (req, res) => {
     // const json = await req.json();
-    const { id: problemsetId } = req.params;
-    const { id: studentId } = req.user;
-    const sectionId = await getUserSection(studentId);
-    const { incorrectProblems, score } = await scoreResponses(
-      req.body,
-      problemsetId
-    );
 
-    const dueDate = await getDueDate(problemsetId, sectionId);
+    if (req.user) {
+      const { id: problemsetId } = req.params;
+      const { id: studentId } = req.user;
+      const sectionId = await getUserSection(studentId);
+      const { incorrectProblems, score } = await scoreResponses(
+        req.body,
+        problemsetId
+      );
 
-    await saveResponses(studentId, problemsetId, req.body);
+      const dueDate = await getDueDate(problemsetId, sectionId);
 
-    const isPastDueDate = dueDate && moment(dueDate).isBefore(moment());
+      await saveResponses(studentId, problemsetId, req.body);
 
-    if (!isPastDueDate) {
-      // Only save the best score if it's not after the due date
-      await saveBestResponses(studentId, problemsetId, req.body);
-      await saveBestScore(studentId, problemsetId, score);
-    }
-    res.send(JSON.stringify({ incorrectProblems, score }));
+      const isPastDueDate = dueDate && moment(dueDate).isBefore(moment());
+
+      if (!isPastDueDate) {
+        // Only save the best score if it's not after the due date
+        await saveBestResponses(studentId, problemsetId, req.body);
+        await saveBestScore(studentId, problemsetId, score);
+      }
+      res.send(JSON.stringify({ incorrectProblems, score }));
+    } else console.error('POST FAIL at "/api/problemsets/:id" - req.user is undefined')
   });
 
   // Gets a user's score for a problemset.

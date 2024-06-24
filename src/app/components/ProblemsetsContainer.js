@@ -7,6 +7,7 @@ import { useColumnView, useIsUserAuth } from 'hooks';
 
 import ProblemsetContainer from './ProblemsetContainer';
 import StyledSidebar from 'app-styled/StyledSidebar';
+import { ApiBaseUrl } from '../constants';
 
 const ProblemsetsContainer = ({
   match: {
@@ -23,7 +24,7 @@ const ProblemsetsContainer = ({
     if (isUserAuth && user) {
       console.log('IS AUTH', isUserAuth, user);
       const response = await authFetch(
-        `${API_BASE_URL}/api/sections/${user.section_id}/problemsets`
+        `${ApiBaseUrl}/api/sections/${user.section_id}/problemsets`
       ).then(res => res.json());
       setFetchIsLoading(false);
       const problemsets = response;
@@ -33,7 +34,7 @@ const ProblemsetsContainer = ({
     } else {
       console.log('IS NOT AUTH');
       const response = await fetch(
-        `${API_BASE_URL}/api/problemsets`
+        `${ApiBaseUrl}/api/problemsets`
       ).then(res => res.json());
       setFetchIsLoading(false);
       const problemsets = response;
